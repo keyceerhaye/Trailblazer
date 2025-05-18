@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.header {
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 0 90px;
+  height: 130px;
+  box-sizing: border-box;
+}
+.header-shadow {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.Logo img {
+  width: 121px;
+  height: 121px;
+  display: block;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  background: linear-gradient(to right, #326BF6 9%, #90CAF9 21%, #90CAF9 42%, #A3A8F9 58%, #C2AEFD 76%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 0.8;
+  margin-left: -30px;
+}
+
+.subtext {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  background: linear-gradient(to right, #2D9CF4 0%, #90CAF9 49%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-left: -30px;
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-section {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+  margin-left: 120px;
+}
+
+.navbar {
+  display: flex;
+  gap: 16px;
+}
+
+.navbar button {
+  background-color: transparent;
+  color: #2F2785;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.navbar button:hover {
+  color: #326BF6;
+  transition: all 0.3s ease-in-out;
+}
+.navbar button:focus{
+    outline: none;
+}
+.navbar button.active {
+  color: #326BF6;
+}
+
+.Login button,
+.SignUp button {
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.Login button {
+  background-color: white;
+  color: #2F2785;
+}
+
+.SignUp button {
+  background-color: #326BF6;
+  color: white;
+}
+
+.Login,
+.SignUp {
+  display: flex;
+  align-items: center;
+}
+.Login button:active, .Login button:focus{
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+.SignUp button:active, .SignUp button:focus{
+    box-shadow: inset 2px 2px 5px rgb(1, 10, 20);
+    transition: all 0.3s ease-in-out;
+}
+
+.user-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 140px;
+}
+
+.user-icon {
+  background-color: #f7f7f8;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.menu-icon span {
+  height: 4px;
+  background-color: #2F2785;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 10px;
+  background-color: white;
+  border-radius: 20px 0 20px 20px;
+  width: 284px;
+  height: 310px;
+  padding-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  position: relative;
+}
+
+.user-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2F2785;
+}
+
+.close-icon {
+  font-size: 50px;
+  color: #2F2785;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+hr {
+  margin: 0 16px;
+  border: none;
+  border-top: 1px solid #000000;
+}
+
+.dropdown-item {
+  padding: 13px 16px;
+  font-size: 15px;
+  color: #2F2785;
+  background: none;
+  border: none;
+  text-align: left;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f5f9;
+  color: #326BF6;
+}
+
+.dropdown-footer {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+  text-decoration: underline;
+  color: #2f2785;
+  background-color: white;
+  font-weight: 500;
+  bottom: 10px;
+  gap: 50px;
+  cursor: pointer;
+}
+.dropdown-footer a{
+  color: #2F2785;
+}
+
+.dropdown-footer a:hover{
+  color: #326BF6;
+  text-decoration: underline;
+}
+/* For Terms and Privacy simplified header layout */
+.minimal-header {
+  background-color: white;
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.center-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+}
+
+.center-logo .Logo img {
+  width: 121px;
+  height: 121px;
+  display: block;
+}
+
+.center-logo .title {
+  font-size: 48px;
+  font-weight: 700;
+  background: linear-gradient(to right, #326BF6 9%, #90CAF9 21%, #90CAF9 42%, #A3A8F9 58%, #C2AEFD 76%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 0.8;
+  margin-left: -30px;
+}
+
+.center-logo .subtext {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  background: linear-gradient(to right, #2D9CF4 0%, #90CAF9 49%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 0.8;
+  letter-spacing: 2.5px;
+  margin-left: -30px;
+}
+

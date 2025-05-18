@@ -1,0 +1,356 @@
+.ad-dashboard {
+    display: flex;
+    background: #fff;
+    width: 100vw;
+    padding: 0 40px;
+    box-sizing: border-box;
+    font-family: 'Montserrat';
+  }
+  
+  .ad-sidebar {
+    width: 250px;
+    padding: 1rem 1.25rem;
+    border: none;
+    background-color: #ffffff;
+  }
+  
+  .ad-logo {
+    width: 81px;
+    height: 81px;
+    right: 95px;
+    top: 47px;
+    z-index: 1;
+    position: relative;
+    margin-left: -15px;
+  }
+  
+  .ad-logo-text {
+    top: 34px;
+    left: 110px;
+    position: absolute;
+    margin-left: -5px;
+    font-size: 28px;
+    background: linear-gradient(to right, #326BF6 9%, #90CAF9 21%, #90CAF9 42%, #A3A8F9 58%, #C2AEFD 76% );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 0.8;
+  }
+  
+  .ad-tagline {
+    font-size: 9.25px;
+    font-weight: 600;
+    margin-left: 45px;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #2d9cf4 0%, #90caf9 49%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 0.8;
+  }
+  
+  .ad-nav {
+    margin-top: 79px;
+  }
+  
+  .ad-nav-item {
+    padding: 0.625rem;
+    margin-bottom: 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    position: relative;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .ad-nav-item:hover {
+    background: #e1f1fd;
+  }
+  
+  .ad-nav-item.active {
+    background: #2e9cf433;
+    color: #2e9cf4;
+  }
+  
+  .ad-nav-indicator {
+    position: absolute;
+    left: -25px;
+    width: 5px;
+    height: 100%;
+    background: #2e9cf4;
+    border-radius: 20px;
+  }
+  
+  .ad-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: auto    ;
+    position: relative;
+  }
+  
+  .ad-topbar {
+    position: fixed;
+    top: 20px;
+    left: 330px;
+    right: 0;
+    height: 100px;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2.5rem;
+  }
+  
+  .nav-item-image {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+  }
+  
+  .ad-search input {
+    width: 18.75rem;
+    padding: 0.625rem 0.9375rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    outline: none;
+  }
+  
+  .ad-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    cursor: pointer;
+    margin-right: 50px;
+  }
+  
+  .ad-avatar {
+    width: 65px;
+    height: 55px;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .ad-dropdown-icon {
+    color: #2f2785;
+    display: flex;
+    flex-direction: column;
+    margin-right: 7px;
+  }
+  
+  .ad-dropdown-menu {
+    position: absolute;
+    top: 100px;
+    right: 80px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 230px;
+    height: 115px;
+    z-index: 1000;
+    display: none;
+    border-radius: 20px;
+  }
+  
+  .ad-user-profile:hover .ad-dropdown-menu,
+  .ad-user-profile .ad-dropdown-menu {
+    display: block;
+  }
+  
+  .ad-dropdown-menu ul {
+    list-style: none;
+    margin-right: 30px;
+  }
+  
+  .ad-dropdown-menu li {
+    display: flex;
+    flex-direction: row;
+    row-gap: 20px;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .ad-dropdown-menu li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .ad-main-content {
+    flex: 1;
+    padding: 2.5rem;
+    background: linear-gradient(to bottom, #e4eaf7 0%, #fef9f6 25%, #fef9f6 75%, #e4eaf7 100%);
+    border-radius: 20px;
+    width: 1020px;
+    margin: 1.25rem;
+    margin-top: 125px;
+  }
+  
+  .ad-title {
+    font-size: 26px;
+    text-align: left;
+    color: black;
+    font-weight: bold;
+    margin-top: -20px;
+  }
+  
+  .ad-subtitle {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+  
+  .ad-summary {
+    display: flex;
+    gap: 5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  
+  .ad-summary-number {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  .summary-icon {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+  }
+  
+  .ad-summary-card {
+    background: #fff;
+    border: 1px solid #d1caca;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .ad-summary-label {
+    font-size: 1.125rem;
+    color: #555;
+    margin-left: 30px;
+  }
+  
+  .ad-orders-table {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .ad-orders-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .ad-orders-table th {
+    background: #bec8fc;
+    color: #2e2684;
+    font-weight: 600;
+    font-size: 1.12rem;
+    padding: 0.75rem;
+  }
+  
+  .ad-orders-table td {
+    padding: 0.10rem;
+    font-size: 1rem;
+    color: #2e2684;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
+  
+  .alt-row {
+    background-color: #e4eaf7;
+  }
+  
+  .ad-status {
+    display: inline-block;
+    padding: 0.3125rem 0.625rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+  
+  .ad-status.ready {
+    background: #2e2684;
+    color: white;
+  }
+  
+  .ad-status.ontheway {
+    border: 1px solid #000;
+    background: transparent;
+    color: #2e2684;
+  }
+  
+  .ad-dropdown {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .ad-action-dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .ad-action-dropdown {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+  }
+  
+  .ad-action-dropdown div {
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  
+  .ad-action-dropdown div:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .ad-floating-action-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 99%; 
+    transform: translateX(-290%); 
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    width: 107px;
+    height: 104px;
+  }
+  
+  .ad-floating-action-dropdown div {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s ease;
+  }
+  
+  .ad-floating-action-dropdown div:hover {
+    background-color: #f0f0f0;
+    color: red;
+}

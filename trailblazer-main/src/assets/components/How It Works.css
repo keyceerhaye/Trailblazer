@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+.HowItWorks{
+    position: relative;
+    width: 100%;
+    background: #2F2785;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    /* Box styling */
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;              
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+/*HOW IT WORKS*/
+.heading{
+    text-align: center;
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+    margin-top: 34px;
+    margin-bottom: 0;
+    padding: 0;
+}
+/*PRINTING SERVICE*/
+.subheading1{
+    font-size: 32px;
+    font-weight: 500;
+    color: white;
+    margin-top: 50px;
+    margin-bottom: 0;
+    padding: 0;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-color: white;
+}
+.printing-circles{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 20px 5px;
+    padding: 0 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 5px;
+}
+.circle1, .circle2, .circle3, .circle4{
+    width: 147px;
+    height: 141px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #BEC8FC 0%, #FFFFFF 60%); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.upload img, .printing img, .delivery img, .get-print img{
+    width: 104px;
+    height: 104px;
+}
+.printing-subtext1, .printing-subtext2, .printing-subtext3, .printing-subtext4{
+    display: flex;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding: 0;
+}
+.upload-text, .printing-text, .delivery-text, .get-print-text{
+    display: flex;
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+    padding: 0;
+}
+/*LAYOUTING SERVICE*/
+.subheading2{
+    font-size: 32px;
+    font-weight: 500;
+    color: white;
+    margin-top: 50px;
+    margin-bottom: 0;
+    padding: 0;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-color: white;
+}
+.layout-circles{
+    display: flex;
+    justify-content: center;
+    align-items: stretch; /* or remove this line */
+    gap: 40px;
+    margin: 20px auto;
+    padding: 0 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+.step1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    flex: 1;
+}
+.circle5, .circle6, .circle7{
+    width: 147px;
+    height: 141px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #BEC8FC 0%, #FFFFFF 60%); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.choose-layout img, .modify-layout img, .get-layout img{
+    width: 81px;
+    height: 81px;
+}
+.layout-subtext1, .layout-subtext2, .layout-subtext3{
+    display: flex;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+.choose-text, .modify-text, .get-layout-text{
+    display: flex;
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    text-align: center;
+    margin-top: 0;
+    padding: 0;
+}
