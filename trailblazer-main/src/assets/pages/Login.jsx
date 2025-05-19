@@ -8,6 +8,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -16,31 +17,22 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login attempt with:", { email, password });
 
-    // Simulate successful login by setting loggedIn to true
-    localStorage.setItem("loggedIn", "true");
-    
-    // Redirect to Landing Page
-    navigate("/");
+    const storedEmail = localStorage.getItem("userName");
+    const storedPassword = localStorage.getItem("userPassword");
 
-    axios.post('https://0690-27-110-167-200.ngrok-free.app', {
-      email,
-      password
-    })
-    .then(response => {
-      setMessage('Login successful');
-      // maybe save token or redirect
-    })
-    .catch(error => {
-      setMessage('Login failed');
-    });
+    if (email === storedEmail && password === storedPassword) {
+      localStorage.setItem("loggedIn", "true");
+      setMessage("Login successful");
+      navigate("/");
+    } else {
+      setMessage("Invalid email/username or password");
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-layout">
-
         <div className="login-left-panel">
           <div className="logo-container">
             <img src={logoImage || "/placeholder.svg"} alt="Trailblazer Printing Logo" className="logo-img" />
@@ -77,11 +69,12 @@ function Login() {
                   <Mail className="icon" />
                 </div>
                 <input
-                  type="text"
+                  type="email"
                   placeholder="Email / Username"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="form-input"
+                  required
                 />
               </div>
 
@@ -95,6 +88,7 @@ function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="form-input"
+                  required
                 />
                 <button type="button" className="password-toggle" onClick={togglePasswordVisibility}>
                   {showPassword ? <Eye className="icon" /> : <EyeOff className="icon" />}
@@ -110,6 +104,8 @@ function Login() {
               <button type="submit" className="login-button">
                 Login
               </button>
+
+              {message && <p className="login-message">{message}</p>}
             </form>
           </div>
         </div>

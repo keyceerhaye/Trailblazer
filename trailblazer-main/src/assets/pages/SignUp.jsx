@@ -33,6 +33,8 @@ export default function SignUp() {
     // Store login session
     localStorage.setItem("loggedIn", "true");
     localStorage.setItem("userName", emailUsername);
+    localStorage.setItem("userPassword", password);
+
     localStorage.setItem("firstName", firstName);
     localStorage.setItem("lastName", lastName);
     window.dispatchEvent(new Event("storageUpdated"));
