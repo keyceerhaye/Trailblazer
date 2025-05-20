@@ -17,29 +17,41 @@ export default function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
-    console.log("Form submitted:", {
+    const user = {
       firstName,
       lastName,
       emailUsername,
       password,
-      confirmPassword,
-    });
+    };
 
-    // Store login session
+    // Get existing users array from localStorage or empty array
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Optional: Check if user email/username already exists
+    const userExists = existingUsers.some(
+      (u) => u.emailUsername === emailUsername
+    );
+    if (userExists) {
+      alert("User with this Email/Username already exists.");
+      return;
+    }
+
+    // Append new user to array
+    const updatedUsers = [...existingUsers, user];
+
+    // Save updated array back to localStorage
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+    // Set loggedIn and current user
     localStorage.setItem("loggedIn", "true");
-    localStorage.setItem("userName", emailUsername);
-    localStorage.setItem("userPassword", password);
+    localStorage.setItem("user", JSON.stringify(user));
 
-    localStorage.setItem("firstName", firstName);
-    localStorage.setItem("lastName", lastName);
-    window.dispatchEvent(new Event("storageUpdated"));
-
-    // Redirect to homepage
     navigate("/");
   };
 
@@ -47,15 +59,10 @@ export default function SignUp() {
     <div className="su-layout">
       <div className="su-left-panel">
         <div className="su-logo-container">
-          <img
-            src={logoImage}
-            alt="Trailblazer Printing Logo"
-            className="logo-img"
-          />
+          <img src={logoImage} alt="Trailblazer Printing Logo" className="logo-img" />
           <div>
             <h1 className="su-brand-text">
-              TRAILBLAZER
-              <br />
+              TRAILBLAZER<br />
               <span className="su-sub-text">PRINTING & LAYOUT SERVICES</span>
             </h1>
           </div>
@@ -94,7 +101,7 @@ export default function SignUp() {
                 required
               />
             </div>
-            
+
             <div className="su-input-group">
               <div className="su-input-icon">
                 <Mail className="su-icon" />
@@ -152,9 +159,7 @@ export default function SignUp() {
             </div>
 
             <div className="su-submit-btn-container">
-              <button type="submit" className="su-submit-btn">
-                Submit
-              </button>
+              <button type="submit" className="su-submit-btn">Submit</button>
             </div>
           </form>
         </div>

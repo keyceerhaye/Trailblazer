@@ -112,15 +112,24 @@
   }
   .pay-doc-info {
     margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: auto;
+    max-width: 270px;
+
   }
   .pay-doc-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
+    text-align: left;
+     word-wrap: break-word;     /* allows breaking long words */
+  overflow-wrap: break-word; /* modern, preferred version */
+  white-space: normal; 
   }
   .pay-doc-detail {
-    font-size: 20px;
+    font-size: 16px;
     margin-bottom: 4px;
+    text-align: left;
   }
 
   .pay-info {

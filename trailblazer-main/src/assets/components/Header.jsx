@@ -18,9 +18,9 @@ function Header() {
   useEffect(() => {
     const updateLoginStatus = () => {
       const stored = localStorage.getItem("loggedIn");
-      const name = localStorage.getItem("userName");
+      const user = JSON.parse(localStorage.getItem("user"));
       setIsLoggedIn(stored === "true");
-      if (name) setUserName(name);
+      if (user) setUserName(`${user.firstName} ${user.lastName}`);
     };
 
     updateLoginStatus(); // Initial load
@@ -44,7 +44,7 @@ function Header() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem("loggedIn");
-    localStorage.removeItem("userName");
+    localStorage.removeItem("user");
     setShowDropdown(false);
     navigate('/');
   };
@@ -160,17 +160,17 @@ function Header() {
 
                 <hr />
 
-                <div className="dropdown-item" onClick={() => navigate('/dashboard')}>
+                <div className="dropdown-item-1" onClick={() => navigate('/dashboard')}>
                   <LayoutDashboard size={20} className="dropdown-icon" />
                   <span>Dashboard</span>
                 </div>
 
-                <div className="dropdown-item" onClick={() => navigate('/profile')}>
+                <div className="dropdown-item-1" onClick={() => navigate('/profile')}>
                   <User size={20} className="dropdown-icon" />
                   <span>Profile</span>
                 </div>
 
-                <div className="dropdown-item" onClick={() => navigate('/orderhistory')}>
+                <div className="dropdown-item-1" onClick={() => navigate('/orderhistory')}>
                   <History size={20} className="dropdown-icon" />
                   <span>Order History</span>
                 </div>

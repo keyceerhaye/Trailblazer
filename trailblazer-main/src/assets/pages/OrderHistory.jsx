@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   LayoutDashboard,
   User,
@@ -17,6 +17,7 @@ import Profile from "./profile.png";
 export default function OrderHistoryPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -27,6 +28,69 @@ export default function OrderHistoryPage() {
     setIsDropdownOpen(false);
     navigate("/");
   };
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [orders, setOrders] = useState([
+    {
+      orderId: "#12345",
+      fileName: "SDE Docs",
+      type: "PDF",
+      date: "2025-03-01",
+      payment: "Paid (Gcash)",
+      status: "Completed",
+      amount: "₱50.00",
+    },
+    {
+      orderId: "#12346",
+      fileName: "Alpha Report",
+      type: "DOCX",
+      date: "2025-02-25",
+      payment: "Paid (Cash)",
+      status: "Pending",
+      amount: "₱30.00",
+    },
+    {
+      orderId: "#12344",
+      fileName: "Zebra Notes",
+      type: "PDF",
+      date: "2025-04-15",
+      payment: "Paid (Gcash)",
+      status: "Completed",
+      amount: "₱45.00",
+    },
+  ]);
+
+  const handleSort = (criteria) => {
+    const sorted = [...orders].sort((a, b) => {
+      switch (criteria) {
+        case "date":
+          return new Date(b.date) - new Date(a.date);
+        case "az":
+          return a.fileName.localeCompare(b.fileName);
+        case "orderId":
+          return a.orderId.localeCompare(b.orderId);
+        default:
+          return 0;
+      }
+    });
+    setOrders(sorted);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="oh-container">
@@ -69,13 +133,13 @@ export default function OrderHistoryPage() {
           <h2 className="oh-title">Order History</h2>
 
           <div
-            className={`D-user-profile-box ${isDropdownOpen ? "active" : ""}`}
+            className={`oh-user-profile-box ${isDropdownOpen ? "active" : ""}`}
             onClick={toggleDropdown}
           >
             <img src={Profile} alt="Profile" className="D-profile-img" />
-            <div className="D-user-details">
-              <div className="name">Kryzl</div>
-              <div className="name lastname">Castañeda</div>
+            <div className="oh-user-details">
+              <div className="name">{user?.firstName}</div>
+              <div className="name lastname">{user?.lastName}</div>
             </div>
             <div className={`D-dropdown-icon ${isDropdownOpen ? "rotate" : ""}`}>
               ⌄
@@ -83,7 +147,7 @@ export default function OrderHistoryPage() {
           </div>
 
           {isDropdownOpen && (
-            <div className="D-profile-dropdown">
+            <div className="D-profile-dropdown" ref={dropdownRef}>
               <div
                 className="D-dropdown-header"
                 onClick={(e) => {
@@ -93,22 +157,20 @@ export default function OrderHistoryPage() {
               >
                 <img src={Profile} alt="Avatar" className="D-profile-img" />
                 <div className="D-dropdown-details">
-                  <div className="name1">Kryzl</div>
-                  <div className="name1">Castañeda</div>
+                  <div className="name1">{user?.firstName}</div>
+                  <div className="name1">{user?.lastName}</div>
                 </div>
                 <div
                   className="D-dropdown-icon rotate"
                   onClick={toggleDropdown}
                   style={{ cursor: "pointer" }}
-                >
-                  ⌄
-                </div>
+                ></div>
               </div>
 
               <hr />
 
               <Link to="/" className="D-dropdown-item" onClick={() => setIsDropdownOpen(false)}>
-                <Home className="D-dropdown-icon" size={25} />
+                <Home className="oh-dropdown-icon" size={25} />
                 Home
               </Link>
               <div className="D-dropdown-item">
@@ -117,7 +179,7 @@ export default function OrderHistoryPage() {
                   className="D-dropdown-item"
                   onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Settings className="D-dropdown-icon" size={25} />
+                  <Settings className="oh-dropdown-icon-1" size={25} />
                   Services
                 </Link>
               </div>
@@ -127,7 +189,7 @@ export default function OrderHistoryPage() {
                   className="D-dropdown-item"
                   onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Phone className="D-dropdown-icon" size={25} />
+                  <Phone className="oh-dropdown-icon-1" size={25} />
                   Contact Us
                 </Link>
               </div>
@@ -137,12 +199,12 @@ export default function OrderHistoryPage() {
                   className="D-dropdown-item"
                   onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Info className="D-dropdown-icon" size={25} />
+                  <Info className="oh-dropdown-icon-1" size={25} />
                   About Us
                 </Link>
               </div>
               <div className="D-dropdown-item" onClick={handleLogout}>
-                <LogOut className="D-dropdown-icon" size={25} />
+                <LogOut className="oh-dropdown-icon" size={25} />
                 Log Out
               </div>
 
@@ -172,8 +234,11 @@ export default function OrderHistoryPage() {
 
         <div className="oh-search-sort">
           <input type="text" placeholder="Search..." className="oh-search-box" />
-          <select className="oh-sort-dropdown">
-            <option>Sort by</option>
+          <select className="oh-sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+            <option value="">Sort by</option>
+            <option value="date">Date (Newest)</option>
+            <option value="az">File Name (A-Z)</option>
+            <option value="orderId">Order ID</option>
           </select>
         </div>
 
@@ -191,15 +256,15 @@ export default function OrderHistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {[...Array(6)].map((_, i) => (
+              {orders.map((order, i) => (
                 <tr key={i}>
-                  <td>#12345</td>
-                  <td>SDE Docs</td>
-                  <td>PDF</td>
-                  <td>01-03-25</td>
-                  <td>Paid (Gcash)</td>
-                  <td>Completed</td>
-                  <td>₱50.00</td>
+                  <td>{order.orderId}</td>
+                  <td>{order.fileName}</td>
+                  <td>{order.type}</td>
+                  <td>{new Date(order.date).toLocaleDateString("en-PH")}</td>
+                  <td>{order.payment}</td>
+                  <td>{order.status}</td>
+                  <td>{order.amount}</td>
                 </tr>
               ))}
             </tbody>
@@ -209,4 +274,3 @@ export default function OrderHistoryPage() {
     </div>
   );
 }
-    

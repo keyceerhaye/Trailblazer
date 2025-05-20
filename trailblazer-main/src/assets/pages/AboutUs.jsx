@@ -2,6 +2,10 @@ import React from "react";
 import "./AboutUs.css";
 import aboutHeaderImage from "./about-header.jpg"; 
 import missionImage from "./mission-image.jpg"; 
+import member1 from "./img/Mona.jpg";
+import member2 from "./img/Kryzl.jpg";
+import member3 from "./img/Raisy.jpg";
+import member4 from "./img/Larence.jpg";
 
 export default function AboutUs() {
   return (
@@ -13,20 +17,20 @@ export default function AboutUs() {
 
       <section className="about-intro">
         <p>
-        At Trailblazers Printing and Layout Services, we are passionate about bringing your ideas 
-        to life through high-quality printing and layout designs. As USTP students ourselves, 
-        we understand the academic and creative demands of university life—so we built a 
-        service that’s fast, reliable, and student-friendly.
+          At Trailblazers Printing and Layout Services, we are passionate about bringing your ideas 
+          to life through high-quality printing and layout designs. As USTP students ourselves, 
+          we understand the academic and creative demands of university life—so we built a 
+          service that’s fast, reliable, and student-friendly.
         </p>
         <p>
-        Whether you need project prints, tarpaulins, research layouts, or custom designs, 
-        Trailblazers is here to help you present your work at its best. We aim to be the go-to 
-        printing partner for the USTP community by offering affordable rates, campus-based 
-        convenience, and creative solutions that match your needs.
+          Whether you need project prints, tarpaulins, research layouts, or custom designs, 
+          Trailblazers is here to help you present your work at its best. We aim to be the go-to 
+          printing partner for the USTP community by offering affordable rates, campus-based 
+          convenience, and creative solutions that match your needs.
         </p>
         <p>
-        Trailblazers isn’t just a business—it’s a student-led initiative to support fellow 
-        Trailblazers like you. Let’s create something great together!!
+          Trailblazers isn’t just a business—it’s a student-led initiative to support fellow 
+          Trailblazers like you. Let’s create something great together!!
         </p>
       </section>
 
@@ -56,10 +60,10 @@ export default function AboutUs() {
       <section className="about-team">
         <h3 className="team-title">Team <span>Members</span></h3>
         <div className="team-cards">
-          <div className="team-card" />
-          <div className="team-card" />
-          <div className="team-card" />
-          <div className="team-card" />
+          <img src={member1} alt="Team Member 1" className="team-card" />
+          <img src={member2} alt="Team Member 2" className="team-card" />
+          <img src={member3} alt="Team Member 3" className="team-card" />
+          <img src={member4} alt="Team Member 4" className="team-card" />
         </div>
         <p className="team-description">
           We are a team of driven and creative USTP students committed to serving the printing and layout

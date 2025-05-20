@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Dashboard.css";
 import {
   LayoutDashboard,
@@ -20,22 +20,47 @@ import Delivered from "./4.png";
 
 export default function Dashboard() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate(); // Hook to programmatically navigate
+  const [fileName, setFileName] = useState("SDE Docs");
+  const [price, setPrice] = useState(25.0);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dropdownRef = useRef(null);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  
+  useEffect(() => {
+    // Try to get order info from location.state first
+    const basketItems = location.state?.basketItems || [];
+    const orderDetails = location.state?.orderDetails || {};
+
+    if (basketItems.length > 0) {
+      setFileName(basketItems[0].name);
+    } else {
+      // fallback localStorage
+      const savedOrder = JSON.parse(localStorage.getItem("order"));
+      if (savedOrder?.fileName) {
+        setFileName(savedOrder.fileName);
+      }
+    }
+
+    if (orderDetails.price !== undefined) {
+      setPrice(orderDetails.price);
+    } else {
+      const savedOrder = JSON.parse(localStorage.getItem("order"));
+      if (savedOrder?.price !== undefined) {
+        setPrice(savedOrder.price);
+      }
+    }
+  }, [location.state]); // re-run if location.state changes
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
+
   const handleLogout = () => {
-    // Clear user session or authentication data
-    localStorage.clear(); // Example: clearing localStorage (adjust as needed)
-
-    // Optionally, you can reset any user-specific states or contexts here
-
-    // Close the dropdown
+    localStorage.clear();
     setIsDropdownOpen(false);
-
-    // Navigate to the homepage
-    navigate("/"); // Redirect to the homepage after logging out
+    navigate("/");
   };
 
   const today = new Date();
@@ -46,12 +71,28 @@ export default function Dashboard() {
     year: "numeric",
   });
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
         <div className="logo-section">
           <div className="D-sidebar-brand">
-            <img src={logoImage} alt="Trailblazer Printing Logo" className="brand-logo" />
+            <img
+              src={logoImage}
+              alt="Trailblazer Printing Logo"
+              className="brand-logo"
+            />
             <div className="brand-info">
               <h1 className="brand-title">TRAILBLAZER</h1>
               <span className="brand-subtitle">PRINTING & LAYOUT SERVICES</span>
@@ -94,16 +135,18 @@ export default function Dashboard() {
             className={`D-user-profile-box ${isDropdownOpen ? "active" : ""}`}
             onClick={toggleDropdown}
           >
-            <img src={profilePic} alt="Profile" className="D-profile-img" />
+            <img src={profilePic} alt="Profile" className="D-profile" />
             <div className="D-user-details">
-              <div className="name">Kryzl</div>
-              <div className="name">Castañeda</div>
+              <div className="name">{user?.firstName}</div>
+              <div className="name">{user?.lastName}</div>
             </div>
-            <div className={`D-dropdown-icon ${isDropdownOpen ? "rotate" : ""}`}>⌄</div>
+            <div className={`D-dropdown-icon ${isDropdownOpen ? "rotate" : ""}`}>
+              ⌄
+            </div>
           </div>
 
           {isDropdownOpen && (
-            <div className="D-profile-dropdown">
+            <div className="D-profile-dropdown" ref={dropdownRef}>
               <div
                 className="D-dropdown-header"
                 onClick={(e) => {
@@ -113,16 +156,14 @@ export default function Dashboard() {
               >
                 <img src={profilePic} alt="Avatar" className="D-profile-img" />
                 <div className="D-dropdown-details">
-                  <div className="name1">Kryzl</div>
-                  <div className="name1">Castañeda</div>
+                  <div className="name1">{user?.firstName}</div>
+                  <div className="name1">{user?.lastName}</div>
                 </div>
                 <div
                   className="D-dropdown-icon rotate"
                   onClick={toggleDropdown}
                   style={{ cursor: "pointer" }}
-                >
-                 ⌄
-                </div>
+                ></div>
               </div>
 
               <hr />
@@ -132,7 +173,7 @@ export default function Dashboard() {
                 className="D-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Home className="D-dropdown-icon" />
+                <Home className="dropdown-icon" />
                 Home
               </Link>
               <div className="D-dropdown-item">
@@ -141,7 +182,7 @@ export default function Dashboard() {
                   className="D-dropdown-item"
                   onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Settings className="D-dropdown-icon"  />
+                  <Settings className="dropdown-icon-1" />
                   Services
                 </Link>
               </div>
@@ -151,7 +192,7 @@ export default function Dashboard() {
                   className="D-dropdown-item"
                   onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Phone className="D-dropdown-icon" />
+                  <Phone className="dropdown-icon-1" />
                   Contact Us
                 </Link>
               </div>
@@ -159,34 +200,32 @@ export default function Dashboard() {
                 <Link
                   to="/aboutus"
                   className="D-dropdown-item"
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                  }}
+                  onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Info className="D-dropdown-icon" />
+                  <Info className="dropdown-icon-1" />
                   About Us
                 </Link>
               </div>
               <div className="D-dropdown-item" onClick={handleLogout}>
-                <LogOut className="D-dropdown-icon" />
+                <LogOut className="dropdown-icon" />
                 Log Out
               </div>
 
               <div className="D-dropdown-footer">
-                <a 
-                  className="D-footer-link" 
-                  href="/terms" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  className="D-footer-link"
+                  href="/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   Terms & Conditions
                 </a>
-                <a 
-                  className="D-footer-link" 
-                  href="/privacy" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  className="D-footer-link"
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   Privacy Policy
@@ -197,7 +236,7 @@ export default function Dashboard() {
         </div>
 
         <div className="welcome-card">
-          <h2>Hi, Kryzl</h2>
+          <h2>Hi, {user?.firstName}!</h2>
           <p>
             Welcome To Trailblazer Printing And
             <br />
@@ -211,11 +250,11 @@ export default function Dashboard() {
             <div className="order-line">
               <div className="order-row">
                 <span className="order-label">File Name:</span>
-                <span className="order-value">SDE Docs</span>
+                <span className="order-value">{fileName}</span>
               </div>
               <div className="order-row">
                 <span className="order-label">Payment:</span>
-                <span className="order-value1">₱25.00</span>
+                <span className="order-value1">₱{price.toFixed(2)}</span>
               </div>
             </div>
           </div>

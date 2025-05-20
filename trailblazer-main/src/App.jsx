@@ -12,7 +12,7 @@ import Footer from './assets/components/Footer';
 
 // Pages
 import Login from './assets/pages/Login';
-import SignUp from './assets/pages/Signup';
+import SignUp from './assets/pages/SignUp';
 import AdminLogin from './assets/pages/AdminLogin';
 import ContactForm from './assets/pages/ContactForm';
 import AboutUs from './assets/pages/AboutUs';

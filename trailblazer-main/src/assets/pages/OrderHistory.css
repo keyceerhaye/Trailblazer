@@ -72,7 +72,7 @@
   gap: 1rem;
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 400.5px;
+  margin-bottom: 399.5px;
 }
 
 .oh-nav li a {
@@ -91,6 +91,7 @@
 }
 
 .oh-icon {
+  margin-bottom: .75px;
   margin-right: 0.75rem;
   width: 50px;
   height: 44px;
@@ -193,7 +194,7 @@
     object-fit: cover;
   }
   
-  .D-user-details {
+  .oh-user-details {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -205,28 +206,29 @@
     color: #2c2480;
     font-size: 18px;
   }
-  .D-user-profile-box {
+  .oh-user-profile-box {
     display: flex;
     align-items: center;
     text-align: left;
     gap: 15px;
-    padding: 5px 10px;
     cursor: pointer;
     margin-top: 20px;
-    margin-right: 40px;
+    margin-right: 0;
     width: 300px;
     height: 80px;
     border-radius: 20px;
     transition: background 0.3s ease;
     background-color: transparent;
   }  
-.D-dropdown-icon {
-    font-size: 24px;
-    vertical-align: middle;
+.oh-dropdown-icon {
     transition: transform 0.3s ease;
-    margin-left:  20px;
-    transform: scaleX(1.5);
+    margin-left:  25px;
   }
+.oh-dropdown-icon-1{
+    transition: transform 0.3s ease;
+    margin-left:  19px;
+  }
+
   
   .D-dropdown-icon.rotate {
     transform: rotate(180deg);

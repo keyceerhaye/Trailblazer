@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react"
-import { LayoutDashboard, User, History } from "lucide-react"
-import { PencilIcon } from "@heroicons/react/24/solid"
-import "./ProfilePage.css"
-import logoImage from './logo.png'
-import Profile from './profile.png'
+import React, { useState, useEffect } from "react";
+import { LayoutDashboard, User, History } from "lucide-react";
+import { PencilIcon } from "@heroicons/react/24/solid";
+import "./ProfilePage.css";
+import logoImage from './logo.png';
+import Profile from './profile.png';
 
 export default function ProfilePage() {
   const [userData, setUserData] = useState({
@@ -13,47 +13,79 @@ export default function ProfilePage() {
     countryCode: "+63",
     phoneNumber: "",
     location: "",
-  })
+  });
 
   useEffect(() => {
-    const mockData = {
-      firstName: "Kryzl",
-      lastName: "Castañeda",
-      email: "kryzlcastaneda@gmail.com",
-      countryCode: "+63",
-      phoneNumber: "9900112233",
-      location: "Lawesbra, Lapasan CDO",
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser) {
+      setUserData({
+        firstName: storedUser.firstName || "",
+        lastName: storedUser.lastName || "",
+        email: storedUser.emailUsername || "",
+        phoneNumber: storedUser.phoneNumber || "",
+        location: storedUser.location || "",
+        countryCode: storedUser.countryCode || "+63",
+      });
     }
-    setUserData(mockData)
-  }, [])
+  }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setUserData((prev) => ({
+    const { name, value } = e.target;
+    setUserData(prev => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const formattedData = {
-      ...userData,
-      phone: `${userData.countryCode} ${userData.phoneNumber}`,
+    e.preventDefault();
+
+    // Prepare user object for update (note: key is emailUsername)
+    const updatedUser = {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      emailUsername: userData.email,
+      phoneNumber: userData.phoneNumber,
+      location: userData.location,
+      countryCode: userData.countryCode,
+    };
+
+    // Get all users
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Find the existing user in users array by emailUsername
+    const userIndex = users.findIndex(u => u.emailUsername === updatedUser.emailUsername);
+
+    if (userIndex !== -1) {
+      // Preserve password from existing user
+      const existingPassword = users[userIndex].password;
+
+      // Replace the old user data with updatedUser + password
+      users[userIndex] = {
+        ...updatedUser,
+        password: existingPassword,
+      };
+
+      // Save back to localStorage
+      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("user", JSON.stringify(users[userIndex]));
+      alert("Profile updated successfully!");
+    } else {
+      alert("User not found!");
     }
-    console.log("Form submitted:", formattedData)
-  }
+  };
 
   const handleEditClick = () => {
-    document.getElementById("upload-profile").click()
-  }
+    document.getElementById("upload-profile").click();
+  };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      console.log("Selected profile image:", file)
+      console.log("Selected profile image:", file);
     }
-  }
+  };
 
   return (
     <div className="profile-container">
@@ -151,5 +183,5 @@ export default function ProfilePage() {
         </section>
       </main>
     </div>
-  )
+  );
 }

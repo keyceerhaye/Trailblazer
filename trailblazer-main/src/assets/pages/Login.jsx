@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import logoImage from "./logo.png";
@@ -18,11 +18,17 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const storedEmail = localStorage.getItem("userName");
-    const storedPassword = localStorage.getItem("userPassword");
+    // Get all users from localStorage or empty array if none
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    if (email === storedEmail && password === storedPassword) {
+    // Find user matching email/username and password
+    const matchedUser = users.find(
+      (user) => user.emailUsername === email && user.password === password
+    );
+
+    if (matchedUser) {
       localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("user", JSON.stringify(matchedUser));
       setMessage("Login successful");
       navigate("/");
     } else {
@@ -35,7 +41,11 @@ function Login() {
       <div className="login-layout">
         <div className="login-left-panel">
           <div className="logo-container">
-            <img src={logoImage || "/placeholder.svg"} alt="Trailblazer Printing Logo" className="logo-img" />
+            <img
+              src={logoImage || "/placeholder.svg"}
+              alt="Trailblazer Printing Logo"
+              className="logo-img"
+            />
             <div>
               <h1 className="brand-text">
                 TRAILBLAZER
@@ -69,7 +79,7 @@ function Login() {
                   <Mail className="icon" />
                 </div>
                 <input
-                  type="email"
+                  type="text"
                   placeholder="Email / Username"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -90,8 +100,16 @@ function Login() {
                   className="form-input"
                   required
                 />
-                <button type="button" className="password-toggle" onClick={togglePasswordVisibility}>
-                  {showPassword ? <Eye className="icon" /> : <EyeOff className="icon" />}
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <Eye className="icon" />
+                  ) : (
+                    <EyeOff className="icon" />
+                  )}
                 </button>
               </div>
 

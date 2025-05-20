@@ -132,14 +132,16 @@
   border-radius: 20px;
   transition: background 0.3s ease;
   background-color: transparent;
-  margin-left: 60px;
+  margin-right: 90px;
 }
 
-.D-profile-img {
+.D-profile {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
+  margin-left: 90px;
+  
 }
 
 .D-user-details {
@@ -307,10 +309,14 @@
   color: #2F2785;
 }
 
-.D-dropdown-icon {
-  font-size: 20px;
+.dropdown-icon {
   transition: transform 0.3s ease;
-  transform: scaleX(1.5);
+  margin-left:25px;
+}
+.dropdown-icon-1 {
+  transition: transform 0.3s ease;
+  margin-left:19px;
+  
 }
 
 .D-dropdown-icon.rotate {
@@ -337,7 +343,6 @@
   margin-top: 10px;
   padding: 0;
   color: #2F2785;
-  margin-left: 90px;
 }
 
 @keyframes fadeIn {
@@ -379,7 +384,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 20px;
+  padding: 10px 15px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
@@ -388,7 +393,7 @@
   text-decoration: none;
 }
 
-.D-dropdown-icon {
+.dropdown-icon {
   width: 24px;
   height: 24px;
 }
@@ -396,7 +401,7 @@
   display: flex;
   justify-content: space-between;
   padding: 12px 20px;
-  font-size: 14px;
+  font-size: 12px;
   color: #2F2785;
   background-color: #f9f9f9;
   border-top: 1px solid #eee;
