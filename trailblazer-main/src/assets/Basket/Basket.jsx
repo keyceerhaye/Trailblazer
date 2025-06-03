@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Basket.css";
-import uploadPeso from "../pages/img/peso.png";
 import uploadDelete from "../pages/img/delete.png";
 import uploadCheck from "../pages/img/check.png";
 import PDF from "../pages/img/PDF.png";
@@ -14,7 +13,8 @@ const Basket = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const uploadedFile = location.state?.file || null;
+  // Handle both single file (legacy) and multiple files (new)
+  const uploadedFiles = location.state?.files || (location.state?.file ? [location.state.file] : null);
   const passedDetails = location.state?.specifications || null;
 
   const steps = [
@@ -26,33 +26,114 @@ const Basket = () => {
 
   const [basketItems, setBasketItems] = useState([]);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [totalPages, setTotalPages] = useState(0);
 
   const [orderDetails, setOrderDetails] = useState({
-    paperSize: passedDetails?.paperSize || "Not selected",
-    printOption: passedDetails?.printOption || "Not selected",
-    turnaroundTime: passedDetails?.turnaroundTime || "Not selected",
-    paymentMethod: passedDetails?.paymentMethod || "Not selected",
-    price: passedDetails?.price || "00.00",
+    paperSize: passedDetails?.paperSize || "A4",
+    printOption: passedDetails?.printOption || "Black&White",
+    turnaroundTime: passedDetails?.turnaroundTime || "Standard",
+    paymentMethod: passedDetails?.paymentMethod || "Cash",
+    price: "00.00",
+    customization: "None", // Added customization level
   });
 
-  useEffect(() => {
-    if (uploadedFile) {
-      const fileDetails = {
-        name: uploadedFile.name,
-        status: "Uploaded Successfully",
-        icon: getFileIcon(uploadedFile),
-      };
-      setBasketItems([fileDetails]);
-      showFeedback("File added to basket");
-    }
+  // Price constants
+  const PRICES = {
+    PRINTING: {
+      "Black&White": {
+        "Short": 2,
+        "A4": 3,
+        "Long": 3
+      },
+      "Colored": {
+        "Short": 10,
+        "A4": 12,
+        "Long": 12
+      }
+    },
+    CUSTOMIZATION: {
+      "None": 0,
+      "Basic": 100,
+      "High": 150
+    },
+    RUSH_FEE: 7
+  };
 
-    if (passedDetails) {
-      setOrderDetails((prevDetails) => ({
-        ...prevDetails,
-        ...passedDetails,
+  useEffect(() => {
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      // Calculate total pages - now just count files
+      let pages = uploadedFiles.length;
+      
+      const fileItems = uploadedFiles.map(file => {
+        // Each file is 1 page
+        const pageCount = 1;
+        
+        return {
+          id: file.id || `${file.name}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          name: file.name,
+          status: "Uploaded Successfully",
+          icon: getFileIcon(file),
+          file: file,
+          pageCount: pageCount
+        };
+      });
+      
+      setBasketItems(fileItems);
+      setTotalPages(pages);
+      showFeedback(`${fileItems.length} file(s) added to basket`);
+      
+      // Calculate price after adding items
+      if (passedDetails) {
+        setOrderDetails((prevDetails) => {
+          const updatedDetails = {
+            ...prevDetails,
+            ...passedDetails,
+          };
+          return {
+            ...updatedDetails,
+            price: calculatePrice(pages, updatedDetails)
+          };
+        });
+      }
+    }
+  }, [uploadedFiles, passedDetails]);
+
+  // Calculate price based on specifications and number of pages
+  const calculatePrice = (pageCount, details) => {
+    if (pageCount === 0 || 
+        details.paperSize === "Not selected" || 
+        details.printOption === "Not selected") {
+      return "00.00";
+    }
+    
+    // Base printing price per page
+    let basePrice = PRICES.PRINTING[details.printOption]?.[details.paperSize] || 0;
+    
+    // Multiply by number of pages
+    let totalPrice = basePrice * pageCount;
+    
+    // Add customization fee if applicable
+    if (details.customization && details.customization !== "None") {
+      totalPrice += PRICES.CUSTOMIZATION[details.customization];
+    }
+    
+    // Add rush fee if applicable
+    if (details.turnaroundTime === "Rush") {
+      totalPrice += PRICES.RUSH_FEE;
+    }
+    
+    return totalPrice.toFixed(2);
+  };
+
+  useEffect(() => {
+    // Recalculate price whenever order details or basket items change
+    if (basketItems.length > 0) {
+      setOrderDetails(prev => ({
+        ...prev,
+        price: calculatePrice(totalPages, prev)
       }));
     }
-  }, [uploadedFile, passedDetails]);
+  }, [totalPages, orderDetails.paperSize, orderDetails.printOption, orderDetails.turnaroundTime, orderDetails.customization]);
 
   const showFeedback = (message) => {
     setFeedbackMessage(message);
@@ -61,15 +142,28 @@ const Basket = () => {
     }, 3000);
   };
 
-  const handleDeleteItem = () => {
-    setBasketItems([]);
-    setOrderDetails({
-      paperSize: "Not selected",
-      printOption: "Not selected",
-      turnaroundTime: "Not selected",
-      paymentMethod: "Not selected",
-      price: "00.00",
+  const handleDeleteItem = (itemId) => {
+    setBasketItems(prev => {
+      const newItems = prev.filter(item => item.id !== itemId);
+      
+      // Update total pages - each file is 1 page
+      setTotalPages(newItems.length);
+      
+      // If basket is now empty, reset order details
+      if (newItems.length === 0) {
+        setOrderDetails({
+          paperSize: "A4",
+          printOption: "Black&White",
+          turnaroundTime: "Standard",
+          paymentMethod: "Cash",
+          customization: "None",
+          price: "00.00",
+        });
+      }
+      
+      return newItems;
     });
+    
     showFeedback("Item removed from basket");
   };
 
@@ -82,15 +176,24 @@ const Basket = () => {
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileDetails = {
-        name: file.name,
-        status: "Uploaded Successfully",
-        icon: getFileIcon(file),
-      };
-      setBasketItems([fileDetails]);
-      showFeedback("File added to basket");
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files);
+      
+      const fileItems = newFiles.map(file => {
+        return {
+          id: `${file.name}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          name: file.name,
+          status: "Uploaded Successfully",
+          icon: getFileIcon(file),
+          file: file,
+          pageCount: 1 // Each file is 1 page
+        };
+      });
+      
+      const updatedBasketItems = [...basketItems, ...fileItems];
+      setBasketItems(updatedBasketItems);
+      setTotalPages(updatedBasketItems.length);
+      showFeedback(`${fileItems.length} file(s) added to basket`);
     }
   };
 
@@ -122,13 +225,6 @@ const Basket = () => {
         orderDetails,
       },
     });
-  };
-
-  const calculateTotal = () => {
-    if (orderDetails.price === "00.00" || orderDetails.price === "Not selected") {
-      return "00.00";
-    }
-    return orderDetails.price;
   };
 
   return (
@@ -171,42 +267,38 @@ const Basket = () => {
         {basketItems.length > 0 ? (
           <>
             <div className="bs-basket-card bs-card">
-              <div className="bs-basket-item">
-                <img src={basketItems[0].icon} alt="File icon" className="bs-file-icon" />
-                <div className="bs-file-info">
-                  <p className="bs-file-name">{basketItems[0].name}</p>
-                  <p className="bs-file-status">{basketItems[0].status}</p>
+              {basketItems.map(item => (
+                <div className="bs-basket-item" key={item.id}>
+                  <img src={item.icon} alt="File icon" className="bs-file-icon" />
+                  <div className="bs-file-info">
+                    <p className="bs-file-name">{item.name}</p>
+                    <p className="bs-file-status">{item.status}</p>
+                  </div>
+                  <img src={uploadCheck} alt="Done" className="bs-status-icon" />
+                  <button 
+                    className="bs-delete-btn" 
+                    onClick={() => handleDeleteItem(item.id)}
+                    aria-label="Delete item"
+                    title="Remove item"
+                  >
+                    <img src={uploadDelete} alt="Delete" />
+                  </button>
                 </div>
-                <img src={uploadCheck} alt="Done" className="bs-status-icon" />
-                <button 
-                  className="bs-delete-btn" 
-                  onClick={handleDeleteItem}
-                  aria-label="Delete item"
-                  title="Remove item"
-                >
-                  <img src={uploadDelete} alt="Delete" />
-                </button>
-              </div>
+              ))}
             </div>
 
             <div className="bs-summary-card bs-card">
-              <h3 className="bs-summary-title">Order Summary</h3>
               <div className="bs-summary-info">
-                <p>{orderDetails.paperSize} Bondpaper</p>
-                <p>{orderDetails.printOption}</p>
-                <p>{orderDetails.turnaroundTime}</p>
-                <p>{orderDetails.paymentMethod}</p>
-              </div>
-              <div className="bs-summary-price">
-                <img src={uploadPeso} alt="Currency" className="bs-peso-icon" />
-                <span className="bs-payment-value">{orderDetails.price}</span>
+                <p><strong>A4</strong><br/>{orderDetails.printOption} Standard<br/>Cash</p>
+                <p className="bs-summary-price">
+                  <span className="bs-payment-value">₱{orderDetails.price}</span>
+                </p>
               </div>
             </div>
           </>
         ) : (
           <div className="bs-empty-basket bs-card">
             <div className="bs-empty-content">
-              <div className="bs-empty-icon">🛒</div>
               <h3>Your basket is empty</h3>
               <p>Add files to get started with your order</p>
               <button className="bs-add-btn bs-empty-add-btn" onClick={handleAddFiles}>
@@ -221,14 +313,13 @@ const Basket = () => {
         <div className="bs-footer">
           <div className="bs-footer-left">
             <button className="bs-add-btn" onClick={handleAddFiles}>
-              Add Files
+              Add files
             </button>
           </div>
 
           <div className="bs-footer-right">
             <div className="bs-subtotal">
-              <span>Sub-total Amount:</span>
-              <span className="bs-payment-value">₱{calculateTotal()}</span>
+              <span>Sub-Total Amount: ₱{orderDetails.price}</span>
             </div>
 
             <button 
@@ -248,6 +339,7 @@ const Basket = () => {
         style={{ display: "none" }}
         onChange={handleFileChange}
         accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
+        multiple
       />
     </div>
   );

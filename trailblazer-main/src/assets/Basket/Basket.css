@@ -135,17 +135,20 @@
   background-color: white;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  padding: 20px;
-  flex-direction: column;
+  margin-bottom: 20px;
 }
 
 .bs-basket-card {
   width: 100%;
   max-width: 650px;
   height: auto;
-  min-height: 139px;
+  min-height: 250px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 400px;
 }
 
 .bs-basket-item {
@@ -153,6 +156,20 @@
   align-items: center;
   width: 100%;
   flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.bs-basket-item:hover {
+  background-color: #f5f5f5;
+}
+
+.bs-basket-item:not(:last-child) {
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .bs-file-icon {
@@ -190,43 +207,44 @@
   width: 100%;
   max-width: 381px;
   height: auto;
-  min-height: 139px;
+  min-height: 250px;
   position: relative;
   border-radius: 20px;
   border: 1px solid #bcc3ce;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding-bottom: 50px;
+  padding: 20px;
 }
 
 .bs-summary-title {
   font-size: clamp(18px, 2.5vw, 22px);
   font-weight: 600;
   color: #2e2684;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .bs-summary-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  margin-bottom: 60px;
 }
 
 .bs-summary-info p {
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 400;
-  margin: 2px 0;
+  margin: 0;
   color: black;
   text-align: left;
   line-height: 1.4;
   word-wrap: break-word;
+  min-height: 28px;
 }
 
 .bs-summary-price {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
+  bottom: 20px;
+  right: 20px;
   display: flex;
   align-items: center;
   font-size: clamp(20px, 3vw, 25px);
@@ -384,10 +402,46 @@
   margin-top: 10px;
 }
 
+.bs-customization {
+  margin-top: 15px;
+}
+
+.bs-customization p {
+  margin-bottom: 10px !important;
+}
+
+.bs-customization-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bs-customization-btn {
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid #2196f3;
+  background-color: white;
+  font-family: "Montserrat";
+  font-size: 14px;
+  font-weight: 500;
+  color: #2196f3;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bs-customization-btn:hover {
+  background-color: #e6f4ff;
+}
+
+.bs-customization-btn.active {
+  background-color: #2196f3;
+  color: white;
+}
+
 @media screen and (min-width: 992px) {
   .bs-main {
-    justify-content: flex-start;
-    margin-left: clamp(20px, 5vw, 167px);
+
+
   }
   
   .bs-footer {
@@ -438,6 +492,10 @@
     max-width: 300px;
     font-size: 14px;
   }
+  
+  .bs-summary-card {
+    min-height: 220px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -461,5 +519,13 @@
   .bs-delete-btn {
     width: 32px;
     height: 32px;
+  }
+  
+  .bs-summary-info p {
+    min-height: 24px;
+  }
+  
+  .bs-summary-card {
+    min-height: 200px;
   }
 }

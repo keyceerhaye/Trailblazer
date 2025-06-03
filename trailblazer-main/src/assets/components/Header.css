@@ -119,7 +119,7 @@ body {
 }
 
 .navbar button:focus {
-  outline: none;
+    outline: none;
 }
 
 .navbar button.active {
@@ -160,13 +160,13 @@ body {
 }
 
 .Login button:active, .Login button:focus {
-  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease-in-out;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
 }
 
 .SignUp button:active, .SignUp button:focus {
-  box-shadow: inset 2px 2px 5px rgb(1, 10, 20);
-  transition: all 0.3s ease-in-out;
+    box-shadow: inset 2px 2px 5px rgb(1, 10, 20);
+    transition: all 0.3s ease-in-out;
 }
 
 .user-dropdown {

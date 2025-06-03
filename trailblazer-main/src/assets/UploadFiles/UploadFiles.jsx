@@ -11,8 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 export const UploadFiles = () => {
   const fileInputRef = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [isProcessingFiles, setIsProcessingFiles] = useState(false);
   const steps = [
     { number: "1", label: "Upload files", active: true },
     { number: "2", label: "Basket", active: false },
@@ -29,6 +30,50 @@ export const UploadFiles = () => {
 
   const navigate = useNavigate();
 
+  // Price constants
+  const PRICES = {
+    PRINTING: {
+      "Black&White": {
+        "Short": 2,
+        "A4": 3,
+        "Long": 3
+      },
+      "Full color": {
+        "Short": 10,
+        "A4": 12,
+        "Long": 12
+      }
+    },
+    CUSTOMIZATION: {
+      "None": 0,
+      "Basic": 100,
+      "High": 150
+    },
+    RUSH_FEE: 7
+  };
+
+  // Calculate price based on specifications and number of files
+  const calculatePrice = () => {
+    if (selectedFiles.length === 0 || 
+        specifications.paperSize === "" || 
+        specifications.printOption === "") {
+      return "00.00";
+    }
+    
+    // Base printing price per file
+    let basePrice = PRICES.PRINTING[specifications.printOption]?.[specifications.paperSize] || 0;
+    
+    // Multiply by number of files
+    let totalPrice = basePrice * selectedFiles.length;
+    
+    // Add rush fee if applicable
+    if (specifications.turnaroundTime === "Rush") {
+      totalPrice += PRICES.RUSH_FEE;
+    }
+    
+    return totalPrice.toFixed(2);
+  };
+
   // Handle drag and drop events
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -40,27 +85,35 @@ export const UploadFiles = () => {
     e.stopPropagation();
     
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFileSelection(e.dataTransfer.files[0]);
+      handleFileSelection(Array.from(e.dataTransfer.files));
     }
   };
 
   const handleBrowseClick = () => fileInputRef.current.click();
 
-  const simulateUpload = () => {
-    setUploadProgress(0);
+  const simulateUpload = (fileId) => {
+    setUploadProgress(prev => ({
+      ...prev,
+      [fileId]: 0
+    }));
 
     let progress = 0;
     const interval = setInterval(() => {
       progress += 10;
-      setUploadProgress(progress);
+      setUploadProgress(prev => ({
+        ...prev,
+        [fileId]: progress
+      }));
       if (progress >= 100) {
         clearInterval(interval);
       }
     }, 200);
   };
 
-  const handleFileSelection = (file) => {
-    if (!file) return;
+  const handleFileSelection = async (files) => {
+    if (!files || files.length === 0) return;
+    
+    setIsProcessingFiles(true);
 
     const allowedTypes = [
       "application/pdf",
@@ -72,18 +125,36 @@ export const UploadFiles = () => {
       "image/jpeg", // .jpg, .jpeg
     ];
 
-    if (!allowedTypes.includes(file.type)) {
-      alert("Only PDF, DOC, DOCX, PPT, PPTX, PNG, and JPG files are allowed.");
+    const validFiles = files.filter(file => allowedTypes.includes(file.type));
+    
+    if (validFiles.length < files.length) {
+      alert("Some files were not added. Only PDF, DOC, DOCX, PPT, PPTX, PNG, and JPG files are allowed.");
+    }
+    
+    if (validFiles.length === 0) {
+      setIsProcessingFiles(false);
       return;
     }
 
-    setSelectedFile(file);
-    simulateUpload();
+    // Add unique IDs to each file for tracking progress
+    const filesWithIds = validFiles.map(file => {
+      const fileId = `${file.name}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      return { file, id: fileId };
+    });
+
+    setSelectedFiles(prev => [...prev, ...filesWithIds]);
+    
+    // Start upload simulation for each file
+    filesWithIds.forEach(fileObj => {
+      simulateUpload(fileObj.id);
+    });
+    
+    setIsProcessingFiles(false);
   };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      handleFileSelection(e.target.files[0]);
+      handleFileSelection(Array.from(e.target.files));
     }
   };
 
@@ -94,9 +165,20 @@ export const UploadFiles = () => {
     }));
   };
 
+  const removeFile = (fileId) => {
+    setSelectedFiles(prev => prev.filter(fileObj => fileObj.id !== fileId));
+    
+    // Also remove from progress tracking
+    setUploadProgress(prev => {
+      const newProgress = {...prev};
+      delete newProgress[fileId];
+      return newProgress;
+    });
+  };
+
   const handleConfirmClick = () => {
-    if (!selectedFile) {
-      alert("Please upload a file before proceeding.");
+    if (selectedFiles.length === 0) {
+      alert("Please upload at least one file before proceeding.");
       return;
     }
 
@@ -107,8 +189,28 @@ export const UploadFiles = () => {
       alert("Please complete all specification fields before proceeding.");
       return;
     }
+    
+    if (isProcessingFiles) {
+      alert("Please wait until all files are processed.");
+      return;
+    }
 
-    navigate("/basket", { state: { file: selectedFile, specifications } });
+    // Extract files for passing to the next page
+    const files = selectedFiles.map(fileObj => ({
+      id: fileObj.id,
+      name: fileObj.file.name,
+      type: fileObj.file.type,
+      size: fileObj.file.size,
+      lastModified: fileObj.file.lastModified,
+      pageCount: 1 // Default to 1 page per file
+    }));
+    
+    navigate("/basket", { 
+      state: { 
+        files, 
+        specifications 
+      }
+    });
   };
 
   const specs = [
@@ -170,32 +272,44 @@ export const UploadFiles = () => {
 
         <div className="uf-content">
           <div 
-            className={`uf-upload-box ${selectedFile ? "transparent" : ""}`}
+            className={`uf-upload-box ${selectedFiles.length > 0 ? "has-files" : ""}`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
-            {selectedFile ? (
+            {selectedFiles.length > 0 ? (
               <div className="uf-file-preview">
-                <span
-                  className="uf-close-preview"
-                  onClick={() => setSelectedFile(null)}
-                >
-                  &times;
-                </span>
                 <h3 className="uf-preview-title">
-                  Uploading Files
+                  Uploaded Files ({selectedFiles.length})
                 </h3>
 
-                <div className="uf-progress-bar-wrapper">
-                  <div
-                    className="uf-progress-bar"
-                    style={{
-                      width: `${uploadProgress}%`,
-                    }}
-                  >
-                    {selectedFile.name}
-                  </div>
+                <div className="uf-files-list">
+                  {selectedFiles.map((fileObj) => (
+                    <div key={fileObj.id} className="uf-file-item">
+                      <span
+                        className="uf-remove-file"
+                        onClick={() => removeFile(fileObj.id)}
+                      >
+                        &times;
+                      </span>
+                      <div className="uf-file-details">
+                        <div className="uf-progress-bar-wrapper">
+                          <div
+                            className="uf-progress-bar"
+                            style={{
+                              width: `${uploadProgress[fileObj.id] || 0}%`,
+                            }}
+                          >
+                            {fileObj.file.name}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+
+                <button className="uf-btn-add-more" onClick={handleBrowseClick}>
+                  + Add More Files
+                </button>
 
                 <p className="uf-accepted-label">Accepted file types</p>
                 <div className="uf-file-icons">
@@ -230,6 +344,7 @@ export const UploadFiles = () => {
               style={{ display: "none" }}
               accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
               onChange={handleFileChange}
+              multiple
             />
           </div>
 
@@ -272,15 +387,16 @@ export const UploadFiles = () => {
                       alt="Currency"
                       className="uf-payment-icon"
                     />
-                    <span className="uf-payment-value">00.00</span>
+                    <span className="uf-payment-value">{calculatePrice()}</span>
                   </div>
                 </div>
                 <div className="uf-confirm-btn-wrapper">
                   <button
                     className="uf-btn-primary"
                     onClick={handleConfirmClick}
+                    disabled={isProcessingFiles}
                   >
-                    Confirm
+                    {isProcessingFiles ? "Processing..." : "Confirm"}
                   </button>
                 </div>
               </div>
@@ -292,4 +408,4 @@ export const UploadFiles = () => {
   );
 };
 
-export default UploadFiles;
+export default UploadFiles; 
