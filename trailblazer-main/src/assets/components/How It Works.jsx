@@ -41,7 +41,7 @@ function HowItWorks() {
                         <h2 className='printing-subtext2'>Print</h2>
                         <div className='printing-text'>
                             <p>Once we receive your <br />
-                            request, we’ll prepare <br />
+                            request, we'll prepare <br />
                             and print your order <br />
                             using high-quality materials <br />
                             and equipment.</p>
@@ -56,11 +56,11 @@ function HowItWorks() {
                         </div>
                         <h2 className='printing-subtext3'>Pickup or Deliver</h2>
                         <div className='delivery-text'>
-                        <p>Choose to pick up <br />
-                        your print at our <br />
-                        campus location or <br />
-                        have it delivered if <br />
-                        available.</p>
+                            <p>Choose to pick up <br />
+                            your print at our <br />
+                            campus location or <br />
+                            have it delivered if <br />
+                            available.</p>
                         </div>
                     </div>
 
@@ -109,7 +109,7 @@ function HowItWorks() {
                         <div className='modify-text'>
                             <p>Send us your content <br />
                             (text, images, logos, <br />
-                            etc.), and we’ll <br />
+                            etc.), and we'll <br />
                             customize the <br />
                             template to match <br />
                             your project needs.</p>
@@ -124,7 +124,7 @@ function HowItWorks() {
                         </div>
                         <h2 className='layout-subtext3'>Get Your Layout</h2>
                         <div className='get-layout-text'>
-                            <p>We’ll send you the <br />
+                            <p>We'll send you the <br />
                             final layout file, ready <br />
                             for printing or <br />
                             submission.</p>

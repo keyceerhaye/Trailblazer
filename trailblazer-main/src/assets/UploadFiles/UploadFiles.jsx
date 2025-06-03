@@ -12,14 +12,13 @@ import { useNavigate } from "react-router-dom";
 export const UploadFiles = () => {
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [steps, setSteps] = useState([
+  const steps = [
     { number: "1", label: "Upload files", active: true },
     { number: "2", label: "Basket", active: false },
     { number: "3", label: "Delivery", active: false },
     { number: "4", label: "Payment", active: false },
-  ]);
+  ];
 
   const [specifications, setSpecifications] = useState({
     paperSize: "",
@@ -30,10 +29,24 @@ export const UploadFiles = () => {
 
   const navigate = useNavigate();
 
+  // Handle drag and drop events
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFileSelection(e.dataTransfer.files[0]);
+    }
+  };
+
   const handleBrowseClick = () => fileInputRef.current.click();
 
   const simulateUpload = () => {
-    setUploading(true);
     setUploadProgress(0);
 
     let progress = 0;
@@ -42,13 +55,11 @@ export const UploadFiles = () => {
       setUploadProgress(progress);
       if (progress >= 100) {
         clearInterval(interval);
-        setUploading(false);
       }
     }, 200);
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const handleFileSelection = (file) => {
     if (!file) return;
 
     const allowedTypes = [
@@ -68,6 +79,12 @@ export const UploadFiles = () => {
 
     setSelectedFile(file);
     simulateUpload();
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFileSelection(e.target.files[0]);
+    }
   };
 
   const handleSpecChange = (label, value) => {
@@ -152,17 +169,21 @@ export const UploadFiles = () => {
         <p className="uf-subtitle">Upload your files you want to print</p>
 
         <div className="uf-content">
-          <div className={`uf-upload-box ${selectedFile ? "transparent" : ""}`}>
+          <div 
+            className={`uf-upload-box ${selectedFile ? "transparent" : ""}`}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
             {selectedFile ? (
               <div className="uf-file-preview">
+                <span
+                  className="uf-close-preview"
+                  onClick={() => setSelectedFile(null)}
+                >
+                  &times;
+                </span>
                 <h3 className="uf-preview-title">
                   Uploading Files
-                  <span
-                    className="uf-close-preview"
-                    onClick={() => setSelectedFile(null)}
-                  >
-                    ×
-                  </span>
                 </h3>
 
                 <div className="uf-progress-bar-wrapper">

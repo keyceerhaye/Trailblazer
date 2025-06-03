@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import "./SignUp.css";
 import logoImage from "../pages/logo.png";
 
@@ -13,12 +13,18 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formError, setFormError] = useState("");
+
+  // Clear any error message when user types
+  useEffect(() => {
+    if (formError) setFormError("");
+  }, [firstName, lastName, emailUsername, password, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      setFormError("Passwords do not match.");
       return;
     }
 
@@ -32,12 +38,13 @@ export default function SignUp() {
     // Get existing users array from localStorage or empty array
     const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
 
-    // Optional: Check if user email/username already exists
+    // Check if user email/username already exists
     const userExists = existingUsers.some(
       (u) => u.emailUsername === emailUsername
     );
+    
     if (userExists) {
-      alert("User with this Email/Username already exists.");
+      setFormError("User with this Email/Username already exists.");
       return;
     }
 
@@ -50,6 +57,9 @@ export default function SignUp() {
     // Set loggedIn and current user
     localStorage.setItem("loggedIn", "true");
     localStorage.setItem("user", JSON.stringify(user));
+
+    // Dispatch storage updated event for other components to detect
+    window.dispatchEvent(new Event("storageUpdated"));
 
     navigate("/");
   };
@@ -75,13 +85,11 @@ export default function SignUp() {
         <div className="su-welcome-content">
           <h2 className="su-welcome-heading">
             Hello, <br />
-            Welcome.
+            Welcome
           </h2>
           <p className="su-welcome-text">
             Welcome To Trailblazer Printing And Layout
-            <br />
             Services. Sign Up To Access Your Designs And
-            <br />
             Start Printing With Trailblazer Services.
           </p>
         </div>
@@ -93,22 +101,26 @@ export default function SignUp() {
 
           <form onSubmit={handleSubmit} className="su-form">
             <div className="su-form-input-name">
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First Name"
-                className="su-name-fields"
-                required
-              />
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last Name"
-                className="su-name-fields"
-                required
-              />
+              <div className="su-input-group" style={{ maxWidth: "none" }}>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First Name"
+                  className="su-name-fields"
+                  required
+                />
+              </div>
+              <div className="su-input-group" style={{ maxWidth: "none" }}>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last Name"
+                  className="su-name-fields"
+                  required
+                />
+              </div>
             </div>
 
             <div className="su-input-group">
@@ -174,6 +186,12 @@ export default function SignUp() {
                 )}
               </button>
             </div>
+
+            {formError && (
+              <div style={{ color: "#ff3333", textAlign: "center", fontSize: "14px", marginTop: "-10px" }}>
+                {formError}
+              </div>
+            )}
 
             <div className="su-submit-btn-container">
               <button type="submit" className="su-submit-btn">

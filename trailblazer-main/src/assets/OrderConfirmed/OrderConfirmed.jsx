@@ -20,41 +20,27 @@ export const OrderConfirmed = () => {
           <div className="oc-progress">
             {steps.map((step, i) => (
               <React.Fragment key={i}>
-                {i > 0 && (
-                  <img
-                    className="oc-line"
-                    alt="Line"
-                    style={{ left: `${90 + (i - 1) * 160}px` }}
-                    src="https://c.animaapp.com/mac90t5x4ytHYc/img/line-1.svg"
-                  />
-                )}
-                <div
-                  className="oc-step-circle"
-                  style={{ left: `${30 + i * 160}px` }}
-                >
+                {i > 0 && <div className="oc-line"></div>}
+                <div className="oc-step-circle">
                   {step.number}
                 </div>
               </React.Fragment>
             ))}
+          </div>
+          
+          <div className="oc-step-labels">
             {steps.map((step, i) => (
-              <div
-                key={i}
-                className="oc-step-label"
-                style={{
-                  left: ["0", "182px", "338px", "492px"][i],
-                  width: ["131px", "76px", "83px", "93px"][i],
-                }}
-              >
+              <div key={i} className="oc-step-label">
                 {step.label}
               </div>
             ))}
           </div>
 
+          <img src={checkmark} alt="Approval" className="oc-checkmark" />
+
           <div className="oc-confirmed-message">
             Your order has been confirmed!
           </div>
-
-          <img src={checkmark} alt="Approval" className="oc-checkmark" />
 
           <div className="oc-thank-you">
             Thank you for choosing <br />

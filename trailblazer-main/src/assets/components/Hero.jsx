@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Hero.css';
 import image from './printer.png';
 
 function Hero() {
   const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
+  // Check login status when component mounts
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const loggedIn = localStorage.getItem('loggedIn') === 'true';
+      setIsLoggedIn(loggedIn);
+    };
+    
+    checkLoginStatus();
+    
+    // Listen for storage changes (in case user logs in/out in another tab)
+    window.addEventListener('storage', checkLoginStatus);
+    window.addEventListener('storageUpdated', checkLoginStatus);
+    
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+      window.removeEventListener('storageUpdated', checkLoginStatus);
+    };
+  }, []);
+
   const handleUploadClick = () => {
-    setShowModal(true);
+    if (isLoggedIn) {
+      setShowModal(true);
+    } else {
+      navigate('/Signup');
+    }
   };
 
   const handleServiceClick = (service) => {
@@ -25,21 +49,24 @@ function Hero() {
       <section className="hero">
         <div className="content">
           <div className="line1">
-            <span className="hero1">ONLY IN</span>
-            <span className="hero2"> UTSP</span>
+            <div>
+              <span className="hero1">ONLY IN</span>
+              <span className="hero2"> UTSP</span>
+            </div>
             <div className="line2">
               <span className="hero3">CDO</span>
               <span className="hero4"> CAMPUS!</span>
-              <div className="line3">
-                <span className="hero5">We produce High-Quality For Printing</span>
-                <div className="line4">
-                  <span className="hero6">And Layout Services.</span>
-                </div>
-              </div>
+            </div>
+          </div>
+          
+          <div className="line3">
+            <span className="hero5">We produce High-Quality For Printing</span>
+            <div className="line4">
+              <span className="hero6">And Layout Services.</span>
             </div>
           </div>
 
-          {/* Upload Button from second JSX */}
+          {/* Upload Button */}
           <div className="btn-container">
             <button className="upload-btn" onClick={handleUploadClick}>
               UPLOAD NOW!
@@ -57,8 +84,10 @@ function Hero() {
           <div className="modal-box">
             <button className="close-btn" onClick={closeModal}>×</button>
             <h3>CHOOSE A SERVICE</h3>
-            <button className="service-btn" onClick={() => handleServiceClick('print')}>PRINT</button>
-            <button className="service-btn" onClick={() => handleServiceClick('layout')} navigate>LAYOUT</button>
+            <div className="service-buttons">
+              <button className="service-btn" onClick={() => handleServiceClick('print')}>PRINT</button>
+              <button className="service-btn" onClick={() => handleServiceClick('layout')}>LAYOUT</button>
+            </div>
           </div>
         </div>
       )}

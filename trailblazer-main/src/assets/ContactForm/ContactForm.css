@@ -1,47 +1,72 @@
-.contact-section {
-  width: 100vw;
-  height: 100vh;
-  margin-bottom: 150px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+}
+
+.contact-section {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(50px, 10vh, 150px);
+}
+
 .contact-container {
-  width: 1020px;
-  min-height: 635px;
+  width: 100%;
+  max-width: 1200px;
+  min-height: auto;
   position: relative;
-  margin-left: 150px;
+  margin: 0 auto;
   background-color: #fff;
   border-radius: 20px;
-  padding: 40px;
+  padding: clamp(20px, 3vw, 40px);
   display: flex;
   overflow: visible;
-  gap: 12px;
+  gap: 30px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .contact-heading {
   text-align: center;
-  font-size: 48px;
+  font-size: clamp(32px, 5vw, 48px);
   font-weight: 800;
-  margin-bottom: 4rem;
+  margin-bottom: clamp(2rem, 4vw, 4rem);
   color: #000000;
-  margin-top: 180px;
+  margin-top: clamp(120px, 15vw, 180px);
 }
 
 .contact-container .contact-form {
   flex: 1;
-  padding-right: 40px;
+  padding-right: clamp(10px, 3vw, 40px);
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin-left: 40px;
+  margin-left: clamp(10px, 2vw, 40px);
+  width: 100%;
+  max-width: 600px;
+  min-width: 280px;
 }
 
 .contact-container .contact-form h2 {
-  font-size: 36px;
+  font-size: clamp(24px, 4vw, 36px);
   font-weight: 500;
-  margin-bottom: 30px;
+  margin-bottom: clamp(15px, 3vw, 30px);
   margin-top: 10px;
   color: #111;
 }
+
 .submit-button {
   margin-right: 15px;
 }
@@ -51,42 +76,40 @@
   flex-direction: column;
   height: 100%;
   justify-content: flex-start;
+  width: 100%;
 }
 
 .contact-container .form-row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .contact-container .form-field {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 250px;
 }
 
-.contact-container .input-email {
-  width: 277px;
-  height: 51px;
-}
-
-.contact-container .input-phone {
-  width: 289px;
-  height: 51px;
-}
-
+.contact-container .input-email,
+.contact-container .input-phone,
 .contact-container .input-name {
-  width: 585px;
+  width: 100%;
   height: 51px;
+  padding: 0 15px;
 }
 
 .contact-container textarea.input-message {
-  width: 585px !important;
-  height: 170px !important;
+  width: 100% !important;
+  height: clamp(120px, 20vh, 170px) !important;
   resize: none;
+  padding: 15px;
 }
 
 .contact-container label {
-  font-size: 18px;
+  font-size: clamp(16px, 2vw, 18px);
   font-weight: 600;
   margin-bottom: 6px;
   color: #000000;
@@ -97,7 +120,7 @@
   margin-bottom: 20px;
   border-radius: 20px;
   border: 2px solid #8e8e8e;
-  font-size: 18px;
+  font-size: clamp(14px, 2vw, 18px);
   background-color: #fff;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -117,12 +140,11 @@
   border-radius: 20px;
   margin-top: 20px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px);
   cursor: pointer;
   transition: background-color 0.3s ease;
-  align-self: center;
-  margin-left: 130px;
-  width: 135px;
+  align-self: flex-start;
+  width: clamp(120px, 30%, 135px);
   height: 44px;
   font-family: "Montserrat";
 }
@@ -133,99 +155,84 @@
 
 .contact-container .contact-info-box {
   margin-top: 35px;
-  position: absolute;
-  top: 60px;
-  right: -90px;
-  width: 396px;
-  height: 484px;
+  position: relative;
+  width: 100%;
+  max-width: 396px;
+  height: auto;
+  min-height: 484px;
   background-color: #2f2785;
   color: white;
-  padding: 24px;
+  padding: clamp(15px, 3vw, 24px);
   border-radius: 20px;
   z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  flex: 0 1 396px;
+  align-self: flex-start;
 }
 
 .contact-container .contact-info-box h3 {
-  font-size: 36px;
+  font-size: clamp(24px, 4vw, 36px);
   font-weight: 600;
   margin-bottom: 8px;
   margin-top: 1px;
   align-self: flex-start;
   color: #ffffff;
-  margin-left: 30px;
-}
-.contact-container .contact-subtext {
-  margin-left: 30px;
+  margin-left: clamp(10px, 3vw, 30px);
 }
 
-.contact-container,
-.contact-info-box,
+.contact-container .contact-subtext {
+  margin-left: clamp(10px, 3vw, 30px);
+  font-size: clamp(14px, 2vw, 18px);
+}
+
 .contact-info-box p {
-  font-size: 18px;
+  font-size: clamp(14px, 2vw, 18px);
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 10px;
   margin-top: 5px;
   text-align: left;
 }
-.contact-container .info-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  background-color: #3f3c8c;
-  padding: 10px;
-  border-radius: 20px;
-  margin-top: 5px;
-  margin-left: 30px;
-  background: rgba(255, 255, 255, 0.25);
-  width: 315px;
-  height: 107px;
-}
 
-.contact-container .phone-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  background-color: #3f3c8c;
-  padding: 10px;
-  border-radius: 20px;
-  margin-top: 16px;
-  margin-left: 30px;
-  background: rgba(255, 255, 255, 0.25);
-  width: 315px;
-  height: 76px;
-}
-
+.contact-container .info-card,
+.contact-container .phone-card,
 .contact-container .mail-card {
   display: flex;
   align-items: flex-start;
   gap: 15px;
-  background-color: #3f3c8c;
+  background: rgba(255, 255, 255, 0.25);
   padding: 10px;
   border-radius: 20px;
-  margin-top: 16px;
-  margin-left: 30px;
-  background: rgba(255, 255, 255, 0.25);
-  width: 315px;
-  height: 76px;
+  margin-top: clamp(5px, 2vw, 16px);
+  margin-left: clamp(10px, 3vw, 30px);
+  width: calc(100% - clamp(20px, 6vw, 60px));
+  height: auto;
+  min-height: 76px;
+}
+
+.contact-container .info-card {
+  min-height: 107px;
 }
 
 .contact-container .info-icon {
   margin-top: 25px;
-  width: 42px;
-  height: 42px;
+  width: clamp(30px, 4vw, 42px);
+  height: clamp(30px, 4vw, 42px);
+  flex-shrink: 0;
 }
 
 .contact-container .pin-icon {
   margin-top: 10px;
+  width: clamp(60px, 8vw, 90px);
+  height: auto;
+  flex-shrink: 0;
 }
 
 .contact-container .info-card p {
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 14px);
   color: #dcdcdc;
   line-height: 1.4;
   text-align: left;
@@ -235,23 +242,109 @@
 .contact-container .info-label {
   font-weight: 600;
   color: white;
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 14px);
   text-align: left;
 }
 
-@media (max-width: 1024px) {
+/* Responsive adjustments */
+@media (min-width: 1025px) {
   .contact-container {
-    flex-direction: column;
-    height: auto;
-    padding: 24px;
+    flex-wrap: nowrap;
+    padding: clamp(20px, 3vw, 40px);
+    justify-content: space-between;
   }
-
+  
   .contact-container .contact-info-box {
     position: relative;
     top: 0;
     right: 0;
-    width: 100%;
+    margin-top: 35px;
+  }
+  
+  .contact-container button {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .contact-container {
+    margin: 0 20px;
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contact-section {
+    margin-bottom: 80px;
+  }
+  
+  .contact-container {
+    flex-direction: column;
+    align-items: center;
     height: auto;
-    margin-top: 24px;
+    padding: clamp(15px, 3vw, 24px);
+  }
+  
+  .contact-container .contact-form {
+    padding-right: 0;
+    margin-left: 0;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .contact-container .contact-info-box {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .contact-container button {
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-heading {
+    margin-top: 100px;
+  }
+  
+  .contact-container .form-field {
+    min-width: 100%;
+  }
+  
+  .contact-container .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .contact-container .contact-info-box {
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-heading {
+    margin-top: 80px;
+  }
+  
+  .contact-container {
+    padding: 15px;
+  }
+  
+  .contact-container .contact-form h2 {
+    text-align: center;
+  }
+  
+  .contact-container .contact-info-box {
+    padding: 15px;
+  }
+  
+  .contact-container .info-card,
+  .contact-container .phone-card,
+  .contact-container .mail-card {
+    margin-left: 10px;
+    width: calc(100% - 20px);
   }
 }

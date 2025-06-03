@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./AboutUs.css";
 import aboutHeaderImage from "../pages/about-header.jpg";
 import missionImage from "../pages/mission-image.jpg";
@@ -8,13 +8,19 @@ import member3 from "../pages/img/Raisy.jpg";
 import member4 from "../pages/img/Larence.jpg";
 
 export default function AboutUs() {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="about-container">
+    <main className="about-container">
       <section className="about-header">
         <img
           src={aboutHeaderImage}
           alt="Team Working Together"
           className="about-header-img"
+          loading="eager"
         />
         <h1 className="about-title">ABOUT US</h1>
       </section>
@@ -37,16 +43,19 @@ export default function AboutUs() {
         <p>
           Trailblazers isn't just a business—it's a student-led initiative to
           support fellow Trailblazers like you. Let's create something great
-          together!!
+          together!
         </p>
       </section>
 
       <section className="about-mission">
-        <img
-          src={missionImage}
-          alt="Students Collaborating"
-          className="about-mission-img"
-        />
+        <div className="mission-image-container">
+          <img
+            src={missionImage}
+            alt="Students Collaborating"
+            className="about-mission-img"
+            loading="lazy"
+          />
+        </div>
         <div className="about-mission-text">
           <h2>Mission</h2>
           <p>
@@ -57,9 +66,9 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="about-goals">
+      <section className="about-goals" aria-labelledby="goals-heading">
         <div className="about-goals-box">
-          <h3>Our Goals</h3>
+          <h3 id="goals-heading">Our Goals</h3>
           <ul>
             <li>
               To support students with fast, helpful, friendly, and high-quality
@@ -77,15 +86,35 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="about-team">
-        <h3 className="team-title">
+      <section className="about-team" aria-labelledby="team-heading">
+        <h3 id="team-heading" className="team-title">
           Team <span>Members</span>
         </h3>
         <div className="team-cards">
-          <img src={member1} alt="Team Member 1" className="team-card" />
-          <img src={member2} alt="Team Member 2" className="team-card" />
-          <img src={member3} alt="Team Member 3" className="team-card" />
-          <img src={member4} alt="Team Member 4" className="team-card" />
+          <img 
+            src={member1} 
+            alt="Mona - Team Member" 
+            className="team-card" 
+            loading="lazy" 
+          />
+          <img 
+            src={member2} 
+            alt="Kryzl - Team Member" 
+            className="team-card" 
+            loading="lazy" 
+          />
+          <img 
+            src={member3} 
+            alt="Raisy - Team Member" 
+            className="team-card" 
+            loading="lazy" 
+          />
+          <img 
+            src={member4} 
+            alt="Larence - Team Member" 
+            className="team-card" 
+            loading="lazy" 
+          />
         </div>
         <p className="team-description">
           We are a team of driven and creative USTP students committed to
@@ -93,6 +122,6 @@ export default function AboutUs() {
           passion and purpose.
         </p>
       </section>
-    </div>
+    </main>
   );
 }

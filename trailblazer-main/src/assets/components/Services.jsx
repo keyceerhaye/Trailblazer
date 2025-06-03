@@ -17,9 +17,9 @@ function Services() {
                         <img src={printing} alt="Printer icon" />
                         <h2 className='printing'>Printing</h2>
                         <div className='subtext1'>
-                                High-quality prints <br />
-                                Document printing <br />
-                                Color and black & white printing <br />
+                            High-quality prints <br />
+                            Document printing <br />
+                            Color and black & white printing <br />
                         </div>
                     </div>
                 </div>
@@ -34,13 +34,12 @@ function Services() {
                         </div>
                     </div>
                 </div>
-                <div className='Rhombus-shapes'>
-                    <div>
-                        <div className='rhombus1'></div>
-                        <div className='rhombus2'></div>
-                        <div className='rhombus3'></div>
-                        <div className='rhombus4'></div>
-                    </div>
+            </div>
+            
+            <div className='Rhombus-shapes'>
+                <div>
+                    <div className='rhombus1'></div>
+                    <div className='rhombus2'></div>
                 </div>
             </div>
         </section>

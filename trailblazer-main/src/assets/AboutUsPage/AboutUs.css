@@ -4,16 +4,21 @@
   font-family: "Montserrat";
   background-color: white;
   padding-bottom: 2rem;
+  width: 100%;
+  overflow-x: hidden;
 }
+
 .about-header {
   position: relative;
   margin-top: 130px;
   text-align: center;
+  width: 100%;
 }
 
 .about-header-img {
   width: 100%;
-  height: 448;
+  height: auto;
+  object-fit: cover;
 }
 
 .about-title {
@@ -31,7 +36,7 @@
 .about-intro {
   max-width: 1050px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
   line-height: 1.8;
   font-size: 20px;
   font-weight: 500;
@@ -52,8 +57,6 @@
 }
 
 .about-mission-img {
-  display: flex;
-  flex-direction: row;
   width: 320px;
   height: 360px;
   border-radius: 8px;
@@ -61,44 +64,40 @@
 }
 
 .about-mission-text {
-  flex: column;
   flex: 1;
   max-width: 450px;
   font-weight: 400;
   font-size: 20px;
-  margin-top: -50px;
 }
 
 .about-mission-text h2 {
-  display: flex;
   font-size: 56px;
-  font-size: 700;
+  font-weight: 700;
   color: #326bf6;
   margin-bottom: 1rem;
-  margin-left: 110px;
+  text-align: center;
 }
 
 /* Goals Section */
 .about-goals {
   background-color: #2f2785;
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 2rem;
   border-radius: 120px 20px;
   max-width: 1120px;
-  height: 340px;
   margin: 2rem auto;
 }
 
 .about-goals-box h3 {
   font-size: 40px;
   font-weight: 700;
-  margin-bottom: 0;
+  margin-bottom: 1.5rem;
   text-align: center;
 }
 
 .about-goals-box ul {
   list-style-type: disc;
-  padding-left: 5rem;
+  padding-left: 2rem;
 }
 
 .about-goals-box li {
@@ -107,7 +106,6 @@
   line-height: 1.5;
   font-size: 22px;
   font-weight: 500;
-  max-width: 1000px;
 }
 
 /* Team Section */
@@ -122,6 +120,7 @@
   color: #326bf6;
   margin-bottom: 3rem;
 }
+
 .team-title span {
   color: black;
 }
@@ -153,7 +152,44 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .about-title {
+    font-size: 80px;
+  }
+  
+  .about-mission-text h2 {
+    font-size: 48px;
+    margin-left: 0;
+  }
+  
+  .team-description {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 992px) {
+  .about-title {
+    font-size: 64px;
+  }
+  
+  .about-intro {
+    font-size: 18px;
+  }
+  
+  .about-goals-box li {
+    font-size: 20px;
+  }
+  
+  .team-description {
+    font-size: 22px;
+  }
+}
+
 @media (max-width: 768px) {
+  .about-title {
+    font-size: 48px;
+  }
+  
   .about-mission {
     flex-direction: column;
     text-align: center;
@@ -161,14 +197,88 @@
 
   .about-mission-img {
     width: 90%;
+    max-width: 320px;
+    height: auto;
+    aspect-ratio: 1/1.1;
+  }
+  
+  .about-mission-text {
+    max-width: 100%;
+    margin-top: 0;
+  }
+
+  .about-mission-text h2 {
+    font-size: 40px;
+    margin-left: 0;
   }
 
   .about-goals {
-    margin: 1rem;
+    border-radius: 60px 15px;
+    height: auto;
+    padding: 1.5rem;
   }
-
+  
+  .about-goals-box ul {
+    padding-left: 1.5rem;
+  }
+  
+  .about-goals-box li {
+    font-size: 18px;
+  }
+  
   .team-cards {
-    flex-direction: column;
-    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .team-description {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .about-header {
+    margin-top: 100px;
+  }
+  
+  .about-title {
+    font-size: 36px;
+  }
+  
+  .about-intro {
+    font-size: 16px;
+    padding: 0 1rem;
+  }
+  
+  .about-mission-text h2 {
+    font-size: 32px;
+  }
+  
+  .about-mission-text p {
+    font-size: 16px;
+  }
+  
+  .about-goals {
+    border-radius: 40px 10px;
+  }
+  
+  .about-goals-box h3 {
+    font-size: 32px;
+  }
+  
+  .about-goals-box li {
+    font-size: 16px;
+  }
+  
+  .team-title {
+    font-size: 32px;
+  }
+  
+  .team-card {
+    width: 200px;
+    height: 240px;
+  }
+  
+  .team-description {
+    font-size: 18px;
   }
 }

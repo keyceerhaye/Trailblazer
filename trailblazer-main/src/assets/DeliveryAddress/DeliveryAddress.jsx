@@ -243,7 +243,7 @@ const DeliveryAddress = () => {
                   onChange={handleDeliveryChange}
                 />
               ) : (
-                <span className="da-value">{deliveryDetails.note}</span>
+                <span className="da-value">{deliveryDetails.note || "None"}</span>
               )}
             </div>
           </div>

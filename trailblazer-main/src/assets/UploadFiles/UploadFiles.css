@@ -1,13 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+}
+
 .uf-container {
   background: transparent;
   display: flex;
   justify-content: center;
   width: 100%;
-  align-items: center;
-  margin-left: 60px;
+  align-items: flex-start;
+  padding: 0 20px;
   margin-top: 130px;
+  min-height: calc(100vh - 130px);
 }
 
 .uf-wrapper {
@@ -38,7 +50,10 @@
 }
 
 .uf-main {
-  padding: 4rem 2.5rem;
+  padding: clamp(2rem, 4vw, 4rem) clamp(1rem, 2.5vw, 2.5rem);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .uf-steps {
@@ -51,10 +66,12 @@
 .uf-step-circles {
   display: flex;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .uf-line {
-  width: 100px;
+  width: clamp(50px, 10vw, 100px);
   height: 4px;
   background-color: #ccc;
   border-radius: 2px;
@@ -67,14 +84,15 @@
 }
 
 .uf-step-circle {
-  width: 60px;
-  height: 60px;
+  width: clamp(40px, 6vw, 60px);
+  height: clamp(40px, 6vw, 60px);
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   border: 2px solid #243f6a;
   background-color: white;
+  flex-shrink: 0;
 }
 
 .uf-step-circle.active {
@@ -83,7 +101,7 @@
 
 .uf-step-num {
   font-weight: bold;
-  font-size: 32px;
+  font-size: clamp(20px, 4vw, 32px);
   color: #2e2684;
   font-family: "Montserrat";
 }
@@ -94,15 +112,17 @@
 
 .uf-step-labels {
   display: flex;
-  gap: 30px;
+  gap: clamp(15px, 3vw, 30px);
   margin-top: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .uf-step-label {
   font-family: "Montserrat";
-  width: 131px;
+  width: clamp(90px, 12vw, 131px);
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.25rem);
   color: black;
   text-align: center;
 }
@@ -110,36 +130,45 @@
 .uf-title {
   font-family: "Montserrat";
   font-weight: bold;
-  font-size: 48px;
+  font-size: clamp(28px, 5vw, 48px);
   color: #2e2684;
   text-align: left;
+  margin-bottom: 30px;
 }
 
 .uf-subtitle {
   font-family: "Montserrat";
   font-weight: 500;
-  font-size: 24px;
+  font-size: clamp(16px, 3vw, 24px);
   color: #5f6b7e;
   margin-bottom: 18px;
   text-align: left;
-  margin-top: -40px;
+  margin-top: 10px;
 }
 
 .uf-content {
   display: flex;
   gap: 2.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  min-height: 600px;
 }
 
 .uf-upload-box {
-  flex: 1;
+  flex: 1.5;
   background-color: white;
   border: 2px dashed #5f6b7e;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 777px;
-  height: 585px;
+  width: 100%;
+  max-width: 100%;
+  min-height: 550px;
+  height: 100%;
+  padding: 2rem;
   transition: background-color 0.5s ease;
 }
 
@@ -149,14 +178,14 @@
 
 .uf-upload-icon {
   width: 212px;
-  height: 212px;
+  height: auto;
   object-fit: cover;
   margin-bottom: 1.25rem;
 }
 
 .uf-upload-text {
   font-weight: 500;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   color: #5f6b7e;
   text-align: center;
   margin-bottom: 1.5rem;
@@ -166,17 +195,18 @@
   background-color: #2196f3;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 369px;
-  height: 61px;
+  width: clamp(200px, 80%, 369px);
+  height: auto;
+  min-height: 50px;
   font-family: "Montserrat";
   font-weight: bold;
-  font-size: 32px;
+  font-size: clamp(18px, 4vw, 32px);
   color: white;
   border-style: none;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
-  padding: 2px 2rem;
+  padding: 10px 2rem;
 }
 
 .uf-btn-browse:hover {
@@ -186,51 +216,59 @@
 }
 
 .uf-card {
-  width: 447px;
-  height: 583px;
+  flex: 1;
+  width: 100%;
+  max-width: 447px;
+  height: auto;
+  min-height: 550px;
   background: linear-gradient(to bottom, #e8ecf7 0%, #fef9f6 27%);
   background-size: cover;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border: none;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .uf-card-content {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .uf-card-title {
   font-weight: bold;
-  font-size: 24px;
+  font-size: clamp(18px, 3vw, 24px);
   color: black;
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   margin-top: 24px;
-  margin-left: 115px;
-  margin-right: 110px;
 }
 
 .uf-specs {
   margin-top: 15px;
+  flex-grow: 1;
 }
 
 .uf-spec-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 
 .uf-spec-label {
   font-family: "Montserrat";
   font-weight: 600;
-  font-size: 16px;
+  font-size: clamp(14px, 2vw, 16px);
   color: black;
   margin-bottom: 5px;
 }
 
 .uf-spec-trigger {
-  width: 255px;
+  width: 100%;
+  max-width: 255px;
   height: 41px;
   background-color: white;
   border-radius: 10px;
@@ -242,7 +280,8 @@
 
 .uf-payment-section {
   margin-top: 15px;
-  margin-left: 70px;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .uf-payment-info {
@@ -254,9 +293,8 @@
 
 .uf-payment-label {
   font-weight: bold;
-  font-size: 20px;
+  font-size: clamp(16px, 2.5vw, 20px);
   color: black;
-  margin-right: 6.69px;
 }
 
 .uf-payment-amount {
@@ -265,39 +303,39 @@
 }
 
 .uf-payment-icon {
-  width: 29px;
-  height: 31px;
+  width: clamp(20px, 3vw, 29px);
+  height: auto;
   object-fit: cover;
+  margin-right: 5px;
 }
 
 .uf-payment-value {
   font-weight: 600;
-  font-size: 25px;
+  font-size: clamp(18px, 3vw, 25px);
   color: black;
-  margin-right: 70px;
   font-family: "Montserrat";
 }
 
 .uf-confirm-btn-wrapper {
   display: flex;
   justify-content: flex-end;
-  margin-right: -5px;
-  margin-top: -20px;
+  width: 100%;
+  padding: 0 20px 20px;
+  margin-top: 10px;
 }
 
 .uf-btn-primary {
   background-color: #2196f3;
   border-radius: 20px;
   font-family: "Montserrat";
-  width: 100px;
+  width: clamp(80px, 30%, 100px);
   font-weight: bold;
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px);
   color: white;
   padding: 10px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: -20px;
 }
 
 .uf-btn-primary:hover {
@@ -311,36 +349,49 @@
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   border: none;
-  width: 587px;
-  height: 320px;
+  width: 100%;
+  max-width: 587px;
+  height: auto;
+  min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 2.5rem 2rem 2rem;
   box-sizing: border-box;
   position: relative;
 }
 
 .uf-preview-title {
   font-family: "Montserrat";
-  font-size: 32px;
+  font-size: clamp(20px, 4vw, 32px);
   font-weight: bold;
   color: #000000;
   position: relative;
   text-align: center;
-  margin-top: 5px;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .uf-close-preview {
   position: absolute;
-  top: -50px;
-  right: -155px;
-  font-size: 65px;
+  top: -15px;
+  right: 15px;
+  font-size: clamp(30px, 4vw, 40px);
   color: #000000;
   cursor: pointer;
-  font-weight: 100;
+  font-weight: 300;
   transition: color 0.2s ease;
+  line-height: 0.5;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  z-index: 5;
 }
 
 .uf-close-preview:hover {
@@ -349,9 +400,9 @@
 
 .uf-accepted-label {
   font-family: "Montserrat";
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 14px);
   color: #000000;
-  margin-top: 52.71px;
+  margin-top: clamp(30px, 5vh, 52.71px);
 }
 
 .uf-file-icons {
@@ -359,11 +410,12 @@
   gap: 15px;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .uf-file-icons img {
-  width: 45px;
-  height: 45px;
+  width: clamp(30px, 5vw, 45px);
+  height: auto;
   object-fit: contain;
 }
 
@@ -371,15 +423,18 @@
   background-color: #90caf9;
   border-radius: 20px;
   height: 35px;
-  width: 437px;
+  width: 100%;
+  max-width: 437px;
   overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
 .uf-progress-bar {
   background-color: #1976d2;
   font-family: "Montserrat";
   height: 35px;
-  width: 437px;
+  width: 100%;
+  max-width: 437px;
   border-radius: 20px;
   text-align: center;
   line-height: 35px;
@@ -390,4 +445,114 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: width 0.4s ease, background-color 0.3s ease;
+}
+
+@media screen and (max-width: 992px) {
+  .uf-content {
+    gap: 2rem;
+  }
+  
+  .uf-card {
+    margin-top: 30px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .uf-container {
+    margin-top: 100px;
+    margin-left: 0;
+  }
+  
+  .uf-main {
+    padding: 2rem 1rem;
+  }
+  
+  .uf-upload-box {
+    min-height: 300px;
+  }
+  
+  .uf-step-circles {
+    gap: 10px;
+  }
+  
+  .uf-line {
+    width: clamp(30px, 8vw, 50px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .uf-container {
+    margin-top: 80px;
+  }
+  
+  .uf-title {
+    text-align: center;
+  }
+  
+  .uf-subtitle {
+    text-align: center;
+  }
+  
+  .uf-card-title {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .uf-payment-section {
+    padding: 0 10px;
+  }
+  
+  .uf-confirm-btn-wrapper {
+    padding: 0 10px 15px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .uf-upload-text {
+    font-size: 2.25rem;
+    line-height: 1.3;
+  }
+  
+  .uf-upload-icon {
+    width: 250px;
+    height: auto;
+    margin-bottom: 2rem;
+  }
+  
+  .uf-upload-box {
+    min-height: 600px;
+    max-width: 65%;
+  }
+  
+  .uf-btn-browse {
+    font-size: 32px;
+    padding: 15px 3rem;
+    margin-top: 1rem;
+  }
+  
+  .uf-content {
+    min-height: 650px;
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  .uf-upload-box {
+    min-height: 700px;
+  }
+  
+  .uf-card {
+    min-height: 700px;
+  }
+  
+  .uf-content {
+    min-height: 750px;
+  }
+  
+  .uf-upload-icon {
+    width: 300px;
+  }
+  
+  .uf-upload-text {
+    font-size: 2.5rem;
+  }
 }

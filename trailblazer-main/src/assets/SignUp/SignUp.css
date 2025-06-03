@@ -1,7 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+}
+
 .su-layout {
   display: flex;
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
 }
 
 .su-sign-up-container {
@@ -19,15 +32,16 @@
 .su-logo-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .logo-img {
-  height: 121px;
-  width: 121px;
+  height: clamp(80px, 10vw, 121px);
+  width: clamp(80px, 10vw, 121px);
 }
 
 .su-brand-text {
-  font-size: 48px;
+  font-size: clamp(28px, 5vw, 48px);
   font-weight: 700;
   background: linear-gradient(
     to right,
@@ -42,16 +56,16 @@
   -webkit-text-fill-color: transparent;
   margin-top: 0px;
   margin-bottom: 0;
-  margin-left: -30px;
+  margin-left: clamp(-10px, -3vw, -30px);
   padding: 0;
   line-height: 0.8;
 }
 
 .su-sub-text {
   display: flex;
-  font-size: 16px;
+  font-size: clamp(10px, 2vw, 16px);
   font-weight: 600;
-  letter-spacing: 4px;
+  letter-spacing: clamp(1px, 0.5vw, 4px);
   background: linear-gradient(to right, #2d9cf4 0%, #90caf9 49%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -76,7 +90,7 @@
     #bec8fc 61%,
     #c2aefd 100%
   );
-  padding: 2rem;
+  padding: clamp(1rem, 3vw, 2rem);
   display: flex;
   flex-direction: column;
 }
@@ -87,13 +101,13 @@
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  margin-left: 50px;
+  margin-left: clamp(20px, 5vw, 50px);
   line-height: 1.25;
-  margin-top: -90px;
+  margin-top: clamp(-40px, -8vh, -90px);
 }
 
 .su-welcome-heading {
-  font-size: 96px;
+  font-size: clamp(40px, 8vw, 96px);
   font-weight: bold;
   color: white;
   margin-bottom: 0;
@@ -101,11 +115,11 @@
 
 .su-welcome-text {
   color: white;
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px);
   font-weight: 600;
-  margin-bottom: 35px;
+  margin-bottom: clamp(20px, 3vh, 35px);
   margin-top: 0;
-  text-align: justify;
+  text-align: left;
 }
 
 .su-right-panel {
@@ -120,39 +134,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  padding: clamp(1rem, 3vw, 3rem);
 }
 
 .su-form-container {
-  background-color: white;
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-  padding: 2rem;
-  width: 425px;
-  height: 500px;
-  background: rgba(255, 255, 255, 0.25);
-  margin: 0;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  width: 100%;
+  max-width: 425px;
+  height: auto;
+  min-height: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .su-form-heading {
-  font-size: 55px;
+  font-size: clamp(36px, 6vw, 55px);
   font-weight: 400;
   color: #243f6a;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 3vh, 2rem);
   text-align: center;
 }
 
 .su-form {
-  width: 551px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   align-items: center;
-  justify-content: center;
 }
 
 .su-input-group {
   position: relative;
+  width: 100%;
+  max-width: 350px;
 }
 
 .su-input-icon {
@@ -177,11 +196,13 @@
 
 .su-form-input {
   padding: 0.75rem 1rem 0.75rem 2.5rem;
-  width: 350px;
-  height: 51;
+  width: 100%;
+  height: 51px;
   border-radius: 20px;
   border: solid #f5f5f5;
-  margin-right: 125px;
+  color: #333;
+  font-size: 16px;
+  background-color: white;
 }
 
 .su-form-input:focus {
@@ -193,7 +214,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 8rem;
+  right: 0.75rem;
   display: flex;
   align-items: center;
   background: none;
@@ -203,12 +224,13 @@
 
 .su-submit-btn-container {
   display: flex;
-  justify-content: right;
-  margin-top: 0;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .su-submit-btn {
-  width: 135px;
+  width: clamp(120px, 40%, 135px);
   background-color: #2f2785;
   color: white;
   padding: 0.5rem 1rem;
@@ -216,13 +238,42 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.2s;
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px);
   font-weight: 700;
-  margin-left: 145px;
 }
 
 .su-submit-btn:hover {
   background-color: #283593;
+}
+
+/* Name fields styling */
+.su-form-input-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: 350px;
+}
+
+.su-name-fields {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 1rem;
+  height: 51px;
+  border-radius: 20px;
+  border: solid #f5f5f5;
+  background-color: white;
+  color: #333;
+  font-size: 16px;
+}
+
+.su-name-fields::placeholder {
+  color: #decfcf;
+}
+
+.su-name-fields:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
 }
 
 @media (min-width: 768px) {
@@ -236,28 +287,41 @@
   }
 }
 
-/* === NEWLY ADDED CSS FOR FIRST NAME AND LAST NAME FIELDS === */
-
-.su-form-input-name {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-right: 125px;
+@media (max-width: 767px) {
+  .su-welcome-content {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .su-form-container {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+  }
 }
 
-.su-name-fields {
-  width: 135px;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  height: 51;
-  border-radius: 20px;
-  border: solid #f5f5f5;
-  background-color: white;
-}
-.su-name-fields::placeholder {
-  color: #decfcf;
-}
-.su-name-fields:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+@media (max-width: 480px) {
+  .su-logo-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .su-brand-text {
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+  
+  .su-welcome-content {
+    text-align: center;
+    margin-left: 0;
+  }
+  
+  .su-form-container {
+    padding: 1rem;
+  }
+  
+  .su-form-input-name {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
@@ -10,6 +10,11 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  // Clear error message when user types
+  useEffect(() => {
+    if (message) setMessage("");
+  }, [email, password]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -29,7 +34,10 @@ function Login() {
     if (matchedUser) {
       localStorage.setItem("loggedIn", "true");
       localStorage.setItem("user", JSON.stringify(matchedUser));
-      setMessage("Login successful");
+      
+      // Dispatch storage updated event for other components to detect
+      window.dispatchEvent(new Event("storageUpdated"));
+      
       navigate("/");
     } else {
       setMessage("Invalid email/username or password");
@@ -42,7 +50,7 @@ function Login() {
         <div className="login-left-panel">
           <div className="logo-container">
             <img
-              src={logoImage || "/placeholder.svg"}
+              src={logoImage}
               alt="Trailblazer Printing Logo"
               className="logo-img"
             />
@@ -59,11 +67,10 @@ function Login() {
             <h2 className="welcome-heading">
               Hello,
               <br />
-              Welcome.
+              Welcome
             </h2>
             <p className="welcome-text">
               Log In To Access Your Designs And
-              <br />
               Start Printing With Trailblazer Services.
             </p>
           </div>
@@ -122,11 +129,13 @@ function Login() {
                 </Link>
               </div>
 
-              <button type="submit" className="login-button">
-                Login
-              </button>
+              {message && <div className="login-message">{message}</div>}
 
-              {message && <p className="login-message">{message}</p>}
+              <div className="login-button-container">
+                <button type="submit" className="login-button">
+                  Login
+                </button>
+              </div>
             </form>
           </div>
         </div>

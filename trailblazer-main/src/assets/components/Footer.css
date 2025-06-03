@@ -1,38 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 
-body{
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
 }
-footer{
+
+footer {
     color: white;
     background-color: #2F2785;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    padding: 50px 60px;
+    padding: clamp(20px, 4vw, 50px) clamp(15px, 3vw, 60px);
     text-align: left;
     margin-top: 0;
     box-sizing: border-box;
     width: 100%;
     z-index: 100;
-    
+    flex-wrap: wrap;
 }
-.footer-logo img{
-    width: 121px;
-    height: 121px;
+
+.footer-logo img {
+    width: clamp(60px, 10vw, 121px);
+    height: clamp(60px, 10vw, 121px);
 }
+
 .footer-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: -30px;
+    margin-left: clamp(-15px, -3vw, -30px);
 }
 
 .footer-title {
-    font-size: 48px;
+    font-size: clamp(24px, 5vw, 48px);
     font-weight: 700;
     background: linear-gradient(to right, #326BF6 9%, #90CAF9 21%, #90CAF9 42%, #A3A8F9 58%, #C2AEFD 76%);
     background-clip: text;
@@ -44,44 +54,120 @@ footer{
 }
 
 .footer-subtext {
-    font-size: 18px;
+    font-size: clamp(10px, 2vw, 18px);
     font-weight: 600;
-    background: linear-gradient(to right, #2D9CF4 0%, #90CAF9 49% );
+    background: linear-gradient(to right, #2D9CF4 0%, #90CAF9 49%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 0.8;
-    letter-spacing: 2.5px;
+    letter-spacing: clamp(1px, 0.5vw, 2.5px);
 }
-.footer-headings{
+
+.footer-headings {
     display: flex;
     margin-left: auto;
-    margin-right: 60px;
+    margin-right: clamp(0px, 3vw, 60px);
     align-items: flex-start;
-    gap: 50px;
+    gap: clamp(20px, 3vw, 50px);
     text-align: left;
+    flex-wrap: wrap;
 }
-.footer-headings h2{
-    font-size: 20px;
+
+.footer-headings h2 {
+    font-size: clamp(16px, 2vw, 20px);
     font-weight: 600;
     color: #FFFFFF;
     margin-top: 10px;
 }
-.footer-headings p{
-    font-size: 16px;
+
+.footer-headings p {
+    font-size: clamp(14px, 1.5vw, 16px);
     font-weight: 300;
     color: #FFFFFF;
     margin: 0;
     text-align: left;
     line-height: 1.5;
 }
-.terms-and-privacy a{
+
+.terms-and-privacy a {
     color: white;
     font-weight: 600;
     display: flex;
     flex-direction: column;
+    text-decoration: none;
 }
-.terms-and-privacy a:hover{
+
+.terms-and-privacy a:hover {
     text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 992px) {
+    footer {
+        padding: 30px 20px;
+        justify-content: center;
+    }
+    
+    .footer-headings {
+        margin: 20px auto 0;
+        justify-content: space-around;
+        width: 100%;
+    }
+    
+    .address, .contact, .hours, .terms-and-privacy {
+        min-width: 180px;
+        margin-bottom: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    footer {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 15px;
+    }
+    
+    .footer-logo {
+        margin-bottom: 10px;
+    }
+    
+    .footer-text {
+        margin-left: 0;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .footer-headings {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        margin-right: 0;
+    }
+    
+    .footer-headings h2, .footer-headings p {
+        text-align: center;
+    }
+    
+    .terms-and-privacy {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .terms-and-privacy a {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    footer {
+        padding: 20px 10px;
+    }
+    
+    .footer-headings {
+        gap: 15px;
+    }
 }
 

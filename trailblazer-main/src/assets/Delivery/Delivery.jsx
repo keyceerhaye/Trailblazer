@@ -79,21 +79,20 @@ const Delivery = () => {
             value="pickup"
             checked={selectedOption === "pickup"}
             onChange={() => setSelectedOption("pickup")}
+            id="pickup-radio"
           />
           <div className="delivery-info">
             <h4>Pick-up</h4>
-            <p>
-              CEA Building
-              <br />
-              Ground Floor
-              <br />
-              10:00 AM
-            </p>
-            <p>
-              <em>
-                Note: Get your print in <strong>7 minutes</strong>
-              </em>
-            </p>
+            <div className="delivery-details">
+              <p>
+                CEA Building<br />
+                Ground Floor<br />
+                10:00 AM
+              </p>
+              <p className="delivery-note">
+                <em>Note: Get your print in <strong>7 minutes</strong></em>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -109,19 +108,21 @@ const Delivery = () => {
             value="deliver"
             checked={selectedOption === "deliver"}
             onChange={() => setSelectedOption("deliver")}
+            id="deliver-radio"
           />
           <div className="delivery-info">
             <h4>Deliver</h4>
-            <em>
-              If you choose deliver please enter your delivery address in the
-              next step.
-              <br />
-              Delivery Fee <strong>depends</strong> on what building.
-              <br />
-              <em>
-                Note: Delivery area is <strong>inside</strong> the Campus only.
-              </em>
-            </em>
+            <div className="delivery-details">
+              <p>
+                If you choose deliver please enter your delivery address in the next step.
+              </p>
+              <p>
+                Delivery Fee <strong>depends</strong> on what building.
+              </p>
+              <p className="delivery-note">
+                <em>Note: Delivery area is <strong>inside</strong> the Campus only.</em>
+              </p>
+            </div>
           </div>
         </div>
       </div>
