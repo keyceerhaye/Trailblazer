@@ -1,18 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Dashboard.css";
-import {
-  LayoutDashboard,
-  User,
-  History,
-  LogOut,
-  Phone,
-  Info,
-  Settings,
-  Home,
-} from "lucide-react";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import { LogOut, Phone, Info, Settings, Home } from "lucide-react";
 import profilePic from "../pages/profile.png";
-import logoImage from "../pages/logo.png";
 import OrderReceived from "../pages/1.png";
 import OrderProcessing from "../pages/2.png";
 import Otw from "../pages/3.png";
@@ -25,7 +16,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
-
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -85,44 +75,7 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <aside className="sidebar">
-        <div className="logo-section">
-          <div className="D-sidebar-brand">
-            <img
-              src={logoImage}
-              alt="Trailblazer Printing Logo"
-              className="brand-logo"
-            />
-            <div className="brand-info">
-              <h1 className="brand-title">TRAILBLAZER</h1>
-              <span className="brand-subtitle">PRINTING & LAYOUT SERVICES</span>
-            </div>
-          </div>
-        </div>
-
-        <nav className="D-sidebar-nav">
-          <ul>
-            <li className="active">
-              <Link to="/dashboard">
-                <LayoutDashboard className="icon" />
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/profile">
-                <User className="icon" />
-                Profile
-              </Link>
-            </li>
-            <li>
-              <Link to="/orderhistory">
-                <History className="icon" />
-                Order History
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+      <Sidebar />
 
       <main className="main-dashboard">
         <div className="dashboard-header">

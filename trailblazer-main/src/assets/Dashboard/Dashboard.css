@@ -5,109 +5,13 @@
   width: 100%;
   font-family: "Montserrat";
   background: transparent;
-}
-
-.sidebar {
-  width: 300px;
-  height: 100vh;
-  background-color: #2f2785;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 4px 0px 4px 5px rgba(0, 0, 0, 0.25);
-  background-clip: border-box;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  position: relative;
-  z-index: 2;
-  padding: 1rem 1.5rem;
-}
-
-.brand-logo {
-  width: 106px;
-  height: 106px;
-  object-fit: contain;
-  display: block;
-}
-
-.brand-info {
-  margin-left: 80px;
-  margin-top: -128px;
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-title {
-  font-size: 28px;
-  font-weight: 700;
-  background: linear-gradient(
-    to right,
-    #326bf6 9%,
-    #90caf9 21%,
-    #90caf9 42%,
-    #a3a8f9 58%,
-    #c2aefd 76%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 0.8;
-}
-
-.brand-subtitle {
-  font-size: 9.25px;
-  font-weight: 600;
-  background: linear-gradient(
-    to right,
-    #326bf6 9%,
-    #90caf9 21%,
-    #90caf9 42%,
-    #a3a8f9 58%,
-    #c2aefd 76%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 0.8;
-  letter-spacing: 2.4px;
-}
-
-.D-sidebar-nav ul {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.D-sidebar-nav li a {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  color: white;
-  text-decoration: none;
-}
-
-.D-sidebar-nav li a:hover,
-.D-sidebar-nav li.active a {
-  background-color: rgba(255, 255, 255, 0.25);
-  color: white;
-  border-radius: 20px;
-}
-
-.D-sidebar-nav .icon {
-  margin-right: 0.75rem;
-  width: 50px;
-  height: 44px;
-  color: white;
+  padding-left: 300px;
 }
 
 .main-dashboard {
   flex: 1;
   overflow-y: auto;
+  padding: 2rem;
 }
 
 .dashboard-header {
@@ -116,6 +20,7 @@
   align-items: center;
   position: relative;
   z-index: 100;
+  margin-bottom: 2rem;
 }
 
 .dashboard-header h2 {
@@ -123,15 +28,12 @@
   font-weight: 600;
   color: #2c2480;
   text-align: left;
-  margin-left: 70px;
   line-height: 0.8;
-  margin-top: 45px;
 }
 
 .date {
   color: #2e9cf4;
   font-size: 15px;
-  margin-left: 70px;
   line-height: 0.8;
 }
 
@@ -139,14 +41,13 @@
   display: flex;
   align-items: center;
   text-align: left;
-  gap: 15px;
-  padding: 5px 10px;
+  gap: 10px;
+  padding: 5px;
   cursor: pointer;
-  margin-top: 20px;
   border-radius: 20px;
   transition: background 0.3s ease;
   background-color: transparent;
-  margin-right: 90px;
+  position: relative;
 }
 
 .D-profile {
@@ -154,7 +55,6 @@
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  margin-left: 90px;
 }
 
 .D-user-details {
@@ -168,6 +68,9 @@
   font-weight: 600;
   color: #2c2480;
   font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .welcome-card {
@@ -176,11 +79,9 @@
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   padding: 1.5rem;
   text-align: left;
-  width: 930px;
-  height: 100px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 60px;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 2rem;
 }
 
 .welcome-card h2 {
@@ -189,7 +90,7 @@
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 20px;
-  margin-left: 50px;
+  margin-left: 0;
   line-height: 0.8;
 }
 
@@ -197,21 +98,21 @@
   color: #4a4a6a;
   font-size: 18px;
   font-weight: 600;
-  margin-left: 50px;
+  margin-left: 0;
   line-height: 1;
 }
 
 .order-progress {
-  margin-top: 2rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
 }
 
 .order-progress h3 {
   font-size: 36px;
   font-weight: 600;
   color: #2f2785;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   text-align: left;
-  margin-left: 70px;
 }
 
 .order-progress p {
@@ -223,14 +124,13 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-left: auto;
+  margin-bottom: 1.5rem;
 }
 
 .order-line {
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin-left: 70px;
 }
 
 .order-label {
@@ -253,22 +153,23 @@
 
 .progress-steps {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
   position: relative;
-  width: 980px;
-  margin-top: 60px;
-  padding: 0 60px;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0 10px;
 }
 
 .progress-steps::before {
   content: "";
   position: absolute;
-  top: 40%;
-  left: 9%;
-  right: 8%;
+  top: 50px;
+  left: 60px;
+  right: 60px;
   height: 15px;
-  width: auto;
   background: #2f2785;
   z-index: 0;
   transform: translateY(-50%);
@@ -280,8 +181,12 @@
   font-size: 24px;
   font-weight: 600;
   color: #2f2785;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   z-index: 1;
+  min-width: 120px;
 }
 
 .icon-circle {
@@ -292,8 +197,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: -22px;
   background: white;
+  margin-bottom: 0.5rem;
 }
 
 .step-img {
@@ -340,11 +245,15 @@
 .D-dropdown-details {
   color: white;
   text-align: left;
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .D-profile-dropdown {
   position: absolute;
-  height: auto;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 300px;
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -352,7 +261,6 @@
   font-family: "Montserrat", sans-serif;
   overflow: hidden;
   animation: fadeIn 0.3s ease-in-out;
-  margin-top: 10px;
   padding: 0;
   color: #2f2785;
 }
@@ -410,10 +318,6 @@
   text-decoration: none;
 }
 
-/* .dropdown-icon { 
-  width: 24px;
-  height: 24px;
-} */
 .D-dropdown-footer {
   display: flex;
   justify-content: space-between;
@@ -434,4 +338,11 @@
 .D-footer-link:hover {
   opacity: 1;
   text-decoration: underline;
+}
+
+.D-profile-dropdown .name1 {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

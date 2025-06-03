@@ -6,13 +6,105 @@ import logoImage from "../pages/logo.png";
 import profilePic from "../pages/profile.png";
 import salesChartImage from "../pages/img/sales.png";
 
+const AdminOrderHistoryContent = ({ OrdersTableComponent, ordersData }) => {
+  const [activeTab, setActiveTab] = useState("all");
+
+  const filteredOrders = (ordersData || orders).filter((order) => {
+    if (activeTab === "all") return true;
+    return order.status.toLowerCase() === activeTab.toLowerCase();
+  });
+
+  const tabs = [
+    { label: "All Order", value: "all" },
+    { label: "Completed", value: "delivered" },
+    { label: "Cancelled", value: "cancelled" },
+  ];
+
+  const renderOrderStatus = (status) => {
+    let statusClass = "";
+    switch (status.toLowerCase().replace(/\s+/g, "")) {
+      case "delivered":
+        statusClass = "delivered";
+        break;
+      case "cancelled":
+        statusClass = "cancelled";
+        break;
+      default:
+        statusClass = "default";
+    }
+    return <span className={`ad-status ${statusClass}`}>{status}</span>;
+  };
+
+  return (
+    <div className="aoh-content-wrapper">
+      <h2 className="ad-title">Order History</h2>
+
+      <div className="aoh-tabs">
+        {tabs.map((tab) => (
+          <button
+            key={tab.value}
+            className={`aoh-tab-btn ${activeTab === tab.value ? "active" : ""}`}
+            onClick={() => setActiveTab(tab.value)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {filteredOrders.length > 0 ? (
+        OrdersTableComponent ? (
+          <OrdersTableComponent orderData={filteredOrders} />
+        ) : (
+          <div className="ad-orders-table-container">
+            <div className="ad-orders-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order Id</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredOrders.map((order, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 1 ? "alt-row" : ""}
+                    >
+                      <td>{order.id}</td>
+                      <td>{order.name}</td>
+                      <td>{order.type}</td>
+                      <td>{order.payment}</td>
+                      <td>{renderOrderStatus(order.status)}</td>
+                      <td>₱{order.total}</td>
+                      <td>
+                        <button className="ad-dropdown">⋮</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )
+      ) : (
+        <div className="aoh-empty-message">No orders found in this tab.</div>
+      )}
+    </div>
+  );
+};
+
+// Keep the original component for backward compatibility if needed
 const AdminOrderHistory = () => {
   const [activeTab, setActiveTab] = useState("all");
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();
 
-  // Handle the navigation when "Live Orders" is clicked
   const handleLiveOrdersClick = () => {
-    navigate("/admindashboard"); // This will navigate to the Admin Dashboard
+    navigate("/admindashboard");
   };
 
   const filteredOrders = orders.filter((order) => {
@@ -37,20 +129,15 @@ const AdminOrderHistory = () => {
           </div>
         </div>
         <nav className="ad-nav">
-          {/* "Live Orders" with icon */}
           <div className="ad-nav-item" onClick={handleLiveOrdersClick}>
             <LayoutDashboard className="aoh-icon" size={35} />
             <span>Live Orders</span>
           </div>
-
-          {/* Active Order History menu with icon */}
           <div className="ad-nav-item active">
             <div className="ad-nav-indicator" />
             <History className="aoh-icon" size={35} />
             <span>Order History</span>
           </div>
-
-          {/* "Sales" section with icon */}
           <div className="ad-nav-item">
             <img src={salesChartImage} alt="Sales" className="nav-item-image" />
             <span>Sales</span>
@@ -70,69 +157,7 @@ const AdminOrderHistory = () => {
         </div>
 
         <div className="ad-main-content">
-          <h2 className="ad-title">Order History</h2>
-
-          <div className="aoh-tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.value}
-                className={`aoh-tab-btn ${
-                  activeTab === tab.value ? "active" : ""
-                }`}
-                onClick={() => setActiveTab(tab.value)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="ad-orders-table">
-            {filteredOrders.length > 0 ? (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Order Id</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Payment</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.map((order, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 1 ? "alt-row" : ""}
-                    >
-                      <td>{order.id}</td>
-                      <td>{order.name}</td>
-                      <td>{order.type}</td>
-                      <td>{order.payment}</td>
-                      <td>
-                        <span
-                          className={`ad-status ${
-                            order.status === "Delivered" ? "ready" : "ontheway"
-                          }`}
-                        >
-                          {order.status}
-                        </span>
-                      </td>
-                      <td>₱{order.total}</td>
-                      <td>
-                        <button className="ad-action-btn">⋮</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="aoh-empty-message">
-                No orders found in this tab.
-              </div>
-            )}
-          </div>
+          <AdminOrderHistoryContent />
         </div>
       </div>
     </div>
@@ -207,3 +232,6 @@ const orders = [
     total: "50.00",
   },
 ];
+
+// Named export for the content component
+export { AdminOrderHistoryContent };

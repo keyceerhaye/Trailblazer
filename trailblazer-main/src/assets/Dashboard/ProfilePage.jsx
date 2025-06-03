@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { LayoutDashboard, User, History } from "lucide-react";
+// import { LayoutDashboard, User, History } from "lucide-react"; // Now in Sidebar
 import { PencilIcon } from "@heroicons/react/24/solid";
 import "./ProfilePage.css";
-import logoImage from "../pages/logo.png";
+import Sidebar from "../../components/Sidebar/Sidebar"; // Import Sidebar
+// import logoImage from "../pages/logo.png"; // Now in Sidebar
 import Profile from "../pages/profile.png";
 
 export default function ProfilePage() {
@@ -91,47 +92,8 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-container">
-      <aside className="sidebar">
-        <div className="sidebar-top">
-          <div className="sidebar-brand">
-            <img
-              src={logoImage}
-              alt="Trailblazer Printing Logo"
-              className="brand-logo"
-            />
-            <div className="pf-brand-info">
-              <h1 className="pf-brand-title">TRAILBLAZER</h1>
-              <span className="pf-brand-subtitle">
-                PRINTING & LAYOUT SERVICES
-              </span>
-            </div>
-          </div>
-
-          <nav className="sidebar-nav">
-            <ul>
-              <li>
-                <a href="/dashboard">
-                  <LayoutDashboard className="icon" />
-                  Dashboard
-                </a>
-              </li>
-              <li className="active">
-                <a href="#">
-                  <User className="icon" />
-                  Profile
-                </a>
-              </li>
-              <li>
-                <a href="orderhistory">
-                  <History className="icon" />
-                  Order History
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </aside>
-
+      <Sidebar /> {/* Use the Sidebar component */}
+      {/* <aside className="sidebar"> ... OLD SIDEBAR CODE REMOVED ... </aside> */}
       <main className="main-content">
         <section className="content-wrapper">
           <h2 className="Pp-title">User Profile</h2>

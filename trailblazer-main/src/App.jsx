@@ -20,8 +20,8 @@ import ForgotPassword from "./assets/ForgotPassword/forgot-password";
 import VerifyEmail from "./assets/VerifyEmail/VerifyEmail";
 import Dashboard from "./assets/Dashboard/Dashboard";
 import Terms from "./assets/Terms/Terms";
-import ProfilePage from "./assets/ProfilePage/ProfilePage";
-import OrderHistory from "./assets/OrderHistory/OrderHistory";
+import ProfilePage from "./assets/Dashboard/ProfilePage";
+import OrderHistory from "./assets/Dashboard/OrderHistory";
 import Basket from "./assets/Basket/Basket";
 import Delivery from "./assets/Delivery/Delivery";
 import DeliveryAddress from "./assets/DeliveryAddress/DeliveryAddress";
@@ -30,8 +30,8 @@ import Payment from "./assets/Payment/Payment";
 import Layout from "./assets/Layout/Layout";
 import TemplateDetail from "./assets/TemplateDetail/TemplateDetail";
 import OrderConfirmed from "./assets/OrderConfirmed/OrderConfirmed";
-import AdminDashboard from "./assets/AdminDashboard/AdminDashboard";
-import AdminOrderHistory from "./assets/AdminOrderHistory/AdminOrderHistory";
+import AdminDashboard from "./assets/AdminPage/AdminDashboard";
+import AdminOrderHistory from "./assets/AdminPage/AdminOrderHistory";
 import UserList from "./assets/UserList/UserList";
 
 const App = () => {
@@ -205,7 +205,9 @@ const App = () => {
         <Route path="/confirmation" element={<OrderConfirmed />} />
         <Route path="/upload/layout" element={<Layout />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
-        <Route path="/admin-orderhistory" element={<AdminOrderHistory />} />
+        <Route path="/admin-orderhistory" element={<AdminDashboard />} />
+        <Route path="/admin-sales" element={<AdminDashboard />} />
+        <Route path="/admin-messages" element={<AdminDashboard />} />
         <Route path="/admin/orders" element={<AdminOrderHistory />} />
         <Route path="/users" element={<UserList />} />
       </Routes>

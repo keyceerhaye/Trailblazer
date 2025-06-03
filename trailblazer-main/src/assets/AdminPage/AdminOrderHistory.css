@@ -1,0 +1,123 @@
+/* START OF FILE AdminOrderHistory.css */
+
+/* AdminOrderHistory.css */
+/* This file assumes AdminDashboard.css (or its core styles) is loaded first. */
+/* It only contains styles specific to the AdminOrderHistory page that are not */
+/* covered by the shared 'ad-' prefixed classes. */
+
+/* --- Order History Tabs --- */
+.aoh-tabs {
+  display: flex;
+  gap: var(--space-sm); /* Spacing between tab buttons */
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+  padding-left: var(--space-xs); /* Align with content */
+  flex-shrink: 0; /* Prevent tabs from shrinking */
+}
+
+.aoh-tab-btn {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  border-bottom: 3px solid transparent; /* For active indicator */
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  margin-bottom: -1px; /* Align border with container's border */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.aoh-tab-btn:hover {
+  color: var(--color-accent-blue);
+}
+
+.aoh-tab-btn.active {
+  color: var(--color-accent-blue);
+  font-weight: var(--font-weight-semibold);
+  border-bottom-color: var(--color-accent-blue);
+}
+
+/* Empty Message Styling */
+.aoh-empty-message {
+  text-align: center;
+  padding: var(--space-xxxl) var(--space-lg);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  background-color: var(
+    --color-background-component-alt
+  ); /* Light background */
+  border-radius: var(--border-radius-md);
+  margin-top: var(--space-lg);
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Order History Content Container */
+.aoh-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Responsive adjustments for Order History */
+@media (max-width: 768px) {
+  .aoh-tabs {
+    gap: var(--space-xs);
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .aoh-tab-btn {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+    min-width: max-content; /* Prevent tab buttons from shrinking too much */
+  }
+
+  .aoh-empty-message {
+    padding: var(--space-lg) var(--space-md);
+    font-size: var(--font-size-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .aoh-tabs {
+    margin-bottom: var(--space-lg);
+  }
+
+  .aoh-tab-btn {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs);
+  }
+
+  .aoh-empty-message {
+    padding: var(--space-md) var(--space-sm);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Overrides or specific styles for elements if .ad- classes don't fully cover AOH needs */
+/* Example: If .aoh-logo needs very specific tweaks not covered by .ad-logo */
+/* .aoh-logo { } */
+
+/*
+  Most styles like .aoh-container, .aoh-sidebar, .aoh-main, .aoh-title,
+  .aoh-table, .aoh-badge were either too generic or covered by the updated
+  .ad- prefixed styles in AdminDashboard.css.
+
+  The .ad-action-btn is styled via .ad-dropdown in AdminDashboard.css.
+  Table rows (.alt-row) are also handled by .ad-orders-table .alt-row.
+*/
+
+/* Ensure AOH icons align with new sidebar structure */
+.ad-sidebar .ad-nav-item .aoh-icon {
+  /* Default styling is handled by .ad-nav-icon or direct .aoh-icon styles in AdminDashboard.css */
+  /* This is a placeholder if specific overrides are needed for AOH icons in nav */
+}
+
+/* END OF FILE AdminOrderHistory.css */

@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  LayoutDashboard,
-  User,
-  History,
-  Home,
-  Settings,
-  Phone,
-  Info,
-  LogOut,
-} from "lucide-react";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import { Home, Settings, Phone, Info, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import "./OrderHistory.css";
-import logoImage from "../pages/logo.png";
 import Profile from "../pages/profile.png";
 
 export default function OrderHistoryPage() {
@@ -91,39 +82,7 @@ export default function OrderHistoryPage() {
 
   return (
     <div className="oh-container">
-      <aside className="oh-sidebar">
-        <div className="oh-sidebar-brand">
-          <img src={logoImage} alt="Trailblazer Logo" className="oh-logo" />
-          <div className="oh-brand-info">
-            <h1 className="oh-brand-title">TRAILBLAZER</h1>
-            <span className="oh-brand-subtitle">
-              PRINTING & LAYOUT SERVICES
-            </span>
-          </div>
-        </div>
-        <nav className="oh-nav">
-          <ul>
-            <li>
-              <a href="/dashboard">
-                <LayoutDashboard className="oh-icon" />
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a href="/profile">
-                <User className="oh-icon" />
-                Profile
-              </a>
-            </li>
-            <li className="active">
-              <a href="#">
-                <History className="oh-icon" />
-                Order History
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+      <Sidebar />
 
       <main className="oh-main">
         <div className="oh-header-bar">
