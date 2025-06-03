@@ -6,7 +6,7 @@
   background-color: #2f2785;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Adjusted to space-between to push nav to top if no footer */
+  justify-content: flex-start; /* Changed from space-between to stack items at the top */
   box-shadow: 4px 0px 4px 5px rgba(0, 0, 0, 0.25);
   background-clip: border-box;
   border-top-right-radius: 20px;
@@ -24,9 +24,8 @@
 }
 
 .S-sidebar-brand {
-  /* Renamed from D-sidebar-brand for clarity */
-  display: flex; /* Added for better alignment of logo and text */
-  align-items: center; /* Vertically align logo and text block */
+  display: flex;
+  align-items: center; /* Vertically align logo and brand-info block */
 }
 
 .brand-logo {
@@ -38,9 +37,9 @@
 }
 
 .brand-info {
-  /* Removed margins, flexbox on parent handles positioning */
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* Ensures title and subtitle are left-aligned */
 }
 
 .brand-title {
@@ -58,6 +57,9 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1; /* Adjusted line-height */
+  margin: 0; /* Remove default margins */
+  padding: 0; /* Remove default/user-set padding, ensuring no extra space */
+  /* height: auto; Removed as margin/padding are more relevant for spacing */
 }
 
 .brand-subtitle {
@@ -77,6 +79,7 @@
   line-height: 1; /* Adjusted line-height */
   letter-spacing: 1.5px; /* Adjusted spacing */
   margin-top: 2px; /* Added small top margin */
+  padding: 0; /* Ensured padding is 0 for consistency */
 }
 
 .S-sidebar-nav ul {

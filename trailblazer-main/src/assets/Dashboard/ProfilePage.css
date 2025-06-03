@@ -31,15 +31,66 @@
   margin: 0 auto;
 }
 
-/* Page Title */
-.Pp-title {
-  font-size: 36px;
-  font-weight: 600;
-  color: #2f2785;
+/* Shared Page Header Styles (Copied from Dashboard.css for now) */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #cccccc;
   margin-bottom: 2rem;
-  text-align: left;
-  margin-top: 50px;
-  margin-left: -70px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  width: calc(100% - 300px);
+  margin-left: -300px;
+  padding-left: calc(300px + 2rem);
+}
+
+.page-header-title h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c2480;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.page-header-title .date,
+.page-header-title .subtitle {
+  color: #2e9cf4;
+  font-size: 15px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* No user profile box expected in ProfilePage header based on current structure */
+
+/* Reset for existing Profile Page title */
+.profile-header-wrapper {
+  /* This class will be added in JSX and will take .page-header styles */
+  /* Specific overrides for ProfilePage header if any can go here, but likely not needed */
+  /* Clearing out potential old conflicting styles if .profile-header-wrapper was used before */
+  padding: 0;
+  margin-bottom: 0;
+  background-color: transparent;
+  border-bottom: none;
+  position: static;
+  width: auto;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.Pp-title {
+  margin-left: 0 !important; /* Remove negative margin */
+  margin-top: 0; /* Remove top margin if it becomes part of page-header-title h2 */
+  font-size: 22px; /* Standardize with other header titles */
+  /* Other styles for Pp-title if it becomes part of page-header-title h2, can be removed if identical */
+}
+
+/* Ensure main content area has top padding if header is sticky and has fixed height */
+.main-content {
+  /* padding-top: 70px; /* Example: Adjust if header has fixed height */
 }
 
 /* Profile Card */

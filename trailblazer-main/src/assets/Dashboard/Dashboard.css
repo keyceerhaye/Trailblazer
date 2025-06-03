@@ -1,17 +1,52 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 .dashboard-container {
+  position: relative;
   display: flex;
   width: 100%;
   font-family: "Montserrat";
   background: transparent;
-  padding-left: 300px;
+  /* padding-left: 300px; */ /* Removed: Sidebar will occupy its own space */
+  overflow-x: hidden;
+  height: 100vh; /* Ensure container takes full viewport height */
 }
 
-.main-dashboard {
-  flex: 1;
-  overflow-y: auto;
-  padding: 2rem;
+/* Similar containers for other pages, ensure they also use flex */
+.oh-container,
+.profile-container {
+  display: flex;
+  width: 100%;
+  font-family: "Montserrat";
+  background: transparent;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+/* New wrapper for main content area (header + actual page content) */
+.main-content-wrapper {
+  flex: 1; /* Takes remaining width next to sidebar */
+
+  flex-direction: column;
+  height: 100%; /* Full height of its parent flex container */
+  overflow-y: auto; /* Let main content sections handle their own scroll */
+  /* margin-left: 300px; */ /* Removed global margin - will be applied specifically for dashboard */
+}
+
+/* Apply margin-left only to the dashboard's main content wrapper */
+.dashboard-container .main-content-wrapper {
+  margin-left: 300px;
+}
+
+.main-dashboard,
+.oh-main,
+.main-content {
+  /* .main-content is for ProfilePage */
+  flex: 1; /* Allows content to fill space below header */
+  overflow-y: auto; /* Enable scrolling for the content area itself */
+
+  padding-top: 0px;
+  /* padding-top will be adjusted if page-header is sticky, added below */
+  width: 100%;
 }
 
 .dashboard-header {
@@ -226,7 +261,6 @@
   font-weight: 600;
   color: #2f2785;
 }
-
 .dropdown-icon {
   transition: transform 0.3s ease;
   margin-left: 25px;
@@ -345,4 +379,49 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Shared Page Header Styles */
+
+/* Adjustments for user profile box within the new header */
+.page-header .D-user-profile-box,
+.page-header .oh-user-profile-box {
+  margin-top: 0; /* Remove top margin if any */
+}
+
+/* Remove negative margins from titles that were specific to old layout */
+.oh-title,
+.Pp-title {
+  margin-left: 0 !important; /* Titles are now part of .page-header-title, reset old margins */
+}
+
+/* Ensure main content area has top padding if header is sticky and has fixed height */
+.main-dashboard,
+.main-content, /* For ProfilePage */
+.oh-main {
+  /* padding-top: 70px; /* Example: Adjust if header has fixed height */
+  padding-bottom: 1rem; /* Base padding */
+  padding-left: 1rem; /* Base padding */
+  padding-right: 1rem; /* Base padding */
+
+  /* If page-header has a fixed height (e.g., 70px) and is sticky, add top padding to content */
+  /* For example: padding-top: calc(70px + 2rem); */
+  /* For now, relying on sticky behavior; adjust if overlap occurs or fixed header height is set */
+}
+
+/* Cleanup old header styles */
+.dashboard-header,
+.oh-header-bar,
+.profile-header-wrapper {
+  /* This class was in ProfilePage.jsx */
+  /* These styles are largely superseded by .page-header */
+  padding: 0;
+  margin-bottom: 0;
+  background-color: transparent;
+  border-bottom: none;
+  position: static; /* Reset positioning */
+  width: auto;
+  margin-left: 0;
+  padding-left: 0;
+  box-shadow: none; /* Remove old shadows if any */
 }
