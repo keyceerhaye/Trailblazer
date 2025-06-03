@@ -24,6 +24,7 @@
   margin-left: clamp(100px, 10vw, 200px);
   max-width: 650px;
   flex: 1;
+  flex-direction: column-reverse;
   min-width: 300px;
   margin-left: 100px; /* Overridden below for small screens */
 }

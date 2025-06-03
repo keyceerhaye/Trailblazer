@@ -37,12 +37,8 @@ function Services() {
       </div>
 
       <div className="Rhombus-shapes">
-        <div>
-          <div className="rhombus1"></div>
-          <div className="rhombus2"></div>
-          <div className="rhombus3"></div>
-          <div className="rhombus4"></div>
-        </div>
+        <div className="rhombus1"></div>
+        <div className="rhombus2"></div>
       </div>
     </section>
   );

@@ -123,59 +123,39 @@ h1 {
 
 .Rhombus-shapes {
   position: absolute;
-  display: flex;
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   z-index: 0;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .rhombus1 {
-  width: clamp(200px, 30vw, 390px);
-  height: clamp(200px, 30vw, 393px);
-  background-color: #2f2785;
+  width: clamp(120px, 20vw, 300px);
+  height: clamp(120px, 20vw, 300px);
+  background-color: black;
   border-radius: 20px;
   transform: rotate(45deg);
   position: absolute;
-  top: 30%;
-  left: 600px; /* pushed to the left side */
+  top: 50%;
+  left: -10%;
+  margin-top: -10vw; /* Half of height to center vertically */
   animation: spinAndColor 1.7s linear infinite;
 }
 
 .rhombus2 {
-  width: clamp(200px, 30vw, 390px);
-  height: clamp(200px, 30vw, 393px);
+  width: clamp(120px, 20vw, 300px);
+  height: clamp(120px, 20vw, 300px);
   background-color: #326bf6;
   border-radius: 20px;
   transform: rotate(45deg);
   position: absolute;
-  top: 20%;
-  right: 600px; /* pushed to the right side */
+  top: 50%;
+  right: -10%;
+  margin-top: -10vw; /* Half of height to center vertically */
   animation: spinAndColor 1.7s linear infinite reverse;
-}
-
-.rhombus3 {
-  width: clamp(200px, 30vw, 390px);
-  height: clamp(200px, 30vw, 393px);
-  background-color: #2f2785;
-  border-radius: 20px;
-  transform: rotate(45deg);
-  position: absolute;
-  top: 45%;
-  left: 700px;
-  animation: spinAndColor 2s linear infinite;
-}
-
-.rhombus4 {
-  width: clamp(200px, 30vw, 390px);
-  height: clamp(200px, 30vw, 393px);
-  background-color: #326bf6;
-  border-radius: 20px;
-  transform: rotate(45deg);
-  position: absolute;
-  top: 10%;
-  right: 700px;
-  animation: spinAndColor 2s linear infinite reverse;
 }
 
 @keyframes spinAndColor {
@@ -230,11 +210,13 @@ h1 {
   }
 
   .rhombus1 {
-    left: 70vw;
+    left: -15%;
+    margin-top: -15vw;
   }
 
   .rhombus2 {
-    right: 70vw;
+    right: -15%;
+    margin-top: -15vw;
   }
 }
 
@@ -265,5 +247,8 @@ h1 {
   .rhombus1,
   .rhombus2 {
     opacity: 0.3;
+    width: clamp(100px, 25vw, 150px);
+    height: clamp(100px, 25vw, 150px);
+    margin-top: -12.5vw;
   }
 }
