@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Hero.css';
-import image from './printer.png';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Hero.css";
+import image from "./printer.png";
 
 function Hero() {
   const [showModal, setShowModal] = useState(false);
@@ -11,19 +11,19 @@ function Hero() {
   // Check login status when component mounts
   useEffect(() => {
     const checkLoginStatus = () => {
-      const loggedIn = localStorage.getItem('loggedIn') === 'true';
+      const loggedIn = localStorage.getItem("loggedIn") === "true";
       setIsLoggedIn(loggedIn);
     };
-    
+
     checkLoginStatus();
-    
+
     // Listen for storage changes (in case user logs in/out in another tab)
-    window.addEventListener('storage', checkLoginStatus);
-    window.addEventListener('storageUpdated', checkLoginStatus);
-    
+    window.addEventListener("storage", checkLoginStatus);
+    window.addEventListener("storageUpdated", checkLoginStatus);
+
     return () => {
-      window.removeEventListener('storage', checkLoginStatus);
-      window.removeEventListener('storageUpdated', checkLoginStatus);
+      window.removeEventListener("storage", checkLoginStatus);
+      window.removeEventListener("storageUpdated", checkLoginStatus);
     };
   }, []);
 
@@ -31,7 +31,7 @@ function Hero() {
     if (isLoggedIn) {
       setShowModal(true);
     } else {
-      navigate('/Signup');
+      navigate("/Signup");
     }
   };
 
@@ -47,7 +47,7 @@ function Hero() {
   return (
     <>
       <section className="hero">
-        <div className="content">
+        <div className="content-hero">
           <div className="line1">
             <div>
               <span className="hero1">ONLY IN</span>
@@ -58,7 +58,7 @@ function Hero() {
               <span className="hero4"> CAMPUS!</span>
             </div>
           </div>
-          
+
           <div className="line3">
             <span className="hero5">We produce High-Quality For Printing</span>
             <div className="line4">
@@ -74,7 +74,7 @@ function Hero() {
           </div>
         </div>
 
-        <div className="image">
+        <div className="image-landing">
           <img src={image} alt="Printer image with circles" />
         </div>
       </section>
@@ -82,11 +82,23 @@ function Hero() {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <button className="close-btn" onClick={closeModal}>×</button>
+            <button className="close-btn" onClick={closeModal}>
+              ×
+            </button>
             <h3>CHOOSE A SERVICE</h3>
             <div className="service-buttons">
-              <button className="service-btn" onClick={() => handleServiceClick('print')}>PRINT</button>
-              <button className="service-btn" onClick={() => handleServiceClick('layout')}>LAYOUT</button>
+              <button
+                className="service-btn"
+                onClick={() => handleServiceClick("print")}
+              >
+                PRINT
+              </button>
+              <button
+                className="service-btn"
+                onClick={() => handleServiceClick("layout")}
+              >
+                LAYOUT
+              </button>
             </div>
           </div>
         </div>

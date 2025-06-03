@@ -25,7 +25,7 @@
 /* New wrapper for main content area (header + actual page content) */
 .main-content-wrapper {
   flex: 1; /* Takes remaining width next to sidebar */
-  display: flex;
+
   flex-direction: column;
   height: 100%; /* Full height of its parent flex container */
   overflow-y: auto; /* Let main content sections handle their own scroll */
@@ -43,7 +43,8 @@
   /* .main-content is for ProfilePage */
   flex: 1; /* Allows content to fill space below header */
   overflow-y: auto; /* Enable scrolling for the content area itself */
-  padding: 2rem;
+
+  padding-top: 0px;
   /* padding-top will be adjusted if page-header is sticky, added below */
   width: 100%;
 }
@@ -381,18 +382,6 @@
 }
 
 /* Shared Page Header Styles */
-.page-header {
-  position: sticky; /* Make header sticky within .main-content-wrapper */
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 3rem; /* General padding for the header */
-  background: #fff;
-  box-shadow: 0 4px 16px 0 rgba(44, 36, 128, 0.1);
-  z-index: 990;
-  width: 100%; /* Full width of .main-content-wrapper */
-}
 
 /* Adjustments for user profile box within the new header */
 .page-header .D-user-profile-box,
@@ -411,7 +400,10 @@
 .main-content, /* For ProfilePage */
 .oh-main {
   /* padding-top: 70px; /* Example: Adjust if header has fixed height */
-  padding: 2rem; /* Base padding */
+  padding-bottom: 1rem; /* Base padding */
+  padding-left: 1rem; /* Base padding */
+  padding-right: 1rem; /* Base padding */
+
   /* If page-header has a fixed height (e.g., 70px) and is sticky, add top padding to content */
   /* For example: padding-top: calc(70px + 2rem); */
   /* For now, relying on sticky behavior; adjust if overlap occurs or fixed header height is set */

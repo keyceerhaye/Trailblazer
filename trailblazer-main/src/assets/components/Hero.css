@@ -19,13 +19,21 @@
   flex-wrap: wrap;
 }
 
-.content {
+.content-hero {
   text-align: left;
   margin-left: clamp(100px, 10vw, 200px);
   max-width: 650px;
   flex: 1;
   min-width: 300px;
-  padding-left: 100px;
+  margin-left: 100px; /* Overridden below for small screens */
+}
+
+/* Center on smaller screens */
+@media (max-width: 768px) {
+  .content-hero {
+    margin: 0 auto;
+    text-align: center;
+  }
 }
 
 .line1,
