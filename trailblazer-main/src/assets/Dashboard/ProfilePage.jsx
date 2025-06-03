@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-// import { LayoutDashboard, User, History } from "lucide-react"; // Now in Sidebar
 import { PencilIcon } from "@heroicons/react/24/solid";
 import "./ProfilePage.css";
-import Sidebar from "../../components/Sidebar/Sidebar"; // Import Sidebar
-// import logoImage from "../pages/logo.png"; // Now in Sidebar
-import Profile from "../pages/profile.png";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import AppHeader from "../../components/AppHeader/AppHeader"; // Import AppHeader
+import Profile from "../pages/profile.png"; // Assuming this is the desired profile picture
+import { useNavigate } from "react-router-dom"; // Import useNavigate for logout
 
 export default function ProfilePage() {
   const [userData, setUserData] = useState({
@@ -15,8 +15,15 @@ export default function ProfilePage() {
     phoneNumber: "",
     location: "",
   });
+  const [currentDate, setCurrentDate] = useState(""); // For header date
+  const navigate = useNavigate(); // For logout
+  const user = JSON.parse(localStorage.getItem("user")); // Get user for AppHeader
 
   useEffect(() => {
+    const today = new Date();
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    setCurrentDate(today.toLocaleDateString("en-US", options));
+
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     if (storedUser) {
@@ -90,112 +97,128 @@ export default function ProfilePage() {
     }
   };
 
+  const handleProfileLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <div className="profile-container">
-      <Sidebar /> {/* Use the Sidebar component */}
-      {/* <aside className="sidebar"> ... OLD SIDEBAR CODE REMOVED ... </aside> */}
-      <main className="main-content">
-        <section className="content-wrapper">
-          <h2 className="Pp-title">User Profile</h2>
+      <Sidebar />
+      <div className="main-content-wrapper">
+        <div className="page-header">
+          <div className="page-header-title">
+            <h2 className="Pp-title">User Profile</h2>
+            <p className="date">{currentDate}</p>
+          </div>
+          <AppHeader
+            user={user}
+            profilePic={Profile}
+            handleLogout={handleProfileLogout}
+          />
+        </div>
 
-          <div className="profile-card">
-            <header className="profile-header">
-              <div className="avatar-container">
-                <div className="avatar">
-                  <img src={Profile} alt="Profile" className="avatar-img" />
+        <main className="main-content">
+          <section className="content-wrapper">
+            <div className="profile-card">
+              <header className="profile-header">
+                <div className="avatar-container">
+                  <div className="avatar">
+                    <img src={Profile} alt="Profile" className="avatar-img" />
+                  </div>
+                  <button className="edit-badge" onClick={handleEditClick}>
+                    <PencilIcon className="edit-icon" />
+                  </button>
+                  <input
+                    type="file"
+                    id="upload-profile"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleImageChange}
+                  />
                 </div>
-                <button className="edit-badge" onClick={handleEditClick}>
-                  <PencilIcon className="edit-icon" />
-                </button>
-                <input
-                  type="file"
-                  id="upload-profile"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={handleImageChange}
-                />
-              </div>
-              <div className="user-info">
-                <h2>
-                  {userData.firstName} {userData.lastName}
-                </h2>
-                <p className="username">
-                  @{userData.firstName.toLowerCase()}_
-                  {userData.lastName.toLowerCase()}
-                </p>
-                <p className="gender">Female</p>
-              </div>
-            </header>
+                <div className="user-info">
+                  <h2>
+                    {userData.firstName} {userData.lastName}
+                  </h2>
+                  <p className="username">
+                    @{userData.firstName.toLowerCase()}_
+                    {userData.lastName.toLowerCase()}
+                  </p>
+                  <p className="gender">Female</p>
+                </div>
+              </header>
 
-            <form onSubmit={handleSubmit} className="profile-form">
-              <div className="form-grid">
-                <div>
-                  <label htmlFor="firstName">First Name</label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    value={userData.firstName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="lastName">Last Name</label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={userData.lastName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email">Email Address</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={userData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone">Phone Number</label>
-                  <div className="phone-input">
+              <form onSubmit={handleSubmit} className="profile-form">
+                <div className="form-grid">
+                  <div>
+                    <label htmlFor="firstName">First Name</label>
                     <input
                       type="text"
-                      name="countryCode"
-                      value={userData.countryCode}
+                      id="firstName"
+                      name="firstName"
+                      value={userData.firstName}
                       onChange={handleChange}
-                      className="country-code"
                     />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName">Last Name</label>
                     <input
                       type="text"
-                      name="phoneNumber"
-                      value={userData.phoneNumber}
+                      id="lastName"
+                      name="lastName"
+                      value={userData.lastName}
                       onChange={handleChange}
-                      className="phone-number"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={userData.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone">Phone Number</label>
+                    <div className="phone-input">
+                      <input
+                        type="text"
+                        name="countryCode"
+                        value={userData.countryCode}
+                        onChange={handleChange}
+                        className="country-code"
+                      />
+                      <input
+                        type="text"
+                        name="phoneNumber"
+                        value={userData.phoneNumber}
+                        onChange={handleChange}
+                        className="phone-number"
+                      />
+                    </div>
+                  </div>
+                  <div className="loc">
+                    <label htmlFor="location">Location</label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      value={userData.location}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
-                <div className="loc">
-                  <label htmlFor="location">Location</label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={userData.location}
-                    onChange={handleChange}
-                  />
+                <div className="form-actions">
+                  <button type="submit">Save Changes</button>
                 </div>
-              </div>
-              <div className="form-actions">
-                <button type="submit">Save Changes</button>
-              </div>
-            </form>
-          </div>
-        </section>
-      </main>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
   );
 }
