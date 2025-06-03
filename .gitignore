@@ -33,7 +33,6 @@ pids/
 .env.development.local
 .env.test.local
 .env.production.local
-*.local # Kept from original
 !.env.example
 !.env.template
 
@@ -81,4 +80,4 @@ Thumbs.db
 # *.dll
 # *.exe
 # *.so
-# *.dylib
+# *.dylib 
