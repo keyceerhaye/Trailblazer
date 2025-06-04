@@ -112,19 +112,30 @@ function Header() {
   }
 
   const pathsWithShadow = [
-    "/AboutUs",
+    "/",
+    "/aboutus",
+    "/contact",
     "/upload/print",
     "/upload/layout",
+    "/upload",
     "/basket",
     "/delivery",
+    "/deliveryaddress",
     "/payment",
     "/confirmation",
+    "/layout",
+    "/service",
   ];
+
+  // Check if the current path starts with /template/
+  const isTemplatePath = location.pathname.startsWith("/template/");
 
   return (
     <header
       className={`header ${
-        pathsWithShadow.includes(location.pathname) ? "header-shadow" : ""
+        pathsWithShadow.includes(location.pathname) || isTemplatePath
+          ? "header-shadow"
+          : ""
       }`}
     >
       <div className="logo-section">

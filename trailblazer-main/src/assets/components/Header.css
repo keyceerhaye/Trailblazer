@@ -28,6 +28,7 @@ body {
 }
 
 .header-shadow {
+  background-color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
@@ -355,12 +356,14 @@ hr {
 
 /* For Terms and Privacy simplified header layout */
 .minimal-header {
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   background-color: white;
-  height: clamp(80px, 15vw, 130px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .center-logo {
