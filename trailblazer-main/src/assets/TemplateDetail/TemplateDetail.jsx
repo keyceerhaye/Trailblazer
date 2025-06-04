@@ -15,34 +15,6 @@ function TemplateDetail() {
     previousTemplateInfo.turnaroundTime || ""
   );
 
-  // Determine template type from templateId
-  const determineTemplateType = () => {
-    let type;
-    if (templateId.includes("resume")) {
-      type = "resume";
-    } else if (
-      templateId.includes("presentation") ||
-      templateId.includes("ppt")
-    ) {
-      type = "presentation";
-    } else if (templateId.includes("poster")) {
-      type = "poster";
-    } else if (templateId.includes("layout")) {
-      type = "layout";
-    } else {
-      type = "other";
-    }
-    console.log(
-      "Determined template type:",
-      type,
-      "from templateId:",
-      templateId
-    );
-    return type;
-  };
-
-  const templateType = determineTemplateType();
-
   const handleContinue = () => {
     // Validate fields
     if (!turnaroundTime) {
@@ -55,30 +27,17 @@ function TemplateDetail() {
     let templateDescription = "";
 
     // Find the template details from the template collections
-    if (templateType === "resume") {
-      const template = resumeTemplates.find((t) => t.id === templateId);
-      if (template) {
-        templateTitle = template.title;
-        templateDescription = template.description;
-      }
-    } else if (templateType === "poster") {
-      const template = posterTemplates.find((t) => t.id === templateId);
-      if (template) {
-        templateTitle = template.title;
-        templateDescription = template.description;
-      }
-    } else if (templateType === "presentation") {
-      const template = pptTemplates.find((t) => t.id === templateId);
-      if (template) {
-        templateTitle = template.title;
-        templateDescription = template.description;
-      }
-    } else if (templateType === "layout") {
-      const template = layoutTemplates.find((t) => t.id === templateId);
-      if (template) {
-        templateTitle = template.title;
-        templateDescription = template.description;
-      }
+    const allTemplates = [
+      ...resumeTemplates,
+      ...posterTemplates,
+      ...pptTemplates,
+      ...layoutTemplates,
+    ];
+    const template = allTemplates.find((t) => t.id === templateId);
+
+    if (template) {
+      templateTitle = template.title;
+      templateDescription = template.description;
     }
 
     // Create template info object with more details
@@ -86,7 +45,6 @@ function TemplateDetail() {
       templateId,
       notes,
       turnaroundTime,
-      templateType,
       title: templateTitle,
       description: templateDescription,
       imageSrc: `/images/${templateId}`,

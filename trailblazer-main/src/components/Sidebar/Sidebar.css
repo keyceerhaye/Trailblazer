@@ -25,8 +25,12 @@
   padding: 1rem 0.8rem;
 }
 
-.logo-section {
+.logo-section-sidebar {
   margin-bottom: 2rem;
+  margin-right: 2rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
 }
@@ -39,9 +43,8 @@
 .brand-logo {
   width: 70px;
   height: 70px;
-  object-fit: contain;
+  object-fit: fill;
   display: block;
-  margin-right: 10px;
 }
 
 .S-sidebar-brand-collapsed {

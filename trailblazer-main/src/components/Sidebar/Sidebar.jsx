@@ -12,11 +12,11 @@ const navItems = [
     label: "Dashboard",
     pageName: "dashboard",
   },
-  { 
-    to: "/profile", 
-    icon: User, 
-    label: "Profile", 
-    pageName: "profile" 
+  {
+    to: "/profile",
+    icon: User,
+    label: "Profile",
+    pageName: "profile",
   },
   {
     to: "/orderhistory",
@@ -43,7 +43,7 @@ export default function Sidebar({ onCollapseChange }) {
 
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      <div className="logo-section">
+      <div className="logo-section-sidebar">
         {!collapsed && (
           <div className="S-sidebar-brand">
             <img

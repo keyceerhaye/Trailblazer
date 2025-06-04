@@ -153,6 +153,7 @@ body {
   width: 100%;
   flex: 1;
   min-height: 600px;
+  align-items: stretch;
 }
 
 .uf-upload-box {
@@ -166,7 +167,7 @@ body {
   width: 100%;
   max-width: 100%;
   min-height: 550px;
-  height: 100%;
+  height: auto;
   padding: 2rem;
   transition: background-color 0.5s ease;
 }
@@ -228,7 +229,9 @@ body {
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
+  height: 100%;
+  min-height: 550px;
 }
 
 .uf-card-content {
@@ -236,6 +239,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  flex: 1;
 }
 
 .uf-card-title {
@@ -244,11 +248,16 @@ body {
   color: black;
   text-align: center;
   margin-bottom: 20px;
-  margin-top: 24px;
+  margin-top: 0;
+  flex-shrink: 0;
 }
 
 .uf-specs {
   margin-top: 15px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  margin-bottom: 20px;
 }
 
 .uf-spec-item {
@@ -281,7 +290,7 @@ body {
 .uf-payment-section {
   width: 100%;
   padding: 0 20px;
-  margin-top: 10px;
+  flex-shrink: 0;
 }
 
 .uf-payment-info {
@@ -637,10 +646,19 @@ body {
 @media screen and (max-width: 992px) {
   .uf-content {
     gap: 2rem;
+    flex-direction: row;
   }
 
   .uf-card {
-    margin-top: 30px;
+    margin-top: 0;
+  }
+
+  .uf-upload-box {
+    min-height: 500px;
+  }
+
+  .uf-card {
+    min-height: 500px;
   }
 }
 
@@ -654,9 +672,27 @@ body {
     padding: 2rem 1rem;
   }
 
+  .uf-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
   .uf-upload-box {
-    max-height: 585px;
-    max-width: 777px;
+    max-width: 100%;
+    min-height: 400px;
+    height: auto;
+  }
+
+  .uf-card {
+    max-width: 100%;
+    min-height: 400px;
+    height: auto;
+  }
+
+  .uf-card-content {
+    height: 100%;
+    padding: 1rem;
   }
 
   .uf-step-circles {
@@ -668,7 +704,7 @@ body {
   }
 
   .uf-files-list {
-    max-height: 250px;
+    max-height: 200px;
   }
 
   .uf-file-item {
@@ -678,46 +714,135 @@ body {
   .uf-progress-bar {
     font-size: 12px;
   }
+
+  .uf-payment-info {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .uf-payment-label {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    font-size: clamp(14px, 2vw, 18px);
+  }
+
+  .uf-payment-value {
+    font-size: clamp(16px, 2.5vw, 22px);
+  }
+
+  .uf-payment-icon {
+    width: clamp(18px, 2.5vw, 25px);
+  }
+
+  .uf-confirm-btn-wrapper {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .uf-btn-primary {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .uf-container {
     margin-top: 80px;
+    padding: 0 10px;
+  }
+
+  .uf-content {
+    flex-direction: column;
+    gap: 1rem;
+    min-height: auto;
+  }
+
+  .uf-upload-box {
+    min-height: 350px;
+    padding: 1.5rem;
+  }
+
+  .uf-card {
+    min-height: 350px;
+  }
+
+  .uf-card-content {
+    padding: 1rem;
   }
 
   .uf-title {
     text-align: center;
+    margin-left: 0;
+    font-size: clamp(24px, 6vw, 32px);
   }
 
   .uf-subtitle {
     text-align: center;
+    margin-left: 0;
   }
 
   .uf-card-title {
     margin-left: 0;
     margin-right: 0;
+    font-size: clamp(16px, 4vw, 20px);
+  }
+
+  .uf-specs {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+
+  .uf-spec-item {
+    margin-bottom: 15px;
+  }
+
+  .uf-spec-trigger,
+  .uf-spec-input {
+    max-width: 100%;
+    font-size: 14px;
+    height: 40px;
   }
 
   .uf-payment-section {
     padding: 0 10px;
   }
 
+  .uf-payment-label {
+    font-size: clamp(12px, 3vw, 16px);
+    margin-bottom: 0.25rem;
+  }
+
+  .uf-payment-value {
+    font-size: clamp(14px, 3.5vw, 20px);
+  }
+
+  .uf-payment-icon {
+    width: clamp(16px, 3vw, 22px);
+  }
+
   .uf-confirm-btn-wrapper {
-    padding: 0 10px 15px;
+    padding: 0 10px 10px;
     justify-content: center;
   }
 
   .uf-btn-primary {
-    width: clamp(90px, 30%, 110px);
+    width: clamp(120px, 60%, 200px);
+    padding: 10px 20px;
+    font-size: 14px;
   }
 
   .uf-files-list {
-    max-height: 200px;
+    max-height: 180px;
   }
 
   .uf-btn-add-more {
     padding: 8px 16px;
     font-size: 14px;
+  }
+
+  .uf-back-button-container {
+    padding-left: 10px;
   }
 }
 
@@ -746,6 +871,27 @@ body {
 
   .uf-content {
     min-height: 650px;
+    gap: 3rem;
+  }
+
+  .uf-card {
+    height: 100%;
+    min-height: 600px;
+  }
+
+  .uf-card-content {
+    height: 100%;
+    padding: 2rem;
+  }
+
+  .uf-card-title {
+    margin-bottom: 25px;
+    font-size: 24px;
+  }
+
+  .uf-specs {
+    margin-top: 20px;
+    margin-bottom: 25px;
   }
 }
 
@@ -755,7 +901,11 @@ body {
   }
 
   .uf-card {
-    min-height: 600px;
+    height: 100%;
+  }
+
+  .uf-card-content {
+    height: 100%;
   }
 
   .uf-content {

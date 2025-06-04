@@ -37,6 +37,8 @@ body {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .Logo img {
