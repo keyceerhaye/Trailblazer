@@ -226,8 +226,7 @@ body {
 
 .contact-container .pin-icon {
   margin-top: 10px;
-  width: clamp(60px, 8vw, 90px);
-  height: auto;
+  width: clamp(42px, 8vw, 48px);
   flex-shrink: 0;
 }
 
