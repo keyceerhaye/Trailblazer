@@ -30,9 +30,12 @@ export const UploadFiles = () => {
     turnaroundTime: templateInfo?.turnaroundTime || "",
     paymentMethod: "",
     notes: templateInfo?.notes || "",
+    emailAddress: "",
+    phoneNumber: "",
   });
 
   const [hasTemplate, setHasTemplate] = useState(false);
+  const [templateType, setTemplateType] = useState(""); // To track the template type
 
   useEffect(() => {
     // Check if coming from template selection
@@ -43,6 +46,16 @@ export const UploadFiles = () => {
         turnaroundTime: templateInfo.turnaroundTime,
         notes: templateInfo.notes,
       }));
+
+      // Determine template type based on templateId
+      const templateId = templateInfo.templateId || "";
+      if (templateId.includes("resume")) {
+        setTemplateType("resume");
+      } else if (templateId.includes("presentation")) {
+        setTemplateType("presentation");
+      } else {
+        setTemplateType("other");
+      }
     }
   }, [templateInfo]);
 
@@ -74,16 +87,32 @@ export const UploadFiles = () => {
   const calculatePrice = () => {
     if (
       selectedFiles.length === 0 ||
-      specifications.paperSize === "" ||
-      specifications.printOption === ""
+      (templateType === "resume" &&
+        (specifications.paperSize === "" ||
+          specifications.printOption === "")) ||
+      (templateType === "presentation" && specifications.paymentMethod === "")
     ) {
       return "00.00";
     }
 
     // Base printing price per file
-    let basePrice =
-      PRICES.PRINTING[specifications.printOption]?.[specifications.paperSize] ||
-      0;
+    let basePrice = 0;
+
+    if (templateType === "resume") {
+      basePrice =
+        PRICES.PRINTING[specifications.printOption]?.[
+          specifications.paperSize
+        ] || 0;
+    } else if (templateType === "presentation") {
+      // For presentations, use a fixed price
+      basePrice = 50; // Example fixed price for presentations
+    } else {
+      // For other template types
+      basePrice =
+        PRICES.PRINTING[specifications.printOption]?.[
+          specifications.paperSize
+        ] || 0;
+    }
 
     // Multiply by number of files
     let totalPrice = basePrice * selectedFiles.length;
@@ -208,17 +237,51 @@ export const UploadFiles = () => {
       return;
     }
 
-    const allSpecsSelected = Object.values(specifications).every(
-      (value, index, array) => {
-        // Skip notes field when checking if all fields are filled
-        if (Object.keys(specifications)[index] === "notes") return true;
-        return value.trim() !== "";
+    // Check required fields based on template type
+    if (templateType === "resume") {
+      if (
+        !specifications.paperSize ||
+        !specifications.printOption ||
+        !specifications.paymentMethod
+      ) {
+        alert(
+          "Please complete all required specification fields before proceeding."
+        );
+        return;
       }
-    );
+    } else if (templateType === "presentation") {
+      if (
+        !specifications.emailAddress ||
+        !specifications.phoneNumber ||
+        !specifications.paymentMethod
+      ) {
+        alert(
+          "Please provide email, phone number, and payment method before proceeding."
+        );
+        return;
+      }
+    } else {
+      // Default check for other template types
+      const allSpecsSelected = Object.values(specifications).every(
+        (value, index, array) => {
+          // Skip notes field and other optional fields when checking
+          const key = Object.keys(specifications)[index];
+          if (
+            key === "notes" ||
+            key === "emailAddress" ||
+            key === "phoneNumber"
+          )
+            return true;
+          return value.trim() !== "";
+        }
+      );
 
-    if (!allSpecsSelected) {
-      alert("Please complete all specification fields before proceeding.");
-      return;
+      if (!allSpecsSelected) {
+        alert(
+          "Please complete all required specification fields before proceeding."
+        );
+        return;
+      }
     }
 
     if (isProcessingFiles) {
@@ -242,6 +305,7 @@ export const UploadFiles = () => {
           templateId: templateInfo.templateId,
           notes: specifications.notes,
           hasTemplate: true,
+          templateType: templateType,
         }
       : null;
 
@@ -254,28 +318,75 @@ export const UploadFiles = () => {
     });
   };
 
-  const specs = [
-    {
-      label: "Paper size:",
-      options: ["A4", "Short", "Long"],
-      stateKey: "paperSize",
-    },
-    {
-      label: "Printing options:",
-      options: ["Full color", "Black&White"],
-      stateKey: "printOption",
-    },
-    {
-      label: "Turnaround Time:",
-      options: ["Standard", "Rush"],
-      stateKey: "turnaroundTime",
-    },
-    {
-      label: "Payment method:",
-      options: ["Cash on Delivery", "Gcash"],
-      stateKey: "paymentMethod",
-    },
-  ];
+  // Get the appropriate specification fields based on template type
+  const getSpecFields = () => {
+    if (templateType === "resume") {
+      return [
+        {
+          label: "Paper size:",
+          options: ["A4", "Short", "Long"],
+          stateKey: "paperSize",
+        },
+        {
+          label: "Printing options:",
+          options: ["Full color", "Black&White"],
+          stateKey: "printOption",
+        },
+        {
+          label: "Payment method:",
+          options: ["Cash on Delivery", "Gcash"],
+          stateKey: "paymentMethod",
+        },
+      ];
+    } else if (templateType === "presentation") {
+      return [
+        {
+          label: "Email address:",
+          type: "text",
+          stateKey: "emailAddress",
+          placeholder: "Enter your email address",
+        },
+        {
+          label: "Phone number:",
+          type: "text",
+          stateKey: "phoneNumber",
+          placeholder: "Enter your phone number",
+        },
+        {
+          label: "Payment method:",
+          options: ["Cash on Delivery", "Gcash"],
+          stateKey: "paymentMethod",
+        },
+      ];
+    } else {
+      // Default fields for other template types
+      return [
+        {
+          label: "Paper size:",
+          options: ["A4", "Short", "Long"],
+          stateKey: "paperSize",
+        },
+        {
+          label: "Printing options:",
+          options: ["Full color", "Black&White"],
+          stateKey: "printOption",
+        },
+        {
+          label: "Turnaround Time:",
+          options: ["Standard", "Rush"],
+          stateKey: "turnaroundTime",
+        },
+        {
+          label: "Payment method:",
+          options: ["Cash on Delivery", "Gcash"],
+          stateKey: "paymentMethod",
+        },
+      ];
+    }
+  };
+
+  // Get the current specification fields based on template type
+  const specs = getSpecFields();
 
   return (
     <div className="uf-container">
@@ -412,22 +523,34 @@ export const UploadFiles = () => {
                 {specs.map((spec, index) => (
                   <div key={index} className="uf-spec-item">
                     <p className="uf-spec-label">{spec.label}</p>
-                    <select
-                      className="uf-spec-trigger"
-                      value={specifications[spec.stateKey]}
-                      onChange={(e) =>
-                        handleSpecChange(spec.stateKey, e.target.value)
-                      }
-                    >
-                      <option value="" disabled hidden>
-                        Select
-                      </option>
-                      {spec.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
+                    {spec.type === "text" ? (
+                      <input
+                        type="text"
+                        className="uf-spec-input"
+                        placeholder={spec.placeholder}
+                        value={specifications[spec.stateKey] || ""}
+                        onChange={(e) =>
+                          handleSpecChange(spec.stateKey, e.target.value)
+                        }
+                      />
+                    ) : (
+                      <select
+                        className="uf-spec-trigger"
+                        value={specifications[spec.stateKey]}
+                        onChange={(e) =>
+                          handleSpecChange(spec.stateKey, e.target.value)
+                        }
+                      >
+                        <option value="" disabled hidden>
+                          Select
                         </option>
-                      ))}
-                    </select>
+                        {spec.options.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                     {specifications[spec.stateKey] && (
                       <div className="uf-selected-value"></div>
                     )}

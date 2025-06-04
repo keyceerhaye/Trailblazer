@@ -36,6 +36,8 @@ const Basket = () => {
     printOption: passedDetails?.printOption || "Black&White",
     turnaroundTime: passedDetails?.turnaroundTime || "Standard",
     paymentMethod: passedDetails?.paymentMethod || "Cash",
+    emailAddress: passedDetails?.emailAddress || "",
+    phoneNumber: passedDetails?.phoneNumber || "",
     price: "00.00",
     customization: "None", // Added customization level
   });
@@ -98,7 +100,11 @@ const Basket = () => {
           };
           return {
             ...updatedDetails,
-            price: calculatePrice(pages, updatedDetails),
+            price: calculatePrice(
+              pages,
+              updatedDetails,
+              templateData?.templateType
+            ),
           };
         });
       }
@@ -106,27 +112,38 @@ const Basket = () => {
   }, [uploadedFiles, passedDetails]);
 
   // Calculate price based on specifications and number of pages
-  const calculatePrice = (pageCount, details) => {
-    if (
-      pageCount === 0 ||
-      details.paperSize === "Not selected" ||
-      details.printOption === "Not selected"
-    ) {
+  const calculatePrice = (pageCount, details, templateType) => {
+    if (pageCount === 0) {
       return "00.00";
     }
 
-    // Base printing price per page
-    // Map "Full color" from upload page to "Colored" in basket if needed
-    const printOption =
-      details.printOption === "Full color" ? "Colored" : details.printOption;
-    let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
+    let totalPrice = 0;
 
-    // Multiply by number of pages
-    let totalPrice = basePrice * pageCount;
+    if (templateType === "presentation") {
+      // For presentations, use a fixed price
+      totalPrice = 50;
+    } else if (templateType === "resume") {
+      // For resumes, use printing prices based on paper size and print option
+      // Map "Full color" from upload page to "Colored" in basket if needed
+      const printOption =
+        details.printOption === "Full color" ? "Colored" : details.printOption;
+      let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
 
-    // Add customization fee if applicable
-    if (details.customization && details.customization !== "None") {
-      totalPrice += PRICES.CUSTOMIZATION[details.customization];
+      // Multiply by number of pages
+      totalPrice = basePrice * pageCount;
+    } else {
+      // Default calculation for other templates
+      const printOption =
+        details.printOption === "Full color" ? "Colored" : details.printOption;
+      let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
+
+      // Multiply by number of pages
+      totalPrice = basePrice * pageCount;
+
+      // Add customization fee if applicable
+      if (details.customization && details.customization !== "None") {
+        totalPrice += PRICES.CUSTOMIZATION[details.customization];
+      }
     }
 
     // Add rush fee if applicable
@@ -142,7 +159,7 @@ const Basket = () => {
     if (basketItems.length > 0) {
       setOrderDetails((prev) => ({
         ...prev,
-        price: calculatePrice(totalPages, prev),
+        price: calculatePrice(totalPages, prev, templateData?.templateType),
       }));
     }
   }, [
@@ -248,6 +265,41 @@ const Basket = () => {
     });
   };
 
+  // Function to render appropriate order details based on template type
+  const renderOrderDetails = () => {
+    if (templateData?.templateType === "resume") {
+      return (
+        <p>
+          <strong>{orderDetails.paperSize}</strong>
+          <br />
+          {orderDetails.printOption}
+          <br />
+          {orderDetails.paymentMethod}
+        </p>
+      );
+    } else if (templateData?.templateType === "presentation") {
+      return (
+        <p>
+          <strong>Email:</strong> {orderDetails.emailAddress}
+          <br />
+          <strong>Phone:</strong> {orderDetails.phoneNumber}
+          <br />
+          {orderDetails.paymentMethod}
+        </p>
+      );
+    } else {
+      return (
+        <p>
+          <strong>{orderDetails.paperSize}</strong>
+          <br />
+          {orderDetails.printOption} {orderDetails.turnaroundTime}
+          <br />
+          {orderDetails.paymentMethod}
+        </p>
+      );
+    }
+  };
+
   return (
     <div className="bs-wrapper">
       {feedbackMessage && (
@@ -316,13 +368,7 @@ const Basket = () => {
 
             <div className="bs-summary-card bs-card">
               <div className="bs-summary-info">
-                <p>
-                  <strong>{orderDetails.paperSize}</strong>
-                  <br />
-                  {orderDetails.printOption} {orderDetails.turnaroundTime}
-                  <br />
-                  {orderDetails.paymentMethod}
-                </p>
+                {renderOrderDetails()}
                 {templateData && (
                   <div className="bs-template-info">
                     <p>
