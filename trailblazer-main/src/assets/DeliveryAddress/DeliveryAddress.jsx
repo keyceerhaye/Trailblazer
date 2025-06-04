@@ -72,6 +72,16 @@ const DeliveryAddress = () => {
     };
     localStorage.setItem("user", JSON.stringify(updatedUser));
 
+    // Validate required fields
+    if (
+      !accountDetails.firstName ||
+      !accountDetails.lastName ||
+      !accountDetails.phoneNumber
+    ) {
+      alert("Please complete all account details before proceeding.");
+      return;
+    }
+
     // Navigate to payment passing current basket and updated order details
     navigate("/payment", {
       state: {
@@ -85,6 +95,12 @@ const DeliveryAddress = () => {
         },
         // Pass the delivery method to ensure delivery fees are calculated correctly
         deliveryMethod: "deliver",
+        deliveryDetails: {
+          ...deliveryDetails,
+          accountDetails: {
+            ...accountDetails,
+          },
+        },
         templateData: location.state?.templateData,
       },
     });

@@ -221,7 +221,6 @@ body {
 .uf-card {
   width: 100%;
   max-width: 447px;
-  max-height: 583px;
   background: linear-gradient(to bottom, #e8ecf7 0%, #fef9f6 27%);
   background-size: cover;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -229,6 +228,7 @@ body {
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  overflow: visible;
 }
 
 .uf-card-content {
@@ -319,34 +319,60 @@ body {
 .uf-confirm-btn-wrapper {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
-  padding: 0 20px 20px;
-  margin-top: 10px;
-  align-items: center;
+  margin-top: 0.5rem;
 }
 
 .uf-btn-primary {
-  background-color: #2196f3;
-  border-radius: 20px;
-  font-family: "Montserrat";
-  width: clamp(100px, 30%, 120px);
-  height: 40px;
-  font-weight: bold;
-  font-size: clamp(16px, 2vw, 20px);
+  background-color: #1981e4;
   color: white;
-  padding: 0;
+  font-weight: bold;
+  padding: 12px 32px;
   border: none;
+  border-radius: 30px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+  font-family: "Montserrat";
 }
 
 .uf-btn-primary:hover {
-  background-color: #362d92;
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  background-color: #1467b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.uf-proceed-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.uf-btn-proceed {
+  background-color: #2f2785;
+  color: white;
+  font-weight: bold;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+  font-family: "Montserrat";
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 300px;
+  text-transform: uppercase;
+}
+
+.uf-btn-proceed:hover {
+  background-color: #241f68;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.uf-btn-proceed:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .uf-file-preview {

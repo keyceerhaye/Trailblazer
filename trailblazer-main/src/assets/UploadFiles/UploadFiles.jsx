@@ -221,10 +221,10 @@ export const UploadFiles = () => {
       totalPrice += basePrice * pageCount;
     });
 
-    // Add rush fee if applicable
-    if (specifications.turnaroundTime === "Rush") {
-      totalPrice += PRICES.RUSH_FEE;
-    }
+    // Remove rush fee calculation - it will be added in the Payment component
+    // if (specifications.turnaroundTime === "Rush") {
+    //   totalPrice += PRICES.RUSH_FEE;
+    // }
 
     return totalPrice.toFixed(2);
   };
@@ -424,6 +424,9 @@ export const UploadFiles = () => {
       pageCount: fileObj.pageCount || 1, // Include the page count information
     }));
 
+    // Calculate the final price
+    const finalPrice = calculatePrice();
+
     // Include template information if it exists
     const templateData = templateInfo
       ? {
@@ -434,13 +437,55 @@ export const UploadFiles = () => {
         }
       : null;
 
+    // Create orderDetails with the same structure expected by Basket and Delivery
+    const orderDetails = {
+      ...specifications,
+      price: finalPrice,
+    };
+
+    // Navigate to basket with all data needed for the flow
     navigate("/basket", {
       state: {
         files,
-        specifications,
+        specifications, // Keep original specifications
+        orderDetails, // Add orderDetails expected by Delivery/Payment
         templateData,
+        basketItems: selectedFiles.map((fileObj) => ({
+          id: fileObj.id,
+          name: fileObj.file.name,
+          file: {
+            type: fileObj.file.type,
+            size: fileObj.file.size,
+            lastModified: fileObj.file.lastModified,
+          },
+          pageCount: fileObj.pageCount || 1,
+          status: "Uploaded",
+          icon: getFileIcon(fileObj.file),
+        })),
       },
     });
+  };
+
+  // Get the appropriate file icon based on file extension
+  const getFileIcon = (file) => {
+    const extension = file.name.split(".").pop().toLowerCase();
+    switch (extension) {
+      case "pdf":
+        return PDF;
+      case "doc":
+      case "docx":
+        return DOC;
+      case "ppt":
+      case "pptx":
+        return PPT;
+      case "jpg":
+      case "jpeg":
+        return JPG;
+      case "png":
+        return PNG;
+      default:
+        return PDF;
+    }
   };
 
   // Get the appropriate specification fields based on template type
@@ -715,6 +760,16 @@ export const UploadFiles = () => {
                     {isProcessingFiles ? "Processing..." : "Confirm"}
                   </button>
                 </div>
+              </div>
+
+              <div className="uf-proceed-btn-wrapper">
+                <button
+                  className="uf-btn-proceed"
+                  onClick={handleConfirmClick}
+                  disabled={isProcessingFiles || selectedFiles.length === 0}
+                >
+                  PROCEED TO BASKET
+                </button>
               </div>
             </div>
           </div>

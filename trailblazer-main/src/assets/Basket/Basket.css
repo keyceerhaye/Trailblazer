@@ -249,6 +249,37 @@
   min-height: 28px;
 }
 
+.bs-order-details,
+.bs-template-info {
+  background-color: rgba(242, 245, 250, 0.5);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #e0e5f2;
+}
+
+.bs-order-details h3,
+.bs-template-info h3 {
+  font-size: 18px;
+  color: #2f2785;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.bs-order-details p,
+.bs-template-info p {
+  font-size: 14px !important;
+  line-height: 1.6;
+  color: #333;
+}
+
+.bs-template-notes {
+  font-style: italic;
+  color: #666;
+  display: inline-block;
+  margin-top: 5px;
+}
+
 .bs-page-info {
   margin-top: 10px;
   background-color: #f8f9fa;
@@ -459,14 +490,6 @@
 .bs-customization-btn.active {
   background-color: #2196f3;
   color: white;
-}
-
-.bs-template-notes {
-  font-style: italic;
-  font-size: 14px;
-  color: #666;
-  display: inline-block;
-  margin-top: 5px;
 }
 
 @media screen and (min-width: 992px) {

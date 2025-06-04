@@ -29,6 +29,7 @@ import UploadFiles from "./assets/UploadFiles/UploadFiles";
 import Payment from "./assets/Payment/Payment";
 import Layout from "./assets/Layout/Layout";
 import TemplateDetail from "./assets/TemplateDetail/TemplateDetail";
+import LayoutSpecification from "./assets/LayoutSpecification/LayoutSpecification";
 import OrderConfirmed from "./assets/OrderConfirmed/OrderConfirmed";
 import AdminDashboard from "./assets/AdminPage/AdminDashboard";
 import AdminOrderHistory from "./assets/AdminPage/AdminOrderHistory";
@@ -167,21 +168,29 @@ const App = () => {
           }
         />
         <Route
-          path="/upload/layout"
-          element={
-            <>
-              <Header />
-              <Layout />
-              <Footer />
-            </>
-          }
-        />
-        <Route
           path="/template/:templateId"
           element={
             <>
               <Header />
               <TemplateDetail />
+            </>
+          }
+        />
+        <Route
+          path="/template/:templateId/specification"
+          element={
+            <>
+              <Header />
+              <LayoutSpecification />
+            </>
+          }
+        />
+        <Route
+          path="/specifications"
+          element={
+            <>
+              <Header />
+              <LayoutSpecification />
             </>
           }
         />
@@ -192,8 +201,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/service" element={<Services />} />{" "}
-        {/* Route for Services */}
+        <Route path="/service" element={<Services />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/orderhistory" element={<OrderHistory />} />
         <Route path="/upload/:service" element={<UploadFiles />} />
@@ -203,7 +211,6 @@ const App = () => {
         <Route path="/deliveryaddress" element={<DeliveryAddress />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/confirmation" element={<OrderConfirmed />} />
-        <Route path="/upload/layout" element={<Layout />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/admin-orderhistory" element={<AdminDashboard />} />
         <Route path="/admin-sales" element={<AdminDashboard />} />

@@ -104,7 +104,10 @@ const Payment = () => {
   // Calculate turnaround fee based on selected turnaround time
   const turnaroundFee = userDetails.turnaround === "Rush" ? 7.0 : 0.0;
 
+  // Get the base file fee from order details
   const filesFee = parseFloat(orderDetails.price || 0);
+
+  // Calculate total amount by adding all fees together
   const totalAmount = (deliveryFee + turnaroundFee + filesFee).toFixed(2);
 
   return (
@@ -115,62 +118,90 @@ const Payment = () => {
             <div className="pay-modal-content">
               <h3 className="pay-terms-title">
                 Terms & Conditions
-                <button className="pay-terms-close" onClick={closeTermsModal}>×</button>
+                <button className="pay-terms-close" onClick={closeTermsModal}>
+                  ×
+                </button>
               </h3>
-              
+
               <div className="pay-terms-container">
                 <p className="pay-terms-intro">
-                  Welcome to Trailblazers Printing and Layout Services! These Terms and Conditions 
-                  govern your use of our website and services. By accessing or using our website, you 
-                  agree to comply with these terms.
+                  Welcome to Trailblazers Printing and Layout Services! These
+                  Terms and Conditions govern your use of our website and
+                  services. By accessing or using our website, you agree to
+                  comply with these terms.
                 </p>
 
                 <div className="pay-terms-section">
                   <span className="pay-terms-label">i. Definitions</span>
                   <p className="pay-terms-text">
-                    "CPE" and "Our" refer to CPE 2D Students, the operator of this website.<br/>
-                    "You" and "Your" refer to the user of our website and services.<br/>
-                    "Services" refer to our printing and layout customization offerings.
+                    "CPE" and "Our" refer to CPE 2D Students, the operator of
+                    this website.
+                    <br />
+                    "You" and "Your" refer to the user of our website and
+                    services.
+                    <br />
+                    "Services" refer to our printing and layout customization
+                    offerings.
                   </p>
                 </div>
 
                 <div className="pay-terms-section">
                   <span className="pay-terms-label">ii. Use of Services</span>
                   <p className="pay-terms-text">
-                    You must be a USTP-CDO student.<br/>
-                    You agree to provide accurate and complete information when placing an order.<br/>
-                    Unauthorized use of our services or website may result in termination of access.
+                    You must be a USTP-CDO student.
+                    <br />
+                    You agree to provide accurate and complete information when
+                    placing an order.
+                    <br />
+                    Unauthorized use of our services or website may result in
+                    termination of access.
                   </p>
                 </div>
 
                 <div className="pay-terms-section">
-                  <span className="pay-terms-label">iii. Orders and Payments</span>
+                  <span className="pay-terms-label">
+                    iii. Orders and Payments
+                  </span>
                   <p className="pay-terms-text">
-                    All orders must be paid in full before processing.<br/>
-                    Payment methods accepted include (list payment methods).<br/>
+                    All orders must be paid in full before processing.
+                    <br />
+                    Payment methods accepted include (list payment methods).
+                    <br />
                     Prices are subject to change without prior notice.
                   </p>
                 </div>
 
                 <div className="pay-terms-section">
-                  <span className="pay-terms-label">iv. Customization and Approval</span>
+                  <span className="pay-terms-label">
+                    iv. Customization and Approval
+                  </span>
                   <p className="pay-terms-text">
-                    Customers must review and approve all design proofs before printing.<br/>
-                    Once approved, we are not responsible for errors (spelling, layout, color, etc.).
+                    Customers must review and approve all design proofs before
+                    printing.
+                    <br />
+                    Once approved, we are not responsible for errors (spelling,
+                    layout, color, etc.).
                   </p>
                 </div>
 
                 <div className="pay-terms-section">
-                  <span className="pay-terms-label">v. Pick-up and Delivery</span>
+                  <span className="pay-terms-label">
+                    v. Pick-up and Delivery
+                  </span>
                   <p className="pay-terms-text">
-                    Estimated delivery times vary based on location and service selection.<br/>
-                    Estimated pick-up time is subject to the admin's availability, and the final
-                    schedule will be determined and confirmed by the admin.
+                    Estimated delivery times vary based on location and service
+                    selection.
+                    <br />
+                    Estimated pick-up time is subject to the admin's
+                    availability, and the final schedule will be determined and
+                    confirmed by the admin.
                   </p>
                 </div>
 
                 <div className="pay-terms-section">
-                  <span className="pay-terms-label">vi. Refunds and Cancellations</span>
+                  <span className="pay-terms-label">
+                    vi. Refunds and Cancellations
+                  </span>
                   <p className="pay-terms-text">
                     Orders can only be canceled before production starts.
                   </p>

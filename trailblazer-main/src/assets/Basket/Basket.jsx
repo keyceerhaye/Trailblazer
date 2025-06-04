@@ -120,15 +120,17 @@ const Basket = () => {
 
     let totalPrice = 0;
 
+    // Normalize print option to match PRICES structure
+    const normalizedPrintOption =
+      details.printOption === "Full color" ? "Colored" : details.printOption;
+
     if (templateType === "presentation" || templateType === "poster") {
       // For presentations and posters, use a fixed price
       totalPrice = 50;
     } else if (templateType === "resume") {
       // For resumes, use printing prices based on paper size and print option
-      // Map "Full color" from upload page to "Colored" in basket if needed
-      const printOption =
-        details.printOption === "Full color" ? "Colored" : details.printOption;
-      let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
+      let basePrice =
+        PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
 
       // Calculate price based on each file's page count
       items.forEach((item) => {
@@ -136,9 +138,8 @@ const Basket = () => {
       });
     } else {
       // Default calculation for other templates
-      const printOption =
-        details.printOption === "Full color" ? "Colored" : details.printOption;
-      let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
+      let basePrice =
+        PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
 
       // Calculate price based on each file's page count
       items.forEach((item) => {
@@ -151,10 +152,10 @@ const Basket = () => {
       }
     }
 
-    // Add rush fee if applicable
-    if (details.turnaroundTime === "Rush") {
-      totalPrice += PRICES.RUSH_FEE;
-    }
+    // Remove rush fee calculation - it will be added in the Payment component
+    // if (details.turnaroundTime === "Rush") {
+    //   totalPrice += PRICES.RUSH_FEE;
+    // }
 
     return totalPrice.toFixed(2);
   };
@@ -272,10 +273,24 @@ const Basket = () => {
   };
 
   const handleNextClick = () => {
+    // Ensure printOption is consistent ("Full color" from upload should be "Colored" in basket)
+    const normalizedOrderDetails = {
+      ...orderDetails,
+      printOption:
+        orderDetails.printOption === "Full color"
+          ? "Colored"
+          : orderDetails.printOption,
+      // Ensure price is calculated and included
+      price:
+        orderDetails.price ||
+        calculatePrice(basketItems, orderDetails, templateData?.templateType),
+    };
+
     navigate("/delivery", {
       state: {
         basketItems,
-        orderDetails,
+        orderDetails: normalizedOrderDetails,
+        specifications: normalizedOrderDetails, // Include as specifications for backward compatibility
         templateData,
       },
     });
@@ -285,70 +300,99 @@ const Basket = () => {
   const renderOrderDetails = () => {
     if (templateData?.templateType === "resume") {
       return (
-        <p>
-          <strong>{orderDetails.paperSize}</strong>
-          <br />
-          {orderDetails.printOption}
-          <br />
-          {orderDetails.turnaroundTime || "Standard"}
-          <br />
-          {orderDetails.paymentMethod}
-        </p>
+        <div className="bs-order-details">
+          <h3>Specifications:</h3>
+          <p>
+            <strong>Paper Size:</strong> {orderDetails.paperSize}
+            <br />
+            <strong>Printing Option:</strong> {orderDetails.printOption}
+            <br />
+            <strong>Turnaround Time:</strong>{" "}
+            {orderDetails.turnaroundTime || "Standard"}
+            <br />
+            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
+          </p>
+        </div>
       );
     } else if (
       templateData?.templateType === "presentation" ||
       templateData?.templateType === "poster"
     ) {
       return (
-        <p>
-          <strong>Email:</strong> {orderDetails.emailAddress}
-          <br />
-          <strong>Phone:</strong> {orderDetails.phoneNumber}
-          <br />
-          {orderDetails.turnaroundTime || "Standard"}
-          <br />
-          {orderDetails.paymentMethod}
-        </p>
+        <div className="bs-order-details">
+          <h3>Specifications:</h3>
+          <p>
+            <strong>Email:</strong> {orderDetails.emailAddress}
+            <br />
+            <strong>Phone:</strong> {orderDetails.phoneNumber}
+            <br />
+            <strong>Turnaround Time:</strong>{" "}
+            {orderDetails.turnaroundTime || "Standard"}
+            <br />
+            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
+          </p>
+        </div>
       );
     } else {
       return (
-        <p>
-          <strong>{orderDetails.paperSize}</strong>
-          <br />
-          {orderDetails.printOption}
-          <br />
-          {orderDetails.turnaroundTime || "Standard"}
-          <br />
-          {orderDetails.paymentMethod}
-        </p>
+        <div className="bs-order-details">
+          <h3>Specifications:</h3>
+          <p>
+            <strong>Paper Size:</strong> {orderDetails.paperSize}
+            <br />
+            <strong>Printing Option:</strong> {orderDetails.printOption}
+            <br />
+            <strong>Turnaround Time:</strong>{" "}
+            {orderDetails.turnaroundTime || "Standard"}
+            <br />
+            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
+          </p>
+        </div>
       );
     }
   };
 
-  // Handle back navigation to upload page
+  // Handle back navigation to upload page or specification page
   const handleBack = () => {
-    // Navigate back to upload page with current state
-    navigate("/upload/print", {
-      state: {
-        files: basketItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          type: item.file?.type,
-          size: item.file?.size,
-          lastModified: item.file?.lastModified,
-          pageCount: item.pageCount || 1,
-        })),
-        specifications: orderDetails,
-        templateInfo: templateData
-          ? {
-              templateId: templateData.templateId,
-              notes: templateData.notes,
-              turnaroundTime: orderDetails.turnaroundTime,
-            }
-          : null,
-        templateData,
-      },
-    });
+    // Check if user came from template specification page
+    if (templateData && templateData.hasTemplate && basketItems.length === 0) {
+      // Navigate back to specification page with current state
+      navigate(`/template/${templateData.templateId}/specification`, {
+        state: {
+          templateInfo: {
+            ...templateData,
+            templateId: templateData.templateId,
+            notes: templateData.notes,
+            turnaroundTime: orderDetails.turnaroundTime,
+            templateType: templateData.templateType,
+          },
+          specifications: orderDetails,
+        },
+      });
+    } else {
+      // Navigate back to upload page with current state
+      navigate("/upload", {
+        state: {
+          files: basketItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            type: item.file?.type,
+            size: item.file?.size,
+            lastModified: item.file?.lastModified,
+            pageCount: item.pageCount || 1,
+          })),
+          specifications: orderDetails,
+          templateInfo: templateData
+            ? {
+                templateId: templateData.templateId,
+                notes: templateData.notes,
+                turnaroundTime: orderDetails.turnaroundTime,
+              }
+            : null,
+          templateData,
+        },
+      });
+    }
   };
 
   return (
@@ -431,13 +475,19 @@ const Basket = () => {
                 {renderOrderDetails()}
                 {templateData && (
                   <div className="bs-template-info">
+                    <h3>Template Information:</h3>
                     <p>
-                      <strong>Template:</strong> {templateData.templateId}
+                      <strong>Template ID:</strong> {templateData.templateId}
+                      <br />
+                      <strong>Template Type:</strong>{" "}
+                      {templateData.templateType.charAt(0).toUpperCase() +
+                        templateData.templateType.slice(1)}
                       {templateData.notes && (
                         <>
                           <br />
+                          <strong>Notes:</strong>{" "}
                           <span className="bs-template-notes">
-                            Notes: {templateData.notes}
+                            {templateData.notes}
                           </span>
                         </>
                       )}
