@@ -423,86 +423,40 @@ const Basket = () => {
 
   // Function to render appropriate order details based on template type
   const renderOrderDetails = () => {
-    if (templateData?.templateType === "layout") {
-      return (
-        <div className="bs-order-details">
-          <h3>Specifications:</h3>
-          <p>
-            <strong>Service:</strong> Layout Design
-            <br />
-            <strong>Turnaround Time:</strong>{" "}
-            {templateData.turnaroundTime ||
-              orderDetails.turnaroundTime ||
-              "Standard"}
-            <br />
-            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
-            {orderDetails.customization &&
-              orderDetails.customization !== "None" && (
-                <>
-                  <br />
-                  <strong>Customization Level:</strong>{" "}
-                  {orderDetails.customization}
-                </>
-              )}
-          </p>
+    // Common specifications for all template types
+    return (
+      <div className="bs-order-details">
+        {/* Show Paper Size for all except pure layout service */}
+        {(templateData?.templateType !== "layout" || !templateData) && (
+          <div>{orderDetails.paperSize}</div>
+        )}
+
+        {/* Show Printing Option for all except pure layout service */}
+        {(templateData?.templateType !== "layout" || !templateData) && (
+          <div>{orderDetails.printOption}</div>
+        )}
+
+        {/* Show Service Type for layout */}
+        {templateData?.templateType === "layout" && <div>Layout Design</div>}
+
+        {/* Turnaround Time for all types */}
+        <div>
+          {templateData?.turnaroundTime ||
+            orderDetails.turnaroundTime ||
+            "Standard"}
         </div>
-      );
-    } else if (templateData?.templateType === "resume") {
-      return (
-        <div className="bs-order-details">
-          <h3>Specifications:</h3>
-          <p>
-            <strong>Paper Size:</strong> {orderDetails.paperSize}
-            <br />
-            <strong>Printing Option:</strong> {orderDetails.printOption}
-            <br />
-            <strong>Turnaround Time:</strong>{" "}
-            {templateData.turnaroundTime ||
-              orderDetails.turnaroundTime ||
-              "Standard"}
-            <br />
-            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
-          </p>
-        </div>
-      );
-    } else if (
-      templateData?.templateType === "presentation" ||
-      templateData?.templateType === "poster"
-    ) {
-      return (
-        <div className="bs-order-details">
-          <h3>Specifications:</h3>
-          <p>
-            <strong>Paper Size:</strong> {orderDetails.paperSize}
-            <br />
-            <strong>Printing Option:</strong> {orderDetails.printOption}
-            <br />
-            <strong>Turnaround Time:</strong>{" "}
-            {templateData.turnaroundTime ||
-              orderDetails.turnaroundTime ||
-              "Standard"}
-            <br />
-            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
-          </p>
-        </div>
-      );
-    } else {
-      return (
-        <div className="bs-order-details">
-          <h3>Specifications:</h3>
-          <p>
-            <strong>Paper Size:</strong> {orderDetails.paperSize}
-            <br />
-            <strong>Printing Option:</strong> {orderDetails.printOption}
-            <br />
-            <strong>Turnaround Time:</strong>{" "}
-            {orderDetails.turnaroundTime || "Standard"}
-            <br />
-            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
-          </p>
-        </div>
-      );
-    }
+
+        {/* Payment Method for all types */}
+        <div>{orderDetails.paymentMethod}</div>
+
+        {/* Customization Level only for layout */}
+        {templateData?.templateType === "layout" &&
+          orderDetails.customization &&
+          orderDetails.customization !== "None" && (
+            <div>{orderDetails.customization}</div>
+          )}
+      </div>
+    );
   };
 
   // Handle back navigation to upload page or specification page
@@ -667,38 +621,6 @@ const Basket = () => {
             <div className="bs-summary-card bs-card">
               <div className="bs-summary-info">
                 {renderOrderDetails()}
-                {templateData && (
-                  <div className="bs-template-info">
-                    <h3>Template Information:</h3>
-                    <p>
-                      <strong>Template:</strong>{" "}
-                      {templateData.title || templateData.templateId}
-                      <br />
-                      {templateData.description && (
-                        <>
-                          <strong>Description:</strong>{" "}
-                          {templateData.description}
-                          <br />
-                        </>
-                      )}
-                      <strong>Template Type:</strong>{" "}
-                      {templateData.templateType.charAt(0).toUpperCase() +
-                        templateData.templateType.slice(1)}
-                      <br />
-                      <strong>Turnaround Time:</strong>{" "}
-                      {templateData.turnaroundTime || "Standard"}
-                      {templateData.notes && (
-                        <>
-                          <br />
-                          <strong>Notes:</strong>{" "}
-                          <span className="bs-template-notes">
-                            {templateData.notes}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                )}
                 {totalPages > basketItems.length && (
                   <div className="bs-page-info">
                     <p>Total pages: {totalPages}</p>

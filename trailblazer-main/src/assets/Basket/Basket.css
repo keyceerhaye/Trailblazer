@@ -251,11 +251,12 @@
 
 .bs-order-details,
 .bs-template-info {
-  background-color: rgba(242, 245, 250, 0.5);
+  background-color: transparent;
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 15px;
-  border: 1px solid #e0e5f2;
+  border: none;
+  text-align: left;
 }
 
 .bs-order-details h3,
@@ -264,13 +265,16 @@
   color: #2f2785;
   margin-bottom: 10px;
   font-weight: 600;
+  text-align: left;
 }
 
-.bs-order-details p,
-.bs-template-info p {
-  font-size: 14px !important;
+.bs-order-details div {
+  font-size: 24px;
   line-height: 1.6;
   color: #333;
+  text-align: left;
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 
 .bs-template-notes {
