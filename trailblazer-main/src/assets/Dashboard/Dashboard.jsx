@@ -13,6 +13,7 @@ import Delivered from "../pages/4.png";
 export default function Dashboard() {
   const [fileName, setFileName] = useState("SDE Docs");
   const [price, setPrice] = useState(25.0);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -45,6 +46,10 @@ export default function Dashboard() {
     }
   }, [location.state]);
 
+  const handleSidebarCollapse = (collapsed) => {
+    setSidebarCollapsed(collapsed);
+  };
+
   const handleDashboardLogout = () => {
     localStorage.clear();
     navigate("/");
@@ -52,9 +57,9 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
-      <div className="main-content-wrapper">
-        <div className="page-header">
+      <Sidebar onCollapseChange={handleSidebarCollapse} />
+      <div className={`main-content-wrapper ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+        <div className={`page-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
           <div className="page-header-title">
             <h2>Dashboard</h2>
             <p className="date">{currentDate}</p>
@@ -63,6 +68,7 @@ export default function Dashboard() {
             user={user}
             profilePic={profilePic}
             handleLogout={handleDashboardLogout}
+            sidebarCollapsed={sidebarCollapsed}
           />
         </div>
 

@@ -110,116 +110,81 @@ const Payment = () => {
   return (
     <div className="pay-wrapper">
       {showTermsModal && (
-        <div className="pay-modal-overlay">
-          <div className="pay-modal">
-            <div className="pay-modal-header">
-              <h3 style={{ textAlign: "left" }}>Terms & Conditions</h3>
-              <button className="pay-modal-close" onClick={closeTermsModal}>
-                ×
-              </button>
-            </div>
+        <div className="pay-modal-overlay" onClick={closeTermsModal}>
+          <div className="pay-modal" onClick={(e) => e.stopPropagation()}>
             <div className="pay-modal-content">
-              <div className="pay-terms-section">
-                <div className="pay-terms-number">1</div>
-                <div className="pay-terms-text">
-                  <p>
-                    Welcome to Trailblazer Printing and Layout Services! These
-                    Terms and Conditions govern your use of our website and
-                    services. By accessing or using our website and services,
-                    you agree to be bound by these Terms and Conditions.
+              <h3 className="pay-terms-title">
+                Terms & Conditions
+                <button className="pay-terms-close" onClick={closeTermsModal}>×</button>
+              </h3>
+              
+              <div className="pay-terms-container">
+                <p className="pay-terms-intro">
+                  Welcome to Trailblazers Printing and Layout Services! These Terms and Conditions 
+                  govern your use of our website and services. By accessing or using our website, you 
+                  agree to comply with these terms.
+                </p>
+
+                <div className="pay-terms-section">
+                  <span className="pay-terms-label">i. Definitions</span>
+                  <p className="pay-terms-text">
+                    "CPE" and "Our" refer to CPE 2D Students, the operator of this website.<br/>
+                    "You" and "Your" refer to the user of our website and services.<br/>
+                    "Services" refer to our printing and layout customization offerings.
+                  </p>
+                </div>
+
+                <div className="pay-terms-section">
+                  <span className="pay-terms-label">ii. Use of Services</span>
+                  <p className="pay-terms-text">
+                    You must be a USTP-CDO student.<br/>
+                    You agree to provide accurate and complete information when placing an order.<br/>
+                    Unauthorized use of our services or website may result in termination of access.
+                  </p>
+                </div>
+
+                <div className="pay-terms-section">
+                  <span className="pay-terms-label">iii. Orders and Payments</span>
+                  <p className="pay-terms-text">
+                    All orders must be paid in full before processing.<br/>
+                    Payment methods accepted include (list payment methods).<br/>
+                    Prices are subject to change without prior notice.
+                  </p>
+                </div>
+
+                <div className="pay-terms-section">
+                  <span className="pay-terms-label">iv. Customization and Approval</span>
+                  <p className="pay-terms-text">
+                    Customers must review and approve all design proofs before printing.<br/>
+                    Once approved, we are not responsible for errors (spelling, layout, color, etc.).
+                  </p>
+                </div>
+
+                <div className="pay-terms-section">
+                  <span className="pay-terms-label">v. Pick-up and Delivery</span>
+                  <p className="pay-terms-text">
+                    Estimated delivery times vary based on location and service selection.<br/>
+                    Estimated pick-up time is subject to the admin's availability, and the final
+                    schedule will be determined and confirmed by the admin.
+                  </p>
+                </div>
+
+                <div className="pay-terms-section">
+                  <span className="pay-terms-label">vi. Refunds and Cancellations</span>
+                  <p className="pay-terms-text">
+                    Orders can only be canceled before production starts.
                   </p>
                 </div>
               </div>
 
-              <div className="pay-terms-section">
-                <div className="pay-terms-number">2</div>
-                <div className="pay-terms-text">
-                  <p>
-                    <strong>Limitations</strong>
-                  </p>
-                  <ul>
-                    <li>
-                      You must be at least 18 years old to use our services.
-                    </li>
-                    <li>
-                      You agree not to use our website for any illegal or
-                      unauthorized purpose.
-                    </li>
-                    <li>
-                      You agree not to violate any laws in your jurisdiction.
-                    </li>
-                  </ul>
-                </div>
+              <div className="pay-terms-buttons">
+                <button className="pay-terms-decline" onClick={declineTerms}>
+                  Decline
+                </button>
+                <button className="pay-terms-accept" onClick={acceptTerms}>
+                  Accept
+                </button>
               </div>
-
-              <div className="pay-terms-section">
-                <div className="pay-terms-number">3</div>
-                <div className="pay-terms-text">
-                  <p>
-                    <strong>Services and Pricing</strong>
-                  </p>
-                  <ul>
-                    <li>
-                      We reserve the right to modify our services and prices at
-                      any time.
-                    </li>
-                    <li>
-                      All prices are in Philippine Peso and include applicable
-                      taxes.
-                    </li>
-                    <li>
-                      Payment is required before printing services are provided.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="pay-terms-section">
-                <div className="pay-terms-number">4</div>
-                <div className="pay-terms-text">
-                  <p>
-                    <strong>Intellectual Property</strong>
-                  </p>
-                  <ul>
-                    <li>
-                      You retain all rights to your content submitted for
-                      printing.
-                    </li>
-                    <li>
-                      You guarantee that you have the necessary rights to print
-                      all submitted content.
-                    </li>
-                    <li>
-                      We are not responsible for copyright violations in
-                      user-submitted materials.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="pay-terms-section">
-                <div className="pay-terms-number">5</div>
-                <div className="pay-terms-text">
-                  <p>
-                    <strong>Refunds and Cancellations</strong>
-                  </p>
-                  <ul>
-                    <li>
-                      Refunds are only available for orders canceled before
-                      production starts.
-                    </li>
-                    <li>No refunds will be issued for completed print jobs.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="pay-modal-footer">
-              <button className="pay-btn-outline" onClick={declineTerms}>
-                Decline
-              </button>
-              <button className="pay-btn-filled" onClick={acceptTerms}>
-                Accept
-              </button>
             </div>
           </div>
         </div>

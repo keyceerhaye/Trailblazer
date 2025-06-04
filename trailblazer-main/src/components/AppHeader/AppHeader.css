@@ -17,6 +17,12 @@
   padding-right: 2rem;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
+  transition: padding-left 0.3s ease; /* Add transition for smooth adjustment */
+}
+
+/* Add class for when sidebar is collapsed */
+.sidebar-collapsed .app-header {
+  padding-left: calc(80px + 2rem); /* 80px for collapsed sidebar + 2rem for spacing */
 }
 
 .app-header-title-section {
@@ -43,8 +49,8 @@
 .app-user-profile-box {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 5px 10px;
+  gap: 8px;
+  padding: 8px 12px;
   cursor: pointer;
   border-radius: 20px;
   transition: all 0.3s ease;
@@ -52,28 +58,23 @@
 }
 
 .app-user-profile-box:hover {
-  background-color: transparent; /* No background change on hover */
+  background-color: #f0f0f0; /* Light background on hover */
 }
 
 .app-user-profile-box.active {
   background-color: #2f2785; /* Violet background when active */
-  color: white;
 }
 
 .app-user-profile-box.active .app-user-name-header {
   color: white;
 }
 
-.app-user-profile-box.active .app-dropdown-icon-header {
-  color: white;
-}
-
 .app-profile-img-main {
-  width: 45px; /* Slightly smaller for header */
+  width: 45px;
   height: 45px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #ddd;
+  border: none;
 }
 
 .app-user-details {
@@ -94,32 +95,35 @@
 }
 
 .app-dropdown-icon-header {
-  font-size: 20px;
-  color: #2c2480;
-  transition: transform 0.3s ease, color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  margin-left: 5px;
 }
 
 .app-dropdown-icon-header.rotate {
   transform: rotate(180deg);
 }
 
-/* Profile Dropdown Styles (Adapted from Dashboard.css) */
+/* Profile Dropdown Styles - Updated for new design */
 .app-profile-dropdown {
   position: absolute;
-  top: calc(100% + 5px); /* Position below the profile box */
+  top: calc(100% + 5px);
   right: 0;
-  width: 300px;
-  background-color: #ffffff;
-  border-radius: 15px; /* Slightly smaller radius */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000; /* Ensure dropdown is above other header elements */
+  width: 250px;
+  background-color: #2f2785; /* Deep purple background */
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
   font-family: "Montserrat", sans-serif;
   overflow: hidden;
   animation: fadeIn 0.2s ease-out;
-  color: #2f2785;
-  border: 1px solid #eee;
+  color: white;
   display: flex;
   flex-direction: column;
+  padding-bottom: 10px;
+  border: none;
 }
 
 @keyframes fadeIn {
@@ -137,17 +141,18 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  /* border-bottom: 1px solid #eee; */ /* Divider used instead */
-  background-color: #f9f9f9;
-  cursor: default; /* Make header part non-interactive unless specific elements are */
+  padding: 15px;
+  background-color: #2f2785; /* Same as dropdown background */
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 5px;
 }
 
 .app-dropdown-avatar-img {
-  width: 48px;
-  height: 48px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  border: 2px solid #2f2785;
+  border: none;
   object-fit: cover;
 }
 
@@ -159,7 +164,7 @@
 .app-dropdown-user-name {
   font-weight: 600;
   font-size: 16px;
-  color: #2f2785;
+  color: white;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -167,51 +172,53 @@
 
 .app-dropdown-divider {
   border: none;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin: 0;
 }
 
 .app-dropdown-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 20px;
+  gap: 15px;
+  padding: 10px 20px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
   transition: background-color 0.2s ease;
-  color: #2f2785;
+  color: white;
   text-decoration: none;
 }
 
 .app-dropdown-item:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .app-dropdown-lucide-icon {
-  width: 24px;
-  height: 24px;
-  color: #2f2785; /* Match text color */
+  width: 20px;
+  height: 20px;
+  color: white;
 }
 
 .app-dropdown-footer {
   display: flex;
   justify-content: space-between;
-  padding: 15px 20px;
-  font-size: 13px;
-  color: #2f2785;
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
-  margin: 15px auto 0;
+  padding: 12px 20px;
+  font-size: 12px;
+  color: white;
+  background-color: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto; /* Push to bottom */
   position: relative;
-  width: calc(100% - 40px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .app-footer-link {
-  color: #2f2785;
+  color: white;
   text-decoration: none;
   opacity: 0.85;
-  font-weight: 500;
+  font-weight: 400;
+  font-size: 12px;
 }
 
 .app-footer-link:hover {
@@ -219,61 +226,16 @@
   text-decoration: underline;
 }
 
-/* Dashboard specific dropdown styling */
+/* Remove dashboard-specific overrides since we're applying them globally now */
 .dashboard-container .app-profile-dropdown {
   background-color: #2f2785;
-  color: white;
 }
 
 .dashboard-container .app-dropdown-header-section {
-  background-color: #4136b0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dashboard-container .app-dropdown-user-name {
-  color: white;
-}
-
-.dashboard-container .app-dropdown-item {
-  color: white;
-}
-
-.dashboard-container .app-dropdown-lucide-icon {
-  color: white;
+  background-color: #2f2785;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dashboard-container .app-dropdown-item:hover {
-  background-color: #4136b0;
-}
-
-.dashboard-container .app-dropdown-divider {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dashboard-container .app-dropdown-footer {
-  background-color: #4136b0;
-  color: white;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dashboard-container .app-footer-link {
-  color: white;
-}
-
-/* Dashboard specific user profile box */
-.dashboard-container .app-user-profile-box:hover {
-  background-color: transparent; /* No background change on hover */
-}
-
-.dashboard-container .app-user-profile-box.active {
-  background-color: #2f2785;
-}
-
-/* Dashboard specific dropdown icon styling */
-.dashboard-container .app-dropdown-icon-header {
-  color: #2c2480;
-}
-
-.dashboard-container .app-dropdown-icon-header.rotate {
-  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
 }

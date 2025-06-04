@@ -5,7 +5,17 @@
   width: 100%;
   font-family: "Montserrat";
   background: transparent;
-  padding-left: 300px; /* Add padding to account for fixed sidebar width */
+}
+
+/* Main content wrapper adjustments */
+.profile-container .main-content-wrapper {
+  margin-left: 300px;
+  transition: margin-left 0.3s ease;
+  flex: 1;
+}
+
+.profile-container .main-content-wrapper.sidebar-collapsed {
+  margin-left: 80px;
 }
 
 /* --- SIDEBAR --- */
@@ -46,6 +56,13 @@
   width: calc(100% - 300px);
   margin-left: -300px;
   padding-left: calc(300px + 2rem);
+  transition: width 0.3s ease, margin-left 0.3s ease, padding-left 0.3s ease;
+}
+
+.page-header.sidebar-collapsed {
+  width: calc(100% - 80px);
+  margin-left: -80px;
+  padding-left: calc(80px + 2rem);
 }
 
 .page-header-title h2 {

@@ -5,7 +5,17 @@
   width: 100%;
   font-family: "Montserrat", sans-serif;
   background: transparent;
-  padding-left: 300px;
+}
+
+/* Main content wrapper adjustments */
+.oh-container .main-content-wrapper {
+  margin-left: 300px;
+  transition: margin-left 0.3s ease;
+  flex: 1;
+}
+
+.oh-container .main-content-wrapper.sidebar-collapsed {
+  margin-left: 80px;
 }
 
 .oh-main {
@@ -276,7 +286,7 @@
   }
 }
 
-/* Shared Page Header Styles (Copied from Dashboard.css for now) */
+/* Page header adjustments (if not already present) */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -291,6 +301,13 @@
   width: calc(100% - 300px);
   margin-left: -300px;
   padding-left: calc(300px + 2rem);
+  transition: width 0.3s ease, margin-left 0.3s ease, padding-left 0.3s ease;
+}
+
+.page-header.sidebar-collapsed {
+  width: calc(100% - 80px);
+  margin-left: -80px;
+  padding-left: calc(80px + 2rem);
 }
 
 .page-header-title h2 {
@@ -317,4 +334,16 @@
 /* Ensure main content area has top padding if header is sticky and has fixed height */
 .oh-main {
   /* padding-top: 70px; /* Example: Adjust if header has fixed height */
+}
+
+/* Adjust search and table margins for consistent layout */
+@media (max-width: 1200px) {
+  .oh-search-box,
+  .oh-table {
+    margin-left: 0;
+  }
+  
+  .oh-main {
+    padding: 0 2rem;
+  }
 }
