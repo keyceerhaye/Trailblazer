@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css"; // Import the new sidebar CSS
-import { LayoutDashboard, History, User, Clock, LogOut, LayoutGrid, PanelLeftDashed } from "lucide-react";
+import { User, Clock, LayoutGrid, PanelLeftDashed } from "lucide-react";
 import logoImage from "../../assets/pages/logo.png"; // Corrected path to logo
 
 // Define the navigation items
@@ -9,7 +9,7 @@ const navItems = [
   {
     to: "/dashboard",
     icon: LayoutGrid,
-    label: "Home",
+    label: "Dashboard",
     pageName: "dashboard",
   },
   { 
@@ -24,18 +24,10 @@ const navItems = [
     label: "Order History",
     pageName: "orderhistory",
   },
-  { 
-    to: "/", 
-    icon: LogOut, 
-    label: "Log Out", 
-    pageName: "logout",
-    action: true 
-  },
 ];
 
 export default function Sidebar({ onCollapseChange }) {
   const location = useLocation(); // Get current location
-  const navigate = useNavigate();
   const currentPath = location.pathname;
   const [collapsed, setCollapsed] = useState(false);
 
@@ -48,11 +40,6 @@ export default function Sidebar({ onCollapseChange }) {
       onCollapseChange(collapsed);
     }
   }, [collapsed, onCollapseChange]);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
 
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -85,19 +72,6 @@ export default function Sidebar({ onCollapseChange }) {
         <ul>
           {navItems.map((item) => {
             const IconComponent = item.icon;
-            if (item.action) {
-              return (
-                <li
-                  key={item.pageName}
-                  className={currentPath === item.to ? "active" : ""}
-                >
-                  <Link to={item.to} onClick={handleLogout}>
-                    <IconComponent className="icon" />
-                    {!collapsed && <span>{item.label}</span>}
-                  </Link>
-                </li>
-              );
-            }
             return (
               <li
                 key={item.pageName}
