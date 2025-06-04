@@ -58,7 +58,16 @@ const Payment = () => {
   };
 
   const handleBack = () => {
-    navigate("/delivery");
+    // Pass the current state back when navigating to delivery page
+    navigate("/delivery", {
+      state: {
+        ...location.state,
+        orderDetails: {
+          ...orderDetails,
+          paymentMethod: userDetails.paymentMethod,
+        },
+      },
+    });
   };
 
   const handleTermsChange = (e) => {
@@ -84,8 +93,14 @@ const Payment = () => {
     setShowTermsModal(false);
   };
 
-  // Set delivery fee to 0 if delivery method is pickup
-  const deliveryFee = userDetails.deliveryMethod === "pickup" ? 0.0 : 10.0;
+  // Apply delivery fee if delivery method is "deliver" OR payment method is "Cash on Delivery"
+  const isCashOnDelivery = userDetails.paymentMethod === "Cash on Delivery";
+
+  // If payment method is Cash on Delivery, always apply delivery fee
+  // Otherwise, apply delivery fee only if delivery method is "deliver"
+  const deliveryFee =
+    isCashOnDelivery || userDetails.deliveryMethod === "deliver" ? 10.0 : 0.0;
+
   const turnaroundFee = 0.0;
   const filesFee = parseFloat(orderDetails.price || 0);
   const totalAmount = (deliveryFee + turnaroundFee + filesFee).toFixed(2);
@@ -308,7 +323,8 @@ const Payment = () => {
             <div className="pay-row">
               <span>Delivery Fee</span>
               <span>
-                {userDetails.deliveryMethod === "pickup" ? (
+                {!isCashOnDelivery &&
+                userDetails.deliveryMethod === "pickup" ? (
                   <span style={{ color: "#4CAF50" }}>FREE</span>
                 ) : (
                   `₱${deliveryFee.toFixed(2)}`

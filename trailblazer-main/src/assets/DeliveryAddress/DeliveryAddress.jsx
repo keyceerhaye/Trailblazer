@@ -82,6 +82,9 @@ const DeliveryAddress = () => {
           turnaroundTime: "Standard",
           price: location.state?.orderDetails?.price || "0.00",
         },
+        // Pass the delivery method to ensure delivery fees are calculated correctly
+        deliveryMethod: "deliver",
+        templateData: location.state?.templateData,
       },
     });
   };
@@ -243,7 +246,9 @@ const DeliveryAddress = () => {
                   onChange={handleDeliveryChange}
                 />
               ) : (
-                <span className="da-value">{deliveryDetails.note || "None"}</span>
+                <span className="da-value">
+                  {deliveryDetails.note || "None"}
+                </span>
               )}
             </div>
           </div>

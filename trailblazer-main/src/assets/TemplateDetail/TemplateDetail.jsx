@@ -1,12 +1,19 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./TemplateDetail.css";
 
 function TemplateDetail() {
   const { templateId } = useParams();
   const navigate = useNavigate();
-  const [notes, setNotes] = useState("");
-  const [turnaroundTime, setTurnaroundTime] = useState("");
+  const location = useLocation();
+
+  // Check for previous state when coming back from upload page
+  const previousTemplateInfo = location.state?.templateInfo || {};
+
+  const [notes, setNotes] = useState(previousTemplateInfo.notes || "");
+  const [turnaroundTime, setTurnaroundTime] = useState(
+    previousTemplateInfo.turnaroundTime || ""
+  );
 
   const handleContinue = () => {
     if (!turnaroundTime) {
@@ -22,13 +29,28 @@ function TemplateDetail() {
           notes,
           turnaroundTime,
         },
+        // Preserve any other state that might have been passed
+        ...location.state,
+      },
+    });
+  };
+
+  const handleBack = () => {
+    // Pass the current state back when navigating
+    navigate(-1, {
+      state: {
+        templateInfo: {
+          templateId,
+          notes,
+          turnaroundTime,
+        },
       },
     });
   };
 
   return (
     <div className="detail-page">
-      <button className="back-btn" onClick={() => navigate(-1)}>
+      <button className="back-btn" onClick={handleBack}>
         Back
       </button>
 

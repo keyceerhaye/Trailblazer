@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 * {
   box-sizing: border-box;
@@ -35,10 +35,18 @@
 }
 
 @keyframes fadeInOut {
-  0% { opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .bs-steps {
@@ -440,20 +448,18 @@
 
 @media screen and (min-width: 992px) {
   .bs-main {
-
-
   }
-  
+
   .bs-footer {
     flex-direction: row;
     justify-content: space-between;
     padding: 0 clamp(20px, 5vw, 140px);
   }
-  
+
   .bs-footer-left {
     justify-content: flex-start;
   }
-  
+
   .bs-footer-right {
     margin-top: 0;
   }
@@ -463,36 +469,36 @@
   .bs-wrapper {
     margin-top: 100px;
   }
-  
+
   .bs-steps {
     margin-top: 40px;
   }
-  
+
   .bs-title {
     margin-left: 20px;
     text-align: center;
   }
-  
+
   .bs-main {
     margin-left: 0;
     padding: 0 10px;
   }
-  
+
   .bs-basket-item {
     padding: 10px 0;
   }
-  
+
   .bs-subtotal {
     justify-content: center;
     margin-bottom: 10px;
   }
-  
+
   .bs-feedback-message {
     width: 90%;
     max-width: 300px;
     font-size: 14px;
   }
-  
+
   .bs-summary-card {
     min-height: 220px;
   }
@@ -502,30 +508,55 @@
   .bs-wrapper {
     margin-top: 80px;
   }
-  
-  .bs-basket-card, .bs-summary-card {
+
+  .bs-basket-card,
+  .bs-summary-card {
     padding: 15px;
   }
-  
+
   .bs-file-icon {
     width: 40px;
     height: 40px;
   }
-  
+
   .bs-file-info {
     margin-left: 10px;
   }
-  
+
   .bs-delete-btn {
     width: 32px;
     height: 32px;
   }
-  
+
   .bs-summary-info p {
     min-height: 24px;
   }
-  
+
   .bs-summary-card {
     min-height: 200px;
   }
+}
+
+.bs-back-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.bs-back-btn {
+  background-color: #1981e4;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bs-back-btn:hover {
+  background-color: #1668c1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

@@ -274,6 +274,8 @@ const Basket = () => {
           <br />
           {orderDetails.printOption}
           <br />
+          {orderDetails.turnaroundTime || "Standard"}
+          <br />
           {orderDetails.paymentMethod}
         </p>
       );
@@ -284,6 +286,8 @@ const Basket = () => {
           <br />
           <strong>Phone:</strong> {orderDetails.phoneNumber}
           <br />
+          {orderDetails.turnaroundTime || "Standard"}
+          <br />
           {orderDetails.paymentMethod}
         </p>
       );
@@ -292,7 +296,9 @@ const Basket = () => {
         <p>
           <strong>{orderDetails.paperSize}</strong>
           <br />
-          {orderDetails.printOption} {orderDetails.turnaroundTime}
+          {orderDetails.printOption}
+          <br />
+          {orderDetails.turnaroundTime || "Standard"}
           <br />
           {orderDetails.paymentMethod}
         </p>
@@ -300,11 +306,43 @@ const Basket = () => {
     }
   };
 
+  // Handle back navigation to upload page
+  const handleBack = () => {
+    // Navigate back to upload page with current state
+    navigate("/upload/print", {
+      state: {
+        files: basketItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          type: item.file?.type,
+          size: item.file?.size,
+          lastModified: item.file?.lastModified,
+          pageCount: item.pageCount,
+        })),
+        specifications: orderDetails,
+        templateInfo: templateData
+          ? {
+              templateId: templateData.templateId,
+              notes: templateData.notes,
+              turnaroundTime: orderDetails.turnaroundTime,
+            }
+          : null,
+        templateData,
+      },
+    });
+  };
+
   return (
     <div className="bs-wrapper">
       {feedbackMessage && (
         <div className="bs-feedback-message">{feedbackMessage}</div>
       )}
+
+      <div className="bs-back-button-container">
+        <button className="bs-back-btn" onClick={handleBack}>
+          Back
+        </button>
+      </div>
 
       <div className="bs-steps">
         <div className="bs-step-circles">

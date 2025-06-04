@@ -11,11 +11,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export const UploadFiles = () => {
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get template info from location state
+  const templateInfo = location.state?.templateInfo;
+
+  // Check for previous state when coming back from basket page
+  const previousState = location.state || {};
+  const previousFiles = previousState.files || [];
+  const previousSpecifications = previousState.specifications || {};
+
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
-  const location = useLocation();
-  const templateInfo = location.state?.templateInfo;
 
   const steps = [
     { number: "1", label: "Upload files", active: true },
@@ -25,17 +34,39 @@ export const UploadFiles = () => {
   ];
 
   const [specifications, setSpecifications] = useState({
-    paperSize: "A4", // Default to A4 for template-based layouts
-    printOption: "Full color", // Default to color for template-based layouts
-    turnaroundTime: templateInfo?.turnaroundTime || "",
-    paymentMethod: "",
-    notes: templateInfo?.notes || "",
-    emailAddress: "",
-    phoneNumber: "",
+    paperSize: previousSpecifications.paperSize || "A4",
+    printOption: previousSpecifications.printOption || "Full color",
+    turnaroundTime:
+      templateInfo?.turnaroundTime ||
+      previousSpecifications.turnaroundTime ||
+      "",
+    paymentMethod: previousSpecifications.paymentMethod || "",
+    notes: templateInfo?.notes || previousSpecifications.notes || "",
+    emailAddress: previousSpecifications.emailAddress || "",
+    phoneNumber: previousSpecifications.phoneNumber || "",
   });
 
   const [hasTemplate, setHasTemplate] = useState(false);
-  const [templateType, setTemplateType] = useState(""); // To track the template type
+  const [templateType, setTemplateType] = useState(
+    previousState.templateData?.templateType || ""
+  ); // To track the template type
+
+  // Handle back navigation to template page
+  const handleBack = () => {
+    if (templateInfo) {
+      navigate(`/template/${templateInfo.templateId}`, {
+        state: {
+          templateInfo: {
+            ...templateInfo,
+            notes: specifications.notes,
+            turnaroundTime: specifications.turnaroundTime,
+          },
+        },
+      });
+    } else {
+      navigate(-1);
+    }
+  };
 
   useEffect(() => {
     // Check if coming from template selection
@@ -57,9 +88,35 @@ export const UploadFiles = () => {
         setTemplateType("other");
       }
     }
-  }, [templateInfo]);
 
-  const navigate = useNavigate();
+    // Restore files from previous state if available
+    if (previousFiles.length > 0) {
+      // Convert file objects back to the format needed
+      const restoredFiles = previousFiles.map((fileInfo) => {
+        // Create a placeholder file object since we can't restore the actual File object
+        const placeholderFile = {
+          name: fileInfo.name,
+          type: fileInfo.type,
+          size: fileInfo.size,
+          lastModified: fileInfo.lastModified,
+        };
+
+        return {
+          file: placeholderFile,
+          id: fileInfo.id,
+        };
+      });
+
+      setSelectedFiles(restoredFiles);
+
+      // Set progress to 100% for all restored files
+      const progressObj = {};
+      restoredFiles.forEach((file) => {
+        progressObj[file.id] = 100;
+      });
+      setUploadProgress(progressObj);
+    }
+  }, [templateInfo, previousFiles]);
 
   // Price constants
   const PRICES = {
@@ -391,6 +448,12 @@ export const UploadFiles = () => {
   return (
     <div className="uf-container">
       <main className="uf-main">
+        <div className="uf-back-button-container">
+          <button className="uf-back-btn" onClick={handleBack}>
+            Back
+          </button>
+        </div>
+
         <div className="uf-steps">
           <div className="uf-step-circles">
             {steps.map((step, index) => (
