@@ -95,7 +95,7 @@ function Hero() {
               </button>
               <button
                 className="service-btn"
-                onClick={() => handleServiceClick("layout")}
+                onClick={() => navigate("/layout")}
               >
                 LAYOUT
               </button>
