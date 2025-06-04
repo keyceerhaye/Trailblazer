@@ -1168,7 +1168,7 @@ ul {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   padding: var(--space-md) var(--space-lg);
-  background-color: #bec8fc;
+  background-color: #e4eaf7;
   flex-shrink: 0;
 }
 
@@ -1260,11 +1260,11 @@ ul {
 }
 
 .ad-messages-preview-card__item:hover {
-  background-color: #e4eaf7;
+  background-color: #bec8fc;
 }
 
 .ad-messages-preview-card__item.active {
-  background-color: #e4eaf7;
+  background-color: #bec8fc;
 }
 
 .ad-messages-user-avatar-container {

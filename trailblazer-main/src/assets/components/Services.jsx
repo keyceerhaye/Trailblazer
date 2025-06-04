@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Services.css";
-import printing from "./printing.png";
+import printing from "./printing-icon.png";
 import layout from "./layouting.png";
 import { useNavigate } from "react-router-dom";
 
