@@ -41,23 +41,27 @@ function TemplateDetail() {
           className="detail-image"
         />
 
-        <div className="template-form">
-          <h3>NOTES:</h3>
-          <textarea
-            placeholder="Specify what you need. e.g. font: arial"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
+        <div className="template-form-container">
+          <div className="template-form">
+            <h3>NOTES:</h3>
+            <textarea
+              placeholder="Specify what you need. e.g. font: arial"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
+          </div>
 
-          <label>Turnaround time:</label>
-          <select
-            value={turnaroundTime}
-            onChange={(e) => setTurnaroundTime(e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="Standard">Standard (3-5 days)</option>
-            <option value="Rush">Rush (1-2 days)</option>
-          </select>
+          <div className="turnaround-container">
+            <label>Turnaround time:</label>
+            <select
+              value={turnaroundTime}
+              onChange={(e) => setTurnaroundTime(e.target.value)}
+            >
+              <option value="">Select</option>
+              <option value="Standard">Standard (3-5 days)</option>
+              <option value="Rush">Rush (1-2 days)</option>
+            </select>
+          </div>
 
           <button className="continue-btn" onClick={handleContinue}>
             Continue
