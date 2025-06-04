@@ -196,7 +196,7 @@
   justify-content: space-around;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: clamp(10px, 2vw, 20px);
   position: relative;
   width: 100%;
   margin-top: 2rem;
@@ -206,10 +206,10 @@
 .progress-steps::before {
   content: "";
   position: absolute;
-  top: 50px;
-  left: 60px;
-  right: 60px;
-  height: 15px;
+  top: clamp(35px, 6vw, 50px);
+  left: clamp(40px, 8vw, 60px);
+  right: clamp(40px, 8vw, 60px);
+  height: clamp(8px, 1.5vw, 15px);
   background: #2f2785;
   z-index: 0;
   transform: translateY(-50%);
@@ -218,7 +218,7 @@
 
 .step {
   position: relative;
-  font-size: 24px;
+  font-size: clamp(16px, 3vw, 24px);
   font-weight: 600;
   color: #2f2785;
   display: flex;
@@ -226,12 +226,13 @@
   align-items: center;
   text-align: center;
   z-index: 1;
-  min-width: 120px;
+  min-width: clamp(80px, 15vw, 120px);
+  max-width: 150px;
 }
 
 .icon-circle {
-  width: 100px;
-  height: 100px;
+  width: clamp(60px, 12vw, 100px);
+  height: clamp(60px, 12vw, 100px);
   border-radius: 50%;
   border: 2px solid #2f2785;
   display: flex;
@@ -242,8 +243,8 @@
 }
 
 .step-img {
-  width: 60px;
-  height: 60px;
+  width: clamp(35px, 7vw, 60px);
+  height: clamp(35px, 7vw, 60px);
   object-fit: contain;
   display: flex;
   align-items: center;
@@ -262,10 +263,87 @@
 }
 
 .step.active p {
-  font-size: 24px;
+  font-size: clamp(16px, 3vw, 24px);
   font-weight: 600;
   color: #2f2785;
 }
+
+/* Responsive breakpoints for progress steps */
+@media (max-width: 992px) {
+  .progress-steps {
+    gap: 15px;
+    margin-top: 1.5rem;
+  }
+
+  .progress-steps::before {
+    height: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .progress-steps {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .progress-steps::before {
+    display: none; /* Hide connecting line on small screens */
+  }
+
+  .step {
+    min-width: 70px;
+    margin-bottom: 1rem;
+  }
+
+  .order-progress h3 {
+    font-size: clamp(24px, 5vw, 36px);
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-steps {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .step {
+    min-width: 100px;
+    max-width: 120px;
+  }
+
+  .order-progress {
+    text-align: center;
+  }
+
+  .order-info {
+    align-items: center;
+  }
+}
+
+@media (max-width: 320px) {
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .step-img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .step {
+    font-size: 14px;
+    min-width: 60px;
+  }
+
+  .step.active p {
+    font-size: 14px;
+  }
+}
+
 .dropdown-icon {
   transition: transform 0.3s ease;
   margin-left: 25px;
