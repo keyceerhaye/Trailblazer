@@ -12,7 +12,7 @@ const navItems = [
     label: "Dashboard",
     pageName: "dashboard",
   },
-  { to: "/", icon: Home, label: "Home", pageName: "home" },
+  { to: "/profile", icon: Home, label: "Profile", pageName: "profile" },
   {
     to: "/orderhistory",
     icon: History,
