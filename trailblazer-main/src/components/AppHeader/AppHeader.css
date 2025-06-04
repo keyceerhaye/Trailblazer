@@ -22,7 +22,9 @@
 
 /* Add class for when sidebar is collapsed */
 .sidebar-collapsed .app-header {
-  padding-left: calc(80px + 2rem); /* 80px for collapsed sidebar + 2rem for spacing */
+  padding-left: calc(
+    80px + 2rem
+  ); /* 80px for collapsed sidebar + 2rem for spacing */
 }
 
 .app-header-title-section {
@@ -202,7 +204,6 @@
 .app-dropdown-footer {
   display: flex;
   justify-content: space-between;
-  padding: 12px 20px;
   font-size: 12px;
   color: white;
   background-color: transparent;

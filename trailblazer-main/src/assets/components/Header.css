@@ -231,7 +231,6 @@ body {
   background-color: white;
   border-radius: 20px 0 20px 20px;
   width: 284px;
-  padding-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   z-index: 100;
   display: flex;
@@ -340,8 +339,8 @@ hr {
   color: #2f2785;
   background-color: white;
   font-weight: 500;
-  padding: 15px 20px;
-  margin: 15px auto 0;
+  margin-left: 15px;
+
   border-top: 1px solid #eee;
 }
 
