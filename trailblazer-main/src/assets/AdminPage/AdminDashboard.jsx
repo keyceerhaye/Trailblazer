@@ -648,22 +648,26 @@ const AdminDashboard = () => {
                     }`}
                   >
                     {message.sender === "user" && (
-                      <img
-                        src={selectedChatUser.avatar}
-                        alt={selectedChatUser.name}
-                        className="ad-chat-message-avatar"
-                      />
+                      <div className="ad-chat-avatar-container">
+                        <img
+                          src={selectedChatUser.avatar}
+                          alt={selectedChatUser.name}
+                          className="ad-chat-message-avatar"
+                        />
+                      </div>
                     )}
                     <div className="ad-chat-message-content">
                       <div className="ad-chat-message-text">{message.text}</div>
                       <div className="ad-chat-message-time">{message.time}</div>
                     </div>
                     {message.sender === "admin" && (
-                      <img
-                        src={profilePic}
-                        alt="Admin"
-                        className="ad-chat-message-avatar"
-                      />
+                      <div className="ad-chat-avatar-container">
+                        <img
+                          src={profilePic}
+                          alt="Admin"
+                          className="ad-chat-message-avatar"
+                        />
+                      </div>
                     )}
                   </div>
                 ))}

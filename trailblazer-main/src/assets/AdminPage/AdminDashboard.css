@@ -206,9 +206,7 @@ ul {
 .aoh-logo {
   width: 50px;
   height: 50px;
-  margin-left: var(
-    --space-xs
-  ); /* Add some left margin if brand padding-left is 0 */
+  margin-left: 0;
   margin-right: var(--space-sm);
   object-fit: contain;
   transition: margin var(--sidebar-transition-duration) ease;
@@ -224,6 +222,8 @@ ul {
     width var(--sidebar-transition-duration) ease;
   overflow: hidden;
   white-space: nowrap;
+  justify-content: start;
+  align-items: flex-start;
 }
 
 .ad-logo-text,
@@ -247,12 +247,20 @@ ul {
 
 .ad-tagline,
 .aoh-tagline {
-  font-size: var(--font-size-tagline);
+  font-size: 9px;
   font-weight: var(--font-weight-medium);
   letter-spacing: 0.5px;
-  color: var(
-    --color-text-muted
-  ); /* Simpler tagline, gradient removed for consistency */
+  background: linear-gradient(
+    to right,
+    var(--color-primary-gradient-start) 9%,
+    var(--color-primary-gradient-mid1) 21%,
+    var(--color-primary-gradient-mid1) 42%,
+    var(--color-primary-gradient-mid2) 58%,
+    var(--color-primary-gradient-end) 76%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
@@ -525,6 +533,7 @@ ul {
   color: var(--color-text-primary);
   margin-top: 0;
   margin-bottom: var(--space-xl);
+  text-align: left;
 }
 
 .ad-subtitle {
@@ -1328,23 +1337,49 @@ ul {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  background-color: #e4eaf7;
+  background-color: white;
 }
 
 .ad-chat-message {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
+  flex-direction: row;
+  gap: var(--space-xs);
   max-width: 80%;
+  margin-bottom: var(--space-md);
+}
+
+.ad-chat-avatar-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .ad-chat-message.user {
   align-self: flex-start;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .ad-chat-message.admin {
   align-self: flex-end;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ad-chat-message-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.ad-chat-message.user .ad-chat-message-wrapper {
   flex-direction: row-reverse;
+}
+
+.ad-chat-message.admin .ad-chat-message-wrapper {
+  flex-direction: row;
 }
 
 .ad-chat-message-avatar {
@@ -1352,10 +1387,11 @@ ul {
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .ad-chat-message-content {
-  background-color: white;
+  background-color: #d9d9d9;
   padding: var(--space-sm) var(--space-md);
   border-radius: 18px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -1363,14 +1399,13 @@ ul {
 }
 
 .ad-chat-message.user .ad-chat-message-content {
-  background-color: white;
-  border-top-left-radius: 4px;
+  background-color: #d9d9d9;
+  border-top-right-radius: 4px;
 }
 
 .ad-chat-message.admin .ad-chat-message-content {
-  background-color: #e4eaf7;
-  border-top-right-radius: 4px;
-  text-align: right;
+  background-color: #d9d9d9;
+  border-top-left-radius: 4px;
 }
 
 .ad-chat-message-text {
@@ -1382,7 +1417,14 @@ ul {
 .ad-chat-message-time {
   font-size: 10px;
   color: var(--color-text-muted);
-  margin-top: 4px;
+  margin-top: var(--space-xxs);
+  align-self: flex-start;
+  text-align: left;
+}
+
+.ad-chat-message.admin .ad-chat-message-time {
+  align-self: flex-end;
+  text-align: right;
 }
 
 .ad-chat-input-container {
