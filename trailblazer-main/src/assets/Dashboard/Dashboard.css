@@ -35,6 +35,11 @@
 /* Apply margin-left only to the dashboard's main content wrapper */
 .dashboard-container .main-content-wrapper {
   margin-left: 300px;
+  transition: margin-left 0.3s ease;
+}
+
+.dashboard-container .main-content-wrapper.sidebar-collapsed {
+  margin-left: 80px;
 }
 
 .main-dashboard,
@@ -382,6 +387,36 @@
 }
 
 /* Shared Page Header Styles */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #cccccc;
+  margin-bottom: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  width: calc(100% - 300px);
+  margin-left: -300px;
+  padding-left: calc(300px + 2rem);
+  transition: width 0.3s ease, margin-left 0.3s ease, padding-left 0.3s ease;
+}
+
+.page-header.sidebar-collapsed {
+  width: calc(100% - 80px);
+  margin-left: -80px;
+  padding-left: calc(80px + 2rem);
+}
+
+.page-header-title h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c2480;
+  margin: 0;
+  line-height: 1.2;
+}
 
 /* Adjustments for user profile box within the new header */
 .page-header .D-user-profile-box,
