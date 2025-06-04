@@ -26,6 +26,8 @@ function TemplateDetail() {
       return "presentation";
     } else if (templateId.includes("poster")) {
       return "poster";
+    } else if (templateId.includes("layout")) {
+      return "layout";
     }
     return "other";
   };
@@ -58,6 +60,12 @@ function TemplateDetail() {
       }
     } else if (templateType === "presentation") {
       const template = pptTemplates.find((t) => t.id === templateId);
+      if (template) {
+        templateTitle = template.title;
+        templateDescription = template.description;
+      }
+    } else if (templateType === "layout") {
+      const template = layoutTemplates.find((t) => t.id === templateId);
       if (template) {
         templateTitle = template.title;
         templateDescription = template.description;
@@ -158,6 +166,24 @@ function TemplateDetail() {
       id: "ppt3",
       title: "Notebook Style Slides",
       description: "2024 • 16:9",
+    },
+  ];
+
+  const layoutTemplates = [
+    {
+      id: "layout1",
+      title: "Basic Layout Design",
+      description: "Simple layout design service",
+    },
+    {
+      id: "layout2",
+      title: "Advanced Layout Design",
+      description: "Complex layout design service",
+    },
+    {
+      id: "layout3",
+      title: "Custom Layout Design",
+      description: "Fully customized layout design",
     },
   ];
 

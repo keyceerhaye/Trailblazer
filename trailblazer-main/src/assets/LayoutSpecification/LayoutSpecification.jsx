@@ -37,6 +37,8 @@ const LayoutSpecification = () => {
         return "presentation";
       } else if (templateId.includes("poster")) {
         return "poster";
+      } else if (templateId.includes("layout")) {
+        return "layout";
       }
     }
 
@@ -93,11 +95,32 @@ const LayoutSpecification = () => {
       High: 150,
     },
     RUSH_FEE: 7,
+    LAYOUT_BASE_PRICE: 50,
   };
 
   // Calculate price based on specifications
   const calculatePrice = () => {
-    // Check required fields based on template type
+    // For layout service, we have a fixed base price
+    if (templateType === "layout") {
+      let totalPrice = PRICES.LAYOUT_BASE_PRICE;
+
+      // Add customization fee if applicable
+      if (
+        specifications.customization &&
+        specifications.customization !== "None"
+      ) {
+        totalPrice += PRICES.CUSTOMIZATION[specifications.customization];
+      }
+
+      // Add rush fee if applicable
+      if (specifications.turnaroundTime === "Rush") {
+        totalPrice += PRICES.RUSH_FEE;
+      }
+
+      return totalPrice.toFixed(2);
+    }
+
+    // For other template types, check required fields
     if (specifications.paperSize === "" || specifications.printOption === "") {
       return "00.00";
     }
@@ -154,15 +177,24 @@ const LayoutSpecification = () => {
 
   const handleConfirmClick = () => {
     // Check required fields based on template type
-    if (
-      !specifications.paperSize ||
-      !specifications.printOption ||
-      !specifications.paymentMethod
-    ) {
-      alert(
-        "Please complete all required specification fields before proceeding."
-      );
-      return;
+    if (templateType === "layout") {
+      if (!specifications.turnaroundTime || !specifications.paymentMethod) {
+        alert(
+          "Please complete all required specification fields before proceeding."
+        );
+        return;
+      }
+    } else {
+      if (
+        !specifications.paperSize ||
+        !specifications.printOption ||
+        !specifications.paymentMethod
+      ) {
+        alert(
+          "Please complete all required specification fields before proceeding."
+        );
+        return;
+      }
     }
 
     // Calculate the final price
@@ -265,7 +297,25 @@ const LayoutSpecification = () => {
 
   // Get the appropriate specification fields based on template type
   const getSpecFields = () => {
-    if (templateType === "resume") {
+    if (templateType === "layout") {
+      return [
+        {
+          label: "Turnaround time:",
+          options: ["Standard", "Rush"],
+          stateKey: "turnaroundTime",
+        },
+        {
+          label: "Payment method:",
+          options: ["Cash on Delivery", "Gcash"],
+          stateKey: "paymentMethod",
+        },
+        {
+          label: "Customization level:",
+          options: ["None", "Basic", "High"],
+          stateKey: "customization",
+        },
+      ];
+    } else if (templateType === "resume") {
       return [
         {
           label: "Paper size:",

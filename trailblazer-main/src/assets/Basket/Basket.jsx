@@ -31,6 +31,9 @@ const Basket = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [totalPages, setTotalPages] = useState(0);
 
+  // Check if user is coming from layoutspecification page
+  const isFromLayoutSpecification = templateData && templateData.hasTemplate;
+
   const [orderDetails, setOrderDetails] = useState({
     paperSize: passedDetails?.paperSize || "A4",
     printOption: passedDetails?.printOption || "Black&White",
@@ -62,6 +65,8 @@ const Basket = () => {
       High: 150,
     },
     RUSH_FEE: 7,
+    LAYOUT_BASE_PRICE: 50,
+    DELIVERY_FEE: 20,
   };
 
   useEffect(() => {
@@ -128,7 +133,20 @@ const Basket = () => {
     // Check if we have template items
     const hasTemplateItems = items.some((item) => item.isTemplate);
 
-    if (templateType === "presentation" || templateType === "poster") {
+    // Handle layout service specifically
+    if (templateType === "layout") {
+      // Base price for layout service is 50 pesos
+      totalPrice = PRICES.LAYOUT_BASE_PRICE;
+
+      // Add rush fee if turnaround time is Rush
+      if (details.turnaroundTime === "Rush") {
+        totalPrice += PRICES.RUSH_FEE;
+      }
+
+      // Note: Delivery fee will be added in the Delivery component
+
+      return totalPrice.toFixed(2);
+    } else if (templateType === "presentation" || templateType === "poster") {
       // For presentations and posters, use a fixed price
       if (hasTemplateItems) {
         // If using a template, base price is 50
@@ -178,6 +196,11 @@ const Basket = () => {
       if (details.customization && details.customization !== "None") {
         totalPrice += PRICES.CUSTOMIZATION[details.customization];
       }
+    }
+
+    // Add rush fee if turnaround time is Rush (for all services)
+    if (details.turnaroundTime === "Rush") {
+      totalPrice += PRICES.RUSH_FEE;
     }
 
     return totalPrice.toFixed(2);
@@ -330,7 +353,31 @@ const Basket = () => {
 
   // Function to render appropriate order details based on template type
   const renderOrderDetails = () => {
-    if (templateData?.templateType === "resume") {
+    if (templateData?.templateType === "layout") {
+      return (
+        <div className="bs-order-details">
+          <h3>Specifications:</h3>
+          <p>
+            <strong>Service:</strong> Layout Design
+            <br />
+            <strong>Turnaround Time:</strong>{" "}
+            {templateData.turnaroundTime ||
+              orderDetails.turnaroundTime ||
+              "Standard"}
+            <br />
+            <strong>Payment Method:</strong> {orderDetails.paymentMethod}
+            {orderDetails.customization &&
+              orderDetails.customization !== "None" && (
+                <>
+                  <br />
+                  <strong>Customization Level:</strong>{" "}
+                  {orderDetails.customization}
+                </>
+              )}
+          </p>
+        </div>
+      );
+    } else if (templateData?.templateType === "resume") {
       return (
         <div className="bs-order-details">
           <h3>Specifications:</h3>
@@ -449,12 +496,14 @@ const Basket = () => {
       <div className="bs-empty-content">
         <h3>Your basket is empty</h3>
         <p>Add files or select a template to get started with your order</p>
-        <button
-          className="bs-add-btn bs-empty-add-btn"
-          onClick={handleAddFiles}
-        >
-          Add Files
-        </button>
+        {!isFromLayoutSpecification && (
+          <button
+            className="bs-add-btn bs-empty-add-btn"
+            onClick={handleAddFiles}
+          >
+            Add Files
+          </button>
+        )}
       </div>
     </div>
   );
@@ -596,9 +645,11 @@ const Basket = () => {
       {basketItems.length > 0 && (
         <div className="bs-footer">
           <div className="bs-footer-left">
-            <button className="bs-add-btn" onClick={handleAddFiles}>
-              Add files
-            </button>
+            {!isFromLayoutSpecification && (
+              <button className="bs-add-btn" onClick={handleAddFiles}>
+                Add files
+              </button>
+            )}
           </div>
 
           <div className="bs-footer-right">

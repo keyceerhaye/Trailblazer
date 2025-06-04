@@ -95,11 +95,18 @@ const Payment = () => {
 
   // Apply delivery fee if delivery method is "deliver" OR payment method is "Cash on Delivery"
   const isCashOnDelivery = userDetails.paymentMethod === "Cash on Delivery";
+  const isLayoutService =
+    location.state?.templateData?.templateType === "layout";
 
   // If payment method is Cash on Delivery, always apply delivery fee
   // Otherwise, apply delivery fee only if delivery method is "deliver"
+  // For layout services, use a higher delivery fee (20 pesos)
   const deliveryFee =
-    isCashOnDelivery || userDetails.deliveryMethod === "deliver" ? 10.0 : 0.0;
+    isCashOnDelivery || userDetails.deliveryMethod === "deliver"
+      ? isLayoutService
+        ? 20.0
+        : 10.0
+      : 0.0;
 
   // Calculate turnaround fee based on selected turnaround time
   const turnaroundFee = userDetails.turnaround === "Rush" ? 7.0 : 0.0;
