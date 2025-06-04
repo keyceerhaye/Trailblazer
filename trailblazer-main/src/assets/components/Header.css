@@ -194,6 +194,16 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-icon:hover {
+  background-color: transparent;
+}
+
+.user-icon.active {
+  background-color: #2f2785;
+  color: white;
 }
 
 .menu-icon {
@@ -220,10 +230,11 @@ body {
   background-color: white;
   border-radius: 20px 0 20px 20px;
   width: 284px;
-  height: 310px;
   padding-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   z-index: 100;
+  display: flex;
+  flex-direction: column;
 }
 
 .dropdown-header {
@@ -312,19 +323,25 @@ hr {
   color: #326bf6;
 }
 
+.dropdown-icon {
+  width: 24px;
+  height: 24px;
+  color: #2f2785;
+}
+
 .dropdown-footer {
-  position: absolute;
-  width: 100%;
+  position: relative;
+  width: calc(100% - 40px);
   display: flex;
-  justify-content: center;
-  font-size: 12px;
+  justify-content: space-between;
+  font-size: 13px;
   text-decoration: underline;
   color: #2f2785;
   background-color: white;
   font-weight: 500;
-  bottom: 10px;
-  gap: 50px;
-  cursor: pointer;
+  padding: 15px 20px;
+  margin: 15px auto 0;
+  border-top: 1px solid #eee;
 }
 
 .dropdown-footer a {

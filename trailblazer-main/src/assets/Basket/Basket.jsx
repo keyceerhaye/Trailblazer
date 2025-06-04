@@ -18,6 +18,7 @@ const Basket = () => {
     location.state?.files ||
     (location.state?.file ? [location.state.file] : null);
   const passedDetails = location.state?.specifications || null;
+  const templateData = location.state?.templateData || null;
 
   const steps = [
     { number: "1", label: "Upload files", active: true },
@@ -242,6 +243,7 @@ const Basket = () => {
       state: {
         basketItems,
         orderDetails,
+        templateData,
       },
     });
   };
@@ -321,6 +323,21 @@ const Basket = () => {
                   <br />
                   {orderDetails.paymentMethod}
                 </p>
+                {templateData && (
+                  <div className="bs-template-info">
+                    <p>
+                      <strong>Template:</strong> {templateData.templateId}
+                      {templateData.notes && (
+                        <>
+                          <br />
+                          <span className="bs-template-notes">
+                            Notes: {templateData.notes}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
                 <p className="bs-summary-price">
                   <span className="bs-payment-value">
                     ₱{orderDetails.price}

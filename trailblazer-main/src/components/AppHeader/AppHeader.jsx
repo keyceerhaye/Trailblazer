@@ -130,23 +130,13 @@ const AppHeader = ({
               </div>
               <hr className="app-dropdown-divider" />
               <Link
-                to="/dashboard"
+                to="/"
                 className="app-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Home className="app-dropdown-lucide-icon" />
-                Dashboard
+                <Home size={24} className="app-dropdown-lucide-icon" />
+                Home
               </Link>
-              {location.pathname !== "/profile" && (
-                <Link
-                  to="/profile"
-                  className="app-dropdown-item"
-                  onClick={() => setIsDropdownOpen(false)}
-                >
-                  <UserIcon className="app-dropdown-lucide-icon" />
-                  Profile
-                </Link>
-              )}
               <Link
                 to="/#service"
                 className="app-dropdown-item"
@@ -159,7 +149,7 @@ const AppHeader = ({
                   setIsDropdownOpen(false);
                 }}
               >
-                <Settings className="app-dropdown-lucide-icon" />
+                <Settings size={24} className="app-dropdown-lucide-icon" />
                 Services
               </Link>
               <Link
@@ -167,7 +157,7 @@ const AppHeader = ({
                 className="app-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Phone className="app-dropdown-lucide-icon" />
+                <Phone size={24} className="app-dropdown-lucide-icon" />
                 Contact Us
               </Link>
               <Link
@@ -175,12 +165,12 @@ const AppHeader = ({
                 className="app-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Info className="app-dropdown-lucide-icon" />
+                <Info size={24} className="app-dropdown-lucide-icon" />
                 About Us
               </Link>
               <hr className="app-dropdown-divider" />
               <div className="app-dropdown-item" onClick={handleLogout}>
-                <LogOut className="app-dropdown-lucide-icon" />
+                <LogOut size={24} className="app-dropdown-lucide-icon" />
                 Log Out
               </div>
               <div className="app-dropdown-footer">

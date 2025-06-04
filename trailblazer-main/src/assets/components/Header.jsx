@@ -2,7 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Header.css";
 import imageLogo from "./logo.png";
 import { useNavigate, useLocation } from "react-router-dom";
-import { User, LayoutDashboard, History, LogOut, Menu, X } from "lucide-react";
+import {
+  User,
+  LayoutDashboard,
+  History,
+  LogOut,
+  Menu,
+  X,
+  Home,
+} from "lucide-react";
 
 function Header() {
   const navigate = useNavigate();
@@ -195,10 +203,10 @@ function Header() {
         ) : (
           <div className="user-dropdown" ref={dropdownRef}>
             <div
-              className="user-icon"
+              className={`user-icon ${showDropdown ? "active" : ""}`}
               onClick={() => setShowDropdown(!showDropdown)}
             >
-              <User size={30} />
+              <User size={30} color={showDropdown ? "white" : "#2F2785"} />
             </div>
             <div
               className="menu-icon"
@@ -238,7 +246,7 @@ function Header() {
                     setShowMobileMenu(false);
                   }}
                 >
-                  <LayoutDashboard size={20} className="dropdown-icon" />
+                  <LayoutDashboard size={24} className="dropdown-icon" />
                   <span>Dashboard</span>
                 </div>
 
@@ -250,7 +258,7 @@ function Header() {
                     setShowMobileMenu(false);
                   }}
                 >
-                  <User size={20} className="dropdown-icon" />
+                  <User size={24} className="dropdown-icon" />
                   <span>Profile</span>
                 </div>
 
@@ -262,12 +270,12 @@ function Header() {
                     setShowMobileMenu(false);
                   }}
                 >
-                  <History size={20} className="dropdown-icon" />
+                  <History size={24} className="dropdown-icon" />
                   <span>Order History</span>
                 </div>
 
                 <div className="dropdown-item-1" onClick={handleLogout}>
-                  <LogOut size={20} className="dropdown-icon" />
+                  <LogOut size={24} className="dropdown-icon" />
                   <span>Log Out</span>
                 </div>
 

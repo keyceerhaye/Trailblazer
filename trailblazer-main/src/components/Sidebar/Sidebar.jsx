@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css"; // Import the new sidebar CSS
-import { LayoutDashboard, User, History } from "lucide-react";
+import { LayoutDashboard, History, Home } from "lucide-react";
 import logoImage from "../../assets/pages/logo.png"; // Corrected path to logo
 
 // Define the navigation items
@@ -12,7 +12,7 @@ const navItems = [
     label: "Dashboard",
     pageName: "dashboard",
   },
-  { to: "/profile", icon: User, label: "Profile", pageName: "profile" },
+  { to: "/", icon: Home, label: "Home", pageName: "home" },
   {
     to: "/orderhistory",
     icon: History,
