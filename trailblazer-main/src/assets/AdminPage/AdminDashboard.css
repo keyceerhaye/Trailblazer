@@ -1168,7 +1168,7 @@ ul {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   padding: var(--space-md) var(--space-lg);
-  background-color: #e6e0f8; /* Figma lavender */
+  background-color: #bec8fc;
   flex-shrink: 0;
 }
 
@@ -1223,5 +1223,240 @@ ul {
 
 /* Ensure AOH specific classes if any are still needed from AdminOrderHistory.css */
 /* This AdminDashboard.css is intended to be quite comprehensive. */
+
+/* Chat interface styles */
+.ad-messages-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.ad-chat-layout {
+  display: flex;
+  flex: 1;
+  height: calc(100% - 60px);
+  gap: var(--space-lg);
+  overflow: hidden;
+}
+
+/* User list styles */
+.ad-messages-users-list {
+  flex: 0 0 300px;
+  background-color: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid var(--color-border-light);
+}
+
+.ad-messages-preview-card__item {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.ad-messages-preview-card__item:hover {
+  background-color: #e4eaf7;
+}
+
+.ad-messages-preview-card__item.active {
+  background-color: #e4eaf7;
+}
+
+.ad-messages-user-avatar-container {
+  position: relative;
+  margin-right: var(--space-md);
+}
+
+.ad-messages-user-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* Chat window styles */
+.ad-chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid var(--color-border-light);
+  background-color: white;
+}
+
+.ad-chat-header {
+  padding: var(--space-md);
+  background-color: #bec8fc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ad-chat-user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ad-chat-username {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+}
+
+.ad-chat-user-status-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.ad-chat-messages {
+  flex: 1;
+  padding: var(--space-md);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background-color: #e4eaf7;
+}
+
+.ad-chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  max-width: 80%;
+}
+
+.ad-chat-message.user {
+  align-self: flex-start;
+}
+
+.ad-chat-message.admin {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.ad-chat-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ad-chat-message-content {
+  background-color: white;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.ad-chat-message.user .ad-chat-message-content {
+  background-color: white;
+  border-top-left-radius: 4px;
+}
+
+.ad-chat-message.admin .ad-chat-message-content {
+  background-color: #e4eaf7;
+  border-top-right-radius: 4px;
+  text-align: right;
+}
+
+.ad-chat-message-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  word-break: break-word;
+}
+
+.ad-chat-message-time {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.ad-chat-input-container {
+  display: flex;
+  padding: var(--space-sm);
+  background-color: white;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.ad-chat-input {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: 24px;
+  font-size: var(--font-size-sm);
+  outline: none;
+}
+
+.ad-chat-input:focus {
+  border-color: #2f2785;
+}
+
+.ad-chat-send-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e4eaf7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: var(--space-sm);
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.ad-chat-send-button:hover {
+  background-color: #bec8fc;
+}
+
+.ad-chat-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa;
+  border-radius: var(--border-radius-lg);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  border: 1px solid var(--color-border-light);
+}
+
+/* Media queries for responsive chat */
+@media (max-width: 992px) {
+  .ad-chat-layout {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .ad-messages-users-list {
+    flex: 0 0 auto;
+    max-height: 300px;
+    width: 100%;
+  }
+
+  .ad-chat-window {
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ad-chat-window {
+    height: 400px;
+  }
+}
 
 /* END OF FILE AdminDashboard.css */

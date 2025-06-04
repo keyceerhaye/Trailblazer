@@ -54,6 +54,7 @@ const AdminDashboard = () => {
     top: 0,
     left: 0,
   });
+  const [selectedChatUser, setSelectedChatUser] = useState(null);
   const actionDropdownRefs = useRef([]);
   const navigate = useNavigate();
   const location = useLocation(); // Get current location
@@ -233,16 +234,142 @@ const AdminDashboard = () => {
     },
   ];
 
-  const messagesPreviewData = [
+  // Mock chat message data
+  const chatUsers = [
     {
+      id: 1,
+      name: "Vice Ganda",
       avatar: avatar1,
-      name: "Kathryn Bernardo",
-      text: "Hi! I would like to ask about the pricing.",
+      preview: "pwede e hatud dapit sa caa building? tnx",
+      online: true,
+      messages: [
+        {
+          id: 1,
+          sender: "user",
+          text: "pwede e hatud dapit sa caa building? tnx",
+          time: "11:20 a.m",
+        },
+        {
+          id: 2,
+          sender: "admin",
+          text: "yes maam, pwede ra po",
+          time: "11:25 a.m",
+        },
+      ],
     },
     {
-      avatar: avatar2,
+      id: 2,
+      name: "Kathryn Bernardo",
+      avatar: avatar1,
+      preview: "Hi! I would like to ask about the pricing.",
+      online: false,
+      messages: [
+        {
+          id: 1,
+          sender: "user",
+          text: "Hi! I would like to ask about the pricing for printing colored documents.",
+          time: "9:30 a.m",
+        },
+        {
+          id: 2,
+          sender: "admin",
+          text: "Hello! For colored documents, our price is ₱10 per page for standard paper and ₱15 for glossy paper.",
+          time: "9:45 a.m",
+        },
+        {
+          id: 3,
+          sender: "user",
+          text: "Thank you! Do you offer discounts for bulk printing?",
+          time: "10:00 a.m",
+        },
+        {
+          id: 4,
+          sender: "admin",
+          text: "Yes, we offer 15% discount for 50+ pages and 25% for 100+ pages.",
+          time: "10:05 a.m",
+        },
+      ],
+    },
+    {
+      id: 3,
       name: "Daniel Padilla",
-      text: "Thank you for your service! The prints are great.",
+      avatar: avatar2,
+      preview: "Thank you for your service! The prints are great.",
+      online: true,
+      messages: [
+        {
+          id: 1,
+          sender: "user",
+          text: "Hi, I received my prints today.",
+          time: "2:15 p.m",
+        },
+        {
+          id: 2,
+          sender: "user",
+          text: "Thank you for your service! The prints are great.",
+          time: "2:16 p.m",
+        },
+        {
+          id: 3,
+          sender: "admin",
+          text: "We're glad you liked them! Thank you for choosing Trailblazer.",
+          time: "2:30 p.m",
+        },
+      ],
+    },
+    {
+      id: 4,
+      name: "Anne Curtis",
+      avatar: avatar1,
+      preview: "Hello, is my order ready for pickup?",
+      online: false,
+      messages: [
+        {
+          id: 1,
+          sender: "user",
+          text: "Hello, is my order ready for pickup? Order #12348",
+          time: "3:40 p.m",
+        },
+        {
+          id: 2,
+          sender: "admin",
+          text: "Hi Anne, your order is ready for pickup. You can come anytime during our business hours.",
+          time: "3:45 p.m",
+        },
+        {
+          id: 3,
+          sender: "user",
+          text: "Great! I'll be there in about an hour.",
+          time: "3:50 p.m",
+        },
+      ],
+    },
+    {
+      id: 5,
+      name: "Ryan Bang",
+      avatar: avatar2,
+      preview: "Can I get a rush printing service?",
+      online: true,
+      messages: [
+        {
+          id: 1,
+          sender: "user",
+          text: "Can I get a rush printing service? I need 50 copies by tomorrow morning.",
+          time: "4:10 p.m",
+        },
+        {
+          id: 2,
+          sender: "admin",
+          text: "We can accommodate your request. There's a 20% rush fee for next-day delivery.",
+          time: "4:15 p.m",
+        },
+        {
+          id: 3,
+          sender: "user",
+          text: "That works for me. I'll send the files right away.",
+          time: "4:20 p.m",
+        },
+      ],
     },
   ];
 
@@ -403,49 +530,178 @@ const AdminDashboard = () => {
     <AdminSalesComponent
       OrdersTableComponent={OrdersTable}
       ordersData={orders}
-      messagesPreviewData={messagesPreviewData}
+      messagesPreviewData={chatUsers}
     />
   );
 
-  const MessagesPageContent = () => (
-    <>
-      <h2 className="ad-title">Messages</h2>
-      <p>Messages functionality will be implemented here.</p>
-      {/* You can reuse the ad-messages-preview-card or build a full messages interface */}
-      <div className="ad-messages-preview-card" style={{ maxWidth: "600px" }}>
-        <h3 className="ad-messages-preview-card__header">All Messages</h3>
-        <div className="ad-messages-preview-card__list">
-          {messagesPreviewData.map((msg, index) => (
-            <div key={index} className="ad-messages-preview-card__item">
-              <img
-                src={msg.avatar}
-                alt={msg.name}
-                className="ad-messages-preview-card__avatar"
-              />
-              <div className="ad-messages-preview-card__content">
-                <div className="ad-messages-preview-card__name">{msg.name}</div>
-                <div className="ad-messages-preview-card__text">{msg.text}</div>
-              </div>
-            </div>
-          ))}
-          {/* Add more messages */}
-          <div className="ad-messages-preview-card__item">
-            <img
-              src={avatar1}
-              alt="Another User"
-              className="ad-messages-preview-card__avatar"
-            />
-            <div className="ad-messages-preview-card__content">
-              <div className="ad-messages-preview-card__name">Another User</div>
-              <div className="ad-messages-preview-card__text">
-                Inquiry about bulk printing...
-              </div>
+  const MessagesPageContent = () => {
+    const [messageInput, setMessageInput] = useState("");
+
+    const handleUserClick = (user) => {
+      setSelectedChatUser(user);
+    };
+
+    const handleSendMessage = (e) => {
+      e.preventDefault();
+      if (!messageInput.trim() || !selectedChatUser) return;
+
+      // Update the chat messages for the selected user
+      const updatedUsers = chatUsers.map((user) => {
+        if (user.id === selectedChatUser.id) {
+          return {
+            ...user,
+            messages: [
+              ...user.messages,
+              {
+                id: user.messages.length + 1,
+                sender: "admin",
+                text: messageInput,
+                time: new Date().toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
+              },
+            ],
+            preview: `Admin: ${messageInput}`, // Update preview with admin's message
+          };
+        }
+        return user;
+      });
+
+      // Update the selected chat user with new messages
+      const updatedUser = updatedUsers.find(
+        (user) => user.id === selectedChatUser.id
+      );
+      setSelectedChatUser(updatedUser);
+
+      // Clear input
+      setMessageInput("");
+    };
+
+    return (
+      <div className="ad-messages-container">
+        <h2 className="ad-title">Messages</h2>
+
+        <div className="ad-chat-layout">
+          {/* Left side - User list */}
+          <div className="ad-messages-users-list">
+            <h3 className="ad-messages-preview-card__header">Chatlist</h3>
+            <div className="ad-messages-preview-card__list">
+              {chatUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className={`ad-messages-preview-card__item ${
+                    selectedChatUser?.id === user.id ? "active" : ""
+                  }`}
+                  onClick={() => handleUserClick(user)}
+                >
+                  <div className="ad-messages-user-avatar-container">
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="ad-messages-preview-card__avatar"
+                    />
+                    {user.online && (
+                      <span className="ad-messages-user-status"></span>
+                    )}
+                  </div>
+                  <div className="ad-messages-preview-card__content">
+                    <div className="ad-messages-preview-card__name">
+                      {user.name}
+                    </div>
+                    <div className="ad-messages-preview-card__text">
+                      {user.preview}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+
+          {/* Right side - Chat window */}
+          {selectedChatUser ? (
+            <div className="ad-chat-window">
+              <div className="ad-chat-header">
+                <div className="ad-chat-user-info">
+                  <img
+                    src={selectedChatUser.avatar}
+                    alt={selectedChatUser.name}
+                    className="ad-messages-preview-card__avatar"
+                  />
+                  <div>
+                    <div className="ad-chat-username">
+                      {selectedChatUser.name}
+                    </div>
+                    <div className="ad-chat-user-status-text">
+                      {selectedChatUser.online ? "online" : "offline"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="ad-chat-messages">
+                {selectedChatUser.messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`ad-chat-message ${
+                      message.sender === "admin" ? "admin" : "user"
+                    }`}
+                  >
+                    {message.sender === "user" && (
+                      <img
+                        src={selectedChatUser.avatar}
+                        alt={selectedChatUser.name}
+                        className="ad-chat-message-avatar"
+                      />
+                    )}
+                    <div className="ad-chat-message-content">
+                      <div className="ad-chat-message-text">{message.text}</div>
+                      <div className="ad-chat-message-time">{message.time}</div>
+                    </div>
+                    {message.sender === "admin" && (
+                      <img
+                        src={profilePic}
+                        alt="Admin"
+                        className="ad-chat-message-avatar"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <form
+                className="ad-chat-input-container"
+                onSubmit={handleSendMessage}
+              >
+                <input
+                  type="text"
+                  placeholder="type your message here..."
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  className="ad-chat-input"
+                />
+                <button type="submit" className="ad-chat-send-button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="#2f2785"
+                  >
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                  </svg>
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="ad-chat-placeholder">
+              <p>Select a conversation to start chatting</p>
+            </div>
+          )}
         </div>
       </div>
-    </>
-  );
+    );
+  };
 
   const renderPageContent = () => {
     const currentPath = location.pathname.toLowerCase();
