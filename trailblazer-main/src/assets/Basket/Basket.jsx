@@ -85,6 +85,7 @@ const Basket = () => {
           icon: getFileIcon(file),
           file: file,
           pageCount: pageCount,
+          isTemplate: file.isTemplate || false,
         };
       });
 
@@ -124,26 +125,53 @@ const Basket = () => {
     const normalizedPrintOption =
       details.printOption === "Full color" ? "Colored" : details.printOption;
 
+    // Check if we have template items
+    const hasTemplateItems = items.some((item) => item.isTemplate);
+
     if (templateType === "presentation" || templateType === "poster") {
       // For presentations and posters, use a fixed price
-      totalPrice = 50;
+      if (hasTemplateItems) {
+        // If using a template, base price is 50
+        totalPrice = 50;
+      }
+
+      // Add price for any additional files
+      items.forEach((item) => {
+        if (!item.isTemplate) {
+          const basePrice =
+            PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
+          totalPrice += basePrice * (item.pageCount || 1);
+        }
+      });
     } else if (templateType === "resume") {
       // For resumes, use printing prices based on paper size and print option
       let basePrice =
         PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
 
+      // If using a template, add template fee
+      if (hasTemplateItems) {
+        totalPrice += 30; // Resume template base fee
+      }
+
       // Calculate price based on each file's page count
       items.forEach((item) => {
-        totalPrice += basePrice * (item.pageCount || 1);
+        if (!item.isTemplate) {
+          totalPrice += basePrice * (item.pageCount || 1);
+        }
       });
     } else {
-      // Default calculation for other templates
+      // Default calculation for other template types
       let basePrice =
         PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
 
       // Calculate price based on each file's page count
       items.forEach((item) => {
-        totalPrice += basePrice * (item.pageCount || 1);
+        if (item.isTemplate) {
+          // Add template fee based on type
+          totalPrice += 25; // Default template fee
+        } else {
+          totalPrice += basePrice * (item.pageCount || 1);
+        }
       });
 
       // Add customization fee if applicable
@@ -151,11 +179,6 @@ const Basket = () => {
         totalPrice += PRICES.CUSTOMIZATION[details.customization];
       }
     }
-
-    // Remove rush fee calculation - it will be added in the Payment component
-    // if (details.turnaroundTime === "Rush") {
-    //   totalPrice += PRICES.RUSH_FEE;
-    // }
 
     return totalPrice.toFixed(2);
   };
@@ -213,6 +236,14 @@ const Basket = () => {
   };
 
   const handleAddFiles = () => {
+    // Check if we already have a template in the basket
+    const hasTemplate = basketItems.some((item) => item.isTemplate);
+
+    if (hasTemplate) {
+      // Show a message that we're adding files to the template
+      showFeedback("Adding files to your template order");
+    }
+
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -234,6 +265,7 @@ const Basket = () => {
           icon: getFileIcon(file),
           file: file,
           pageCount: 1, // Default to 1 page for newly added files
+          isTemplate: file.isTemplate || false,
         };
       });
 
@@ -308,7 +340,9 @@ const Basket = () => {
             <strong>Printing Option:</strong> {orderDetails.printOption}
             <br />
             <strong>Turnaround Time:</strong>{" "}
-            {orderDetails.turnaroundTime || "Standard"}
+            {templateData.turnaroundTime ||
+              orderDetails.turnaroundTime ||
+              "Standard"}
             <br />
             <strong>Payment Method:</strong> {orderDetails.paymentMethod}
           </p>
@@ -322,12 +356,14 @@ const Basket = () => {
         <div className="bs-order-details">
           <h3>Specifications:</h3>
           <p>
-            <strong>Email:</strong> {orderDetails.emailAddress}
+            <strong>Paper Size:</strong> {orderDetails.paperSize}
             <br />
-            <strong>Phone:</strong> {orderDetails.phoneNumber}
+            <strong>Printing Option:</strong> {orderDetails.printOption}
             <br />
             <strong>Turnaround Time:</strong>{" "}
-            {orderDetails.turnaroundTime || "Standard"}
+            {templateData.turnaroundTime ||
+              orderDetails.turnaroundTime ||
+              "Standard"}
             <br />
             <strong>Payment Method:</strong> {orderDetails.paymentMethod}
           </p>
@@ -355,7 +391,10 @@ const Basket = () => {
   // Handle back navigation to upload page or specification page
   const handleBack = () => {
     // Check if user came from template specification page
-    if (templateData && templateData.hasTemplate && basketItems.length === 0) {
+    if (templateData && templateData.hasTemplate) {
+      const hasOnlyTemplate =
+        basketItems.length === 1 && basketItems[0].isTemplate;
+
       // Navigate back to specification page with current state
       navigate(`/template/${templateData.templateId}/specification`, {
         state: {
@@ -363,8 +402,12 @@ const Basket = () => {
             ...templateData,
             templateId: templateData.templateId,
             notes: templateData.notes,
-            turnaroundTime: orderDetails.turnaroundTime,
+            turnaroundTime:
+              templateData.turnaroundTime || orderDetails.turnaroundTime,
             templateType: templateData.templateType,
+            title: templateData.title,
+            description: templateData.description,
+            imageSrc: templateData.imageSrc,
           },
           specifications: orderDetails,
         },
@@ -380,13 +423,18 @@ const Basket = () => {
             size: item.file?.size,
             lastModified: item.file?.lastModified,
             pageCount: item.pageCount || 1,
+            isTemplate: item.isTemplate || false,
           })),
           specifications: orderDetails,
           templateInfo: templateData
             ? {
                 templateId: templateData.templateId,
                 notes: templateData.notes,
-                turnaroundTime: orderDetails.turnaroundTime,
+                turnaroundTime:
+                  templateData.turnaroundTime || orderDetails.turnaroundTime,
+                title: templateData.title,
+                description: templateData.description,
+                templateType: templateData.templateType,
               }
             : null,
           templateData,
@@ -394,6 +442,22 @@ const Basket = () => {
       });
     }
   };
+
+  // Empty basket content
+  const renderEmptyBasket = () => (
+    <div className="bs-empty-basket bs-card">
+      <div className="bs-empty-content">
+        <h3>Your basket is empty</h3>
+        <p>Add files or select a template to get started with your order</p>
+        <button
+          className="bs-add-btn bs-empty-add-btn"
+          onClick={handleAddFiles}
+        >
+          Add Files
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="bs-wrapper">
@@ -447,10 +511,21 @@ const Basket = () => {
                     className="bs-file-icon"
                   />
                   <div className="bs-file-info">
-                    <p className="bs-file-name">{item.name}</p>
+                    <p className="bs-file-name">
+                      {item.name}
+                      {item.isTemplate && (
+                        <span style={{ color: "#1C7ED6", marginLeft: "6px" }}>
+                          (Template)
+                        </span>
+                      )}
+                    </p>
                     <p className="bs-file-status">
                       {item.status}
-                      {item.pageCount > 1 && ` • ${item.pageCount} pages`}
+                      {!item.isTemplate &&
+                        item.pageCount > 1 &&
+                        ` • ${item.pageCount} pages`}
+                      {item.isTemplate &&
+                        ` • ${templateData?.templateType || "Template"}`}
                     </p>
                   </div>
                   <img
@@ -477,11 +552,22 @@ const Basket = () => {
                   <div className="bs-template-info">
                     <h3>Template Information:</h3>
                     <p>
-                      <strong>Template ID:</strong> {templateData.templateId}
+                      <strong>Template:</strong>{" "}
+                      {templateData.title || templateData.templateId}
                       <br />
+                      {templateData.description && (
+                        <>
+                          <strong>Description:</strong>{" "}
+                          {templateData.description}
+                          <br />
+                        </>
+                      )}
                       <strong>Template Type:</strong>{" "}
                       {templateData.templateType.charAt(0).toUpperCase() +
                         templateData.templateType.slice(1)}
+                      <br />
+                      <strong>Turnaround Time:</strong>{" "}
+                      {templateData.turnaroundTime || "Standard"}
                       {templateData.notes && (
                         <>
                           <br />
@@ -494,11 +580,6 @@ const Basket = () => {
                     </p>
                   </div>
                 )}
-                <p className="bs-summary-price">
-                  <span className="bs-payment-value">
-                    ₱{orderDetails.price}
-                  </span>
-                </p>
                 {totalPages > basketItems.length && (
                   <div className="bs-page-info">
                     <p>Total pages: {totalPages}</p>
@@ -508,18 +589,7 @@ const Basket = () => {
             </div>
           </>
         ) : (
-          <div className="bs-empty-basket bs-card">
-            <div className="bs-empty-content">
-              <h3>Your basket is empty</h3>
-              <p>Add files to get started with your order</p>
-              <button
-                className="bs-add-btn bs-empty-add-btn"
-                onClick={handleAddFiles}
-              >
-                Add Files
-              </button>
-            </div>
-          </div>
+          renderEmptyBasket()
         )}
       </div>
 

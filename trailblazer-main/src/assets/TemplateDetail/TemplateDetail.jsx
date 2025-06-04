@@ -39,12 +39,40 @@ function TemplateDetail() {
       return;
     }
 
-    // Create template info object
+    // Get template title and description based on templateId
+    let templateTitle = "Selected Template";
+    let templateDescription = "";
+
+    // Find the template details from the template collections
+    if (templateType === "resume") {
+      const template = resumeTemplates.find((t) => t.id === templateId);
+      if (template) {
+        templateTitle = template.title;
+        templateDescription = template.description;
+      }
+    } else if (templateType === "poster") {
+      const template = posterTemplates.find((t) => t.id === templateId);
+      if (template) {
+        templateTitle = template.title;
+        templateDescription = template.description;
+      }
+    } else if (templateType === "presentation") {
+      const template = pptTemplates.find((t) => t.id === templateId);
+      if (template) {
+        templateTitle = template.title;
+        templateDescription = template.description;
+      }
+    }
+
+    // Create template info object with more details
     const templateInfo = {
       templateId,
       notes,
       turnaroundTime,
       templateType,
+      title: templateTitle,
+      description: templateDescription,
+      imageSrc: `/images/${templateId}`,
     };
 
     // Navigate to template-specific specifications page with template info
@@ -67,6 +95,71 @@ function TemplateDetail() {
       },
     });
   };
+
+  // Template collections for reference
+  const resumeTemplates = [
+    {
+      id: "resume1",
+      title: "Professional Resume",
+      description: "2024 • A4",
+    },
+    {
+      id: "resume2",
+      title: "Modern Resume",
+      description: "2024 • A4",
+    },
+    {
+      id: "resume3",
+      title: "Simple Resume",
+      description: "2024 • A4",
+    },
+    {
+      id: "resume4",
+      title: "Creative Resume",
+      description: "2024 • A4",
+    },
+  ];
+
+  const posterTemplates = [
+    {
+      id: "poster1",
+      title: "Back to School Poster",
+      description: "2024 • A4",
+    },
+    {
+      id: "poster2",
+      title: "Engineer Poster",
+      description: "2024 • A4",
+    },
+    {
+      id: "poster3",
+      title: "Class Schedule Poster",
+      description: "2024 • A4",
+    },
+    {
+      id: "poster4",
+      title: "Nature Theme Poster",
+      description: "2024 • A4",
+    },
+  ];
+
+  const pptTemplates = [
+    {
+      id: "ppt1",
+      title: "Minimal Aesthetic Presentation",
+      description: "2024 • 16:9",
+    },
+    {
+      id: "ppt2",
+      title: "Construction Labor Presentation",
+      description: "2024 • 16:9",
+    },
+    {
+      id: "ppt3",
+      title: "Notebook Style Slides",
+      description: "2024 • 16:9",
+    },
+  ];
 
   return (
     <div className="detail-page">

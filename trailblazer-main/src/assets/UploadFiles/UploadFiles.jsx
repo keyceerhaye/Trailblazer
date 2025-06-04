@@ -756,20 +756,20 @@ export const UploadFiles = () => {
                     className="uf-btn-primary"
                     onClick={handleConfirmClick}
                     disabled={isProcessingFiles}
+                    style={{
+                      backgroundColor: "#1C7ED6",
+                      color: "white",
+                      borderRadius: "2rem",
+                      padding: "0.7rem 2rem",
+                      border: "none",
+                      fontSize: "1rem",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                    }}
                   >
                     {isProcessingFiles ? "Processing..." : "Confirm"}
                   </button>
                 </div>
-              </div>
-
-              <div className="uf-proceed-btn-wrapper">
-                <button
-                  className="uf-btn-proceed"
-                  onClick={handleConfirmClick}
-                  disabled={isProcessingFiles || selectedFiles.length === 0}
-                >
-                  PROCEED TO BASKET
-                </button>
               </div>
             </div>
           </div>
