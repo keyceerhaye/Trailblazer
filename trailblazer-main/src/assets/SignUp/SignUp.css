@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 * {
   box-sizing: border-box;
@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
 }
 
@@ -246,6 +246,24 @@ body {
   background-color: #283593;
 }
 
+.su-login-link {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: clamp(14px, 1.5vw, 16px);
+  color: #243f6a;
+}
+
+.su-auth-link {
+  color: #2f2785;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.su-auth-link:hover {
+  color: #283593;
+}
+
 /* Name fields styling */
 .su-form-input-name {
   display: flex;
@@ -292,7 +310,7 @@ body {
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
-  
+
   .su-form-container {
     margin-top: 1rem;
     margin-bottom: 3rem;
@@ -305,21 +323,21 @@ body {
     align-items: center;
     text-align: center;
   }
-  
+
   .su-brand-text {
     margin-left: 0;
     margin-top: 1rem;
   }
-  
+
   .su-welcome-content {
     text-align: center;
     margin-left: 0;
   }
-  
+
   .su-form-container {
     padding: 1rem;
   }
-  
+
   .su-form-input-name {
     flex-direction: column;
     gap: 1rem;

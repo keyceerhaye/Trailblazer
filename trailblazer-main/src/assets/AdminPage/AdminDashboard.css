@@ -496,7 +496,7 @@ ul {
 .ad-main-content {
   flex: 1;
   width: 100%;
-  background-color: var(--color-background-component);
+  background: linear-gradient(to bottom, #e4eaf7 0%, #fef9f6 50%, #e4eaf7 100%);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--space-xl);
@@ -618,7 +618,7 @@ ul {
   vertical-align: middle;
 }
 .ad-orders-table th {
-  background-color: var(--color-table-header-bg);
+  background-color: #bec8fc;
   color: var(--color-table-header-text);
   font-weight: var(--font-weight-semibold);
   text-transform: capitalize;
@@ -629,12 +629,13 @@ ul {
 }
 .ad-orders-table td {
   color: var(--color-text-secondary);
+  background-color: white;
 }
 .ad-orders-table tr:last-child td {
   border-bottom: none;
 }
 .ad-orders-table .alt-row td {
-  background-color: var(--color-table-row-alt-bg);
+  background-color: #e4eaf7;
 }
 .ad-orders-table tr:hover td {
   background-color: var(--color-accent-blue-light);

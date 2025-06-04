@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import "./SignUp.css";
 import logoImage from "../pages/logo.png";
@@ -42,7 +42,7 @@ export default function SignUp() {
     const userExists = existingUsers.some(
       (u) => u.emailUsername === emailUsername
     );
-    
+
     if (userExists) {
       setFormError("User with this Email/Username already exists.");
       return;
@@ -88,9 +88,8 @@ export default function SignUp() {
             Welcome
           </h2>
           <p className="su-welcome-text">
-            Welcome To Trailblazer Printing And Layout
-            Services. Sign Up To Access Your Designs And
-            Start Printing With Trailblazer Services.
+            Welcome To Trailblazer Printing And Layout Services. Sign Up To
+            Access Your Designs And Start Printing With Trailblazer Services.
           </p>
         </div>
       </div>
@@ -188,7 +187,14 @@ export default function SignUp() {
             </div>
 
             {formError && (
-              <div style={{ color: "#ff3333", textAlign: "center", fontSize: "14px", marginTop: "-10px" }}>
+              <div
+                style={{
+                  color: "#ff3333",
+                  textAlign: "center",
+                  fontSize: "14px",
+                  marginTop: "-10px",
+                }}
+              >
                 {formError}
               </div>
             )}
@@ -197,6 +203,13 @@ export default function SignUp() {
               <button type="submit" className="su-submit-btn">
                 Submit
               </button>
+            </div>
+
+            <div className="su-login-link">
+              Already have an account?{" "}
+              <Link to="/Login" className="su-auth-link">
+                Login here
+              </Link>
             </div>
           </form>
         </div>

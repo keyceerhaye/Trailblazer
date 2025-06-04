@@ -34,10 +34,10 @@ function Login() {
     if (matchedUser) {
       localStorage.setItem("loggedIn", "true");
       localStorage.setItem("user", JSON.stringify(matchedUser));
-      
+
       // Dispatch storage updated event for other components to detect
       window.dispatchEvent(new Event("storageUpdated"));
-      
+
       navigate("/");
     } else {
       setMessage("Invalid email/username or password");
@@ -70,8 +70,8 @@ function Login() {
               Welcome
             </h2>
             <p className="welcome-text">
-              Log In To Access Your Designs And
-              Start Printing With Trailblazer Services.
+              Log In To Access Your Designs And Start Printing With Trailblazer
+              Services.
             </p>
           </div>
         </div>
@@ -135,6 +135,13 @@ function Login() {
                 <button type="submit" className="login-button">
                   Login
                 </button>
+              </div>
+
+              <div className="login-signup-link">
+                Don't have an account?{" "}
+                <Link to="/Signup" className="auth-link">
+                  Signup
+                </Link>
               </div>
             </form>
           </div>
