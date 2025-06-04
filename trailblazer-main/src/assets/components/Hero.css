@@ -41,13 +41,14 @@
 .line2 {
   display: block;
   margin-bottom: 5px;
+  min-width: 600px;
 }
 
 .hero1,
 .hero2,
 .hero3,
 .hero4 {
-  font-size: clamp(40px, 6vw, 76px);
+  font-size: clamp(30px, 6vw, 70px);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: 1px;
