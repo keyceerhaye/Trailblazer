@@ -26,10 +26,11 @@ const Basket = () => {
   console.log("Passed Details:", passedDetails);
 
   const steps = [
-    { number: "1", label: "Upload files", active: true },
-    { number: "2", label: "Basket", active: true },
-    { number: "3", label: "Delivery", active: false },
-    { number: "4", label: "Payment", active: false },
+    { number: "1", label: "Template", active: true },
+    { number: "2", label: "Specifications", active: true },
+    { number: "3", label: "Basket", active: true },
+    { number: "4", label: "Delivery", active: false },
+    { number: "5", label: "Payment", active: false },
   ];
 
   const [basketItems, setBasketItems] = useState([]);

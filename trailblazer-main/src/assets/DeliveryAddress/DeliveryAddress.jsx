@@ -4,10 +4,11 @@ import editIcon from "../pages/img/edit.png";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const steps = [
-  { number: "1", label: "Upload files", isActive: true },
-  { number: "2", label: "Basket", isActive: true },
-  { number: "3", label: "Delivery", isActive: true, isCurrent: true },
-  { number: "4", label: "Payment", isActive: false },
+  { number: "1", label: "Template", isActive: true },
+  { number: "2", label: "Specifications", isActive: true },
+  { number: "3", label: "Basket", isActive: true },
+  { number: "4", label: "Delivery", isActive: true, isCurrent: true },
+  { number: "5", label: "Payment", isActive: false },
 ];
 
 const DeliveryAddress = () => {

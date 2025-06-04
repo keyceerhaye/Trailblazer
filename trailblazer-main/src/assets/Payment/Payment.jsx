@@ -230,7 +230,7 @@ const Payment = () => {
 
       <div className="pay-steps">
         <div className="pay-step-circles">
-          {[1, 2, 3, 4].map((num, index) => (
+          {[1, 2, 3, 4, 5].map((num, index) => (
             <React.Fragment key={num}>
               {index > 0 && <div className="pay-line active" />}
               <div className="pay-step-circle active">
@@ -240,11 +240,13 @@ const Payment = () => {
           ))}
         </div>
         <div className="pay-step-labels">
-          {["Upload files", "Basket", "Delivery", "Payment"].map((label, i) => (
-            <div key={i} className="pay-step-label">
-              {label}
-            </div>
-          ))}
+          {["Template", "Specifications", "Basket", "Delivery", "Payment"].map(
+            (label, i) => (
+              <div key={i} className="pay-step-label">
+                {label}
+              </div>
+            )
+          )}
         </div>
       </div>
 

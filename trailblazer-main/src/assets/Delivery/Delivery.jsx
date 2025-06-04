@@ -9,10 +9,11 @@ const Delivery = () => {
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(false);
 
   const steps = [
-    { number: "1", label: "Upload files", active: true },
-    { number: "2", label: "Basket", active: true },
-    { number: "3", label: "Delivery", active: true },
-    { number: "4", label: "Payment", active: false },
+    { number: "1", label: "Template", active: true },
+    { number: "2", label: "Specifications", active: true },
+    { number: "3", label: "Basket", active: true },
+    { number: "4", label: "Delivery", active: true },
+    { number: "5", label: "Payment", active: false },
   ];
 
   // Check if the payment method is Cash on Delivery

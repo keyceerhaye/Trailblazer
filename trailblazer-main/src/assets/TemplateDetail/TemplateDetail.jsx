@@ -25,6 +25,21 @@ function TemplateDetail() {
     // Get template title and description based on templateId
     let templateTitle = "Selected Template";
     let templateDescription = "";
+    let templateType = "other"; // Default template type
+
+    // Determine template type based on templateId
+    if (templateId.includes("resume")) {
+      templateType = "resume";
+    } else if (
+      templateId.includes("ppt") ||
+      templateId.includes("presentation")
+    ) {
+      templateType = "presentation";
+    } else if (templateId.includes("poster")) {
+      templateType = "poster";
+    } else if (templateId.includes("layout")) {
+      templateType = "layout";
+    }
 
     // Find the template details from the template collections
     const allTemplates = [
@@ -48,6 +63,7 @@ function TemplateDetail() {
       title: templateTitle,
       description: templateDescription,
       imageSrc: `/images/${templateId}`,
+      templateType, // Add template type to ensure proper flow
     };
 
     console.log(
@@ -159,13 +175,65 @@ function TemplateDetail() {
     },
   ];
 
+  // Get dynamic template title based on templateId
+  const getTemplateTitle = () => {
+    const allTemplates = [
+      ...resumeTemplates,
+      ...posterTemplates,
+      ...pptTemplates,
+      ...layoutTemplates,
+    ];
+    const template = allTemplates.find((t) => t.id === templateId);
+    return template ? template.title : "Selected Template";
+  };
+
+  const steps = [
+    { number: "1", label: "Template", active: true },
+    { number: "2", label: "Specifications", active: false },
+    { number: "3", label: "Basket", active: false },
+    { number: "4", label: "Delivery", active: false },
+    { number: "5", label: "Payment", active: false },
+  ];
+
   return (
     <div className="detail-page">
-      <button className="back-btn" onClick={handleBack}>
-        Back
-      </button>
+      <div className="template-back-button-container">
+        <button className="back-btn" onClick={handleBack}>
+          Back
+        </button>
+      </div>
 
-      <h2 className="template-title">Minimal Aesthetic Presentation</h2>
+      <div className="template-steps">
+        <div className="template-step-circles">
+          {steps.map((step, index) => (
+            <React.Fragment key={step.number}>
+              {index > 0 && (
+                <div
+                  className={`template-line ${
+                    steps[index - 1].active ? "active" : ""
+                  }`}
+                ></div>
+              )}
+              <div
+                className={`template-step-circle ${
+                  step.active ? "active" : ""
+                }`}
+              >
+                <span className="template-step-num">{step.number}</span>
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="template-step-labels">
+          {steps.map((step) => (
+            <div key={`label-${step.number}`} className="template-step-label">
+              {step.label}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <h2 className="template-title">{getTemplateTitle()}</h2>
 
       <div className="template-detail-content">
         <img

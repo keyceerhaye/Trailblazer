@@ -7,10 +7,11 @@ export const OrderConfirmed = () => {
   const navigate = useNavigate();
 
   const steps = [
-    { number: "1", label: "Upload files" },
-    { number: "2", label: "Basket" },
-    { number: "3", label: "Delivery" },
-    { number: "4", label: "Payment" },
+    { number: "1", label: "Template" },
+    { number: "2", label: "Specifications" },
+    { number: "3", label: "Basket" },
+    { number: "4", label: "Delivery" },
+    { number: "5", label: "Payment" },
   ];
 
   return (
@@ -21,13 +22,11 @@ export const OrderConfirmed = () => {
             {steps.map((step, i) => (
               <React.Fragment key={i}>
                 {i > 0 && <div className="oc-line"></div>}
-                <div className="oc-step-circle">
-                  {step.number}
-                </div>
+                <div className="oc-step-circle">{step.number}</div>
               </React.Fragment>
             ))}
           </div>
-          
+
           <div className="oc-step-labels">
             {steps.map((step, i) => (
               <div key={i} className="oc-step-label">
