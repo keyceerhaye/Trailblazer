@@ -8,13 +8,16 @@ import {
   Settings,
   Home,
   User as UserIcon,
-} from "lucide-react"; // Added UserIcon for profile
+  ChevronDown,
+  ChevronUp
+} from "lucide-react"; // Added ChevronDown and ChevronUp icons
 import defaultProfilePic from "../../assets/pages/profile.png"; // Default profile picture
 
 const AppHeader = ({
   user,
   profilePic: propProfilePic,
   handleLogout: propHandleLogout,
+  sidebarCollapsed
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -73,7 +76,7 @@ const AppHeader = ({
   };
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       <div className="app-header-title-section">
         <h2 className="app-header-title">{getPageTitle()}</h2>
         {location.pathname === "/dashboard" && (
@@ -101,19 +104,18 @@ const AppHeader = ({
               isDropdownOpen ? "rotate" : ""
             }`}
           >
-            ⌄
+            {isDropdownOpen ? (
+              <ChevronUp size={16} color={isDropdownOpen ? "white" : "#2c2480"} />
+            ) : (
+              <ChevronDown size={16} color="#2c2480" />
+            )}
           </div>
           {isDropdownOpen && (
             <div className="app-profile-dropdown">
-              {" "}
-              {/* Removed ref from here, already on parent */}
               <div
                 className="app-dropdown-header-section"
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Optional: navigate to profile on header click, then close dropdown
-                  // navigate('/profile');
-                  // setIsDropdownOpen(false);
                 }}
               >
                 <img
@@ -125,18 +127,18 @@ const AppHeader = ({
                   <div className="app-dropdown-user-name">
                     {currentUser?.firstName} {currentUser?.lastName}
                   </div>
-                  {/* <div className="app-dropdown-user-email">{currentUser?.email}</div> */}
                 </div>
               </div>
-              <hr className="app-dropdown-divider" />
+              
               <Link
                 to="/"
                 className="app-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Home size={24} className="app-dropdown-lucide-icon" />
+                <Home size={20} className="app-dropdown-lucide-icon" />
                 Home
               </Link>
+              
               <Link
                 to="/#service"
                 className="app-dropdown-item"
@@ -149,46 +151,51 @@ const AppHeader = ({
                   setIsDropdownOpen(false);
                 }}
               >
-                <Settings size={24} className="app-dropdown-lucide-icon" />
+                <Settings size={20} className="app-dropdown-lucide-icon" />
                 Services
               </Link>
+              
               <Link
                 to="/contact"
                 className="app-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Phone size={24} className="app-dropdown-lucide-icon" />
+                <Phone size={20} className="app-dropdown-lucide-icon" />
                 Contact Us
               </Link>
+              
               <Link
                 to="/aboutus"
                 className="app-dropdown-item"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <Info size={24} className="app-dropdown-lucide-icon" />
+                <Info size={20} className="app-dropdown-lucide-icon" />
                 About Us
               </Link>
-              <hr className="app-dropdown-divider" />
+              
               <div className="app-dropdown-item" onClick={handleLogout}>
-                <LogOut size={24} className="app-dropdown-lucide-icon" />
+                <LogOut size={20} className="app-dropdown-lucide-icon" />
                 Log Out
               </div>
+              
               <div className="app-dropdown-footer">
                 <Link
                   className="app-footer-link"
                   to="/terms"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsDropdownOpen(false);
+                  }}
                 >
                   Terms & Conditions
                 </Link>
                 <Link
                   className="app-footer-link"
                   to="/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsDropdownOpen(false);
+                  }}
                 >
                   Privacy Policy
                 </Link>

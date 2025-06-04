@@ -9,6 +9,7 @@ export default function OrderHistoryPage() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [currentDate, setCurrentDate] = useState("");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     const today = new Date();
@@ -19,6 +20,10 @@ export default function OrderHistoryPage() {
   const handleOrderHistoryLogout = () => {
     localStorage.clear();
     navigate("/");
+  };
+
+  const handleSidebarCollapse = (collapsed) => {
+    setSidebarCollapsed(collapsed);
   };
 
   const [orders, setOrders] = useState([
@@ -69,9 +74,9 @@ export default function OrderHistoryPage() {
 
   return (
     <div className="oh-container">
-      <Sidebar />
-      <div className="main-content-wrapper">
-        <div className="page-header">
+      <Sidebar onCollapseChange={handleSidebarCollapse} />
+      <div className={`main-content-wrapper ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+        <div className={`page-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
           <div className="page-header-title">
             <h2>Order History</h2>
             <p className="date">{currentDate}</p>
@@ -80,6 +85,7 @@ export default function OrderHistoryPage() {
             user={user}
             profilePic={Profile}
             handleLogout={handleOrderHistoryLogout}
+            sidebarCollapsed={sidebarCollapsed}
           />
         </div>
 

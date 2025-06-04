@@ -1,50 +1,103 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Sidebar.css"; // Import the new sidebar CSS
-import { LayoutDashboard, History, Home } from "lucide-react";
+import { LayoutDashboard, History, User, Clock, LogOut, LayoutGrid, PanelLeftDashed } from "lucide-react";
 import logoImage from "../../assets/pages/logo.png"; // Corrected path to logo
 
 // Define the navigation items
 const navItems = [
   {
     to: "/dashboard",
-    icon: LayoutDashboard,
-    label: "Dashboard",
+    icon: LayoutGrid,
+    label: "Home",
     pageName: "dashboard",
   },
-  { to: "/profile", icon: Home, label: "Profile", pageName: "profile" },
+  { 
+    to: "/profile", 
+    icon: User, 
+    label: "Profile", 
+    pageName: "profile" 
+  },
   {
     to: "/orderhistory",
-    icon: History,
+    icon: Clock,
     label: "Order History",
     pageName: "orderhistory",
   },
+  { 
+    to: "/", 
+    icon: LogOut, 
+    label: "Log Out", 
+    pageName: "logout",
+    action: true 
+  },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onCollapseChange }) {
   const location = useLocation(); // Get current location
+  const navigate = useNavigate();
   const currentPath = location.pathname;
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
+
+  useEffect(() => {
+    if (onCollapseChange) {
+      onCollapseChange(collapsed);
+    }
+  }, [collapsed, onCollapseChange]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
       <div className="logo-section">
-        <div className="S-sidebar-brand">
-          <img
-            src={logoImage}
-            alt="Trailblazer Printing Logo"
-            className="brand-logo"
-          />
-          <div className="brand-info">
-            <h1 className="brand-title">TRAILBLAZER</h1>
-            <span className="brand-subtitle">PRINTING & LAYOUT SERVICES</span>
+        {!collapsed && (
+          <div className="S-sidebar-brand">
+            <img
+              src={logoImage}
+              alt="Trailblazer Printing Logo"
+              className="brand-logo"
+            />
+            <div className="brand-info">
+              <h1 className="brand-title">TRAILBLAZER</h1>
+              <span className="brand-subtitle">PRINTING & LAYOUT SERVICES</span>
+            </div>
           </div>
-        </div>
+        )}
+        {collapsed && (
+          <div className="S-sidebar-brand-collapsed">
+            <img
+              src={logoImage}
+              alt="Trailblazer Printing Logo"
+              className="brand-logo-collapsed"
+            />
+          </div>
+        )}
       </div>
 
       <nav className="S-sidebar-nav">
         <ul>
           {navItems.map((item) => {
             const IconComponent = item.icon;
+            if (item.action) {
+              return (
+                <li
+                  key={item.pageName}
+                  className={currentPath === item.to ? "active" : ""}
+                >
+                  <Link to={item.to} onClick={handleLogout}>
+                    <IconComponent className="icon" />
+                    {!collapsed && <span>{item.label}</span>}
+                  </Link>
+                </li>
+              );
+            }
             return (
               <li
                 key={item.pageName}
@@ -52,14 +105,19 @@ export default function Sidebar() {
               >
                 <Link to={item.to}>
                   <IconComponent className="icon" />
-                  {item.label}
+                  {!collapsed && <span>{item.label}</span>}
                 </Link>
               </li>
             );
           })}
         </ul>
       </nav>
-      {/* Optional: Add a footer or other elements here if needed later */}
+
+      <div className="sidebar-footer">
+        <button className="collapse-btn" onClick={toggleCollapse}>
+          <PanelLeftDashed size={24} color="white" />
+        </button>
+      </div>
     </aside>
   );
 }

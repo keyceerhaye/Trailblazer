@@ -16,6 +16,7 @@ export default function ProfilePage() {
     location: "",
   });
   const [currentDate, setCurrentDate] = useState(""); // For header date
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Add sidebar state
   const navigate = useNavigate(); // For logout
   const user = JSON.parse(localStorage.getItem("user")); // Get user for AppHeader
 
@@ -37,6 +38,10 @@ export default function ProfilePage() {
       });
     }
   }, []);
+
+  const handleSidebarCollapse = (collapsed) => {
+    setSidebarCollapsed(collapsed);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -104,9 +109,9 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-container">
-      <Sidebar />
-      <div className="main-content-wrapper">
-        <div className="page-header">
+      <Sidebar onCollapseChange={handleSidebarCollapse} />
+      <div className={`main-content-wrapper ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+        <div className={`page-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
           <div className="page-header-title">
             <h2 className="Pp-title">User Profile</h2>
             <p className="date">{currentDate}</p>
@@ -115,6 +120,7 @@ export default function ProfilePage() {
             user={user}
             profilePic={Profile}
             handleLogout={handleProfileLogout}
+            sidebarCollapsed={sidebarCollapsed}
           />
         </div>
 
