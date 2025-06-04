@@ -17,19 +17,28 @@ function TemplateDetail() {
 
   // Determine template type from templateId
   const determineTemplateType = () => {
+    let type;
     if (templateId.includes("resume")) {
-      return "resume";
+      type = "resume";
     } else if (
       templateId.includes("presentation") ||
       templateId.includes("ppt")
     ) {
-      return "presentation";
+      type = "presentation";
     } else if (templateId.includes("poster")) {
-      return "poster";
+      type = "poster";
     } else if (templateId.includes("layout")) {
-      return "layout";
+      type = "layout";
+    } else {
+      type = "other";
     }
-    return "other";
+    console.log(
+      "Determined template type:",
+      type,
+      "from templateId:",
+      templateId
+    );
+    return type;
   };
 
   const templateType = determineTemplateType();
@@ -82,6 +91,11 @@ function TemplateDetail() {
       description: templateDescription,
       imageSrc: `/images/${templateId}`,
     };
+
+    console.log(
+      "Template info being passed to specification page:",
+      templateInfo
+    );
 
     // Navigate to template-specific specifications page with template info
     navigate(`/template/${templateId}/specification`, {

@@ -48,6 +48,9 @@ const LayoutSpecification = () => {
 
   const templateType = determineTemplateType();
 
+  // Debug log
+  console.log("Layout Specification - Template Type:", templateType);
+
   const [specifications, setSpecifications] = useState({
     paperSize: previousSpecifications.paperSize || "A4",
     printOption: previousSpecifications.printOption || "Full color",
@@ -104,19 +107,40 @@ const LayoutSpecification = () => {
     if (templateType === "layout") {
       let totalPrice = PRICES.LAYOUT_BASE_PRICE;
 
+      // Debug log
+      console.log(
+        "Layout Service Price Calculation - Base Price:",
+        PRICES.LAYOUT_BASE_PRICE
+      );
+
       // Add customization fee if applicable
       if (
         specifications.customization &&
         specifications.customization !== "None"
       ) {
         totalPrice += PRICES.CUSTOMIZATION[specifications.customization];
+        // Debug log
+        console.log(
+          "Layout Service Price Calculation - With Customization:",
+          totalPrice
+        );
       }
 
       // Add rush fee if applicable
       if (specifications.turnaroundTime === "Rush") {
         totalPrice += PRICES.RUSH_FEE;
+        // Debug log
+        console.log(
+          "Layout Service Price Calculation - With Rush Fee:",
+          totalPrice
+        );
       }
 
+      // Debug log
+      console.log(
+        "Layout Service Price Calculation - Final Price:",
+        totalPrice.toFixed(2)
+      );
       return totalPrice.toFixed(2);
     }
 
@@ -200,11 +224,17 @@ const LayoutSpecification = () => {
     // Calculate the final price
     const finalPrice = calculatePrice();
 
+    // Debug log
+    console.log("Final Price before creating orderDetails:", finalPrice);
+
     // Create orderDetails with the same structure expected by Basket and Delivery
     const orderDetails = {
       ...specifications,
       price: finalPrice,
     };
+
+    // Debug log
+    console.log("Order Details:", orderDetails);
 
     // Prepare template data with all necessary information
     const templateData = {
@@ -218,6 +248,9 @@ const LayoutSpecification = () => {
       turnaroundTime: templateInfo.turnaroundTime || "Standard",
     };
 
+    // Debug log
+    console.log("Template Data being passed to Basket:", templateData);
+
     // Create a virtual file item to represent the template in the basket
     const templateItem = {
       id: `template-${templateInfo.templateId}-${Date.now()}`,
@@ -230,6 +263,9 @@ const LayoutSpecification = () => {
       templateId: templateInfo.templateId,
       templateType: templateType,
     };
+
+    // Debug log
+    console.log("Template Item being passed to Basket:", templateItem);
 
     // Navigate to basket with all information
     navigate("/basket", {

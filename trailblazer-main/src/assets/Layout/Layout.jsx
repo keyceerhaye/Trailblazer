@@ -87,18 +87,21 @@ function Templates() {
       src: "layout1.png",
       title: "Basic Layout Design",
       description: "Simple layout design service",
+      templateType: "layout",
     },
     {
       id: "layout2",
       src: "layout2.png",
       title: "Advanced Layout Design",
       description: "Complex layout design service",
+      templateType: "layout",
     },
     {
       id: "layout3",
       src: "layout3.png",
       title: "Custom Layout Design",
       description: "Fully customized layout design",
+      templateType: "layout",
     },
   ];
 
@@ -107,7 +110,10 @@ function Templates() {
       <div
         className="template-box"
         key={index}
-        onClick={() => setSelectedTemplate(template)}
+        onClick={() => {
+          console.log("Selected template:", template);
+          setSelectedTemplate(template);
+        }}
       >
         <img src={`/images/${template.src}`} alt={template.title} />
       </div>
@@ -159,7 +165,13 @@ function Templates() {
                 <p>{selectedTemplate.description}</p>
                 <button
                   className="choose-template-btn"
-                  onClick={() => navigate(`/template/${selectedTemplate.id}`)}
+                  onClick={() => {
+                    console.log(
+                      "Navigating to template detail with ID:",
+                      selectedTemplate.id
+                    );
+                    navigate(`/template/${selectedTemplate.id}`);
+                  }}
                 >
                   Choose this template
                 </button>

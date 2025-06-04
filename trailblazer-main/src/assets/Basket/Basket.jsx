@@ -20,6 +20,11 @@ const Basket = () => {
   const passedDetails = location.state?.specifications || null;
   const templateData = location.state?.templateData || null;
 
+  // Debug logs
+  console.log("Template Data:", templateData);
+  console.log("Template Type:", templateData?.templateType);
+  console.log("Passed Details:", passedDetails);
+
   const steps = [
     { number: "1", label: "Upload files", active: true },
     { number: "2", label: "Basket", active: true },
@@ -41,7 +46,10 @@ const Basket = () => {
     paymentMethod: passedDetails?.paymentMethod || "Cash",
     emailAddress: passedDetails?.emailAddress || "",
     phoneNumber: passedDetails?.phoneNumber || "",
-    price: "00.00",
+    price:
+      templateData?.templateType === "layout"
+        ? PRICES.LAYOUT_BASE_PRICE.toFixed(2)
+        : "00.00",
     customization: "None", // Added customization level
   });
 
@@ -70,7 +78,50 @@ const Basket = () => {
   };
 
   useEffect(() => {
-    if (uploadedFiles && uploadedFiles.length > 0) {
+    // If coming from layout specification page, prioritize template data
+    if (templateData && templateData.hasTemplate) {
+      console.log("BASKET: Initializing from template data.", templateData);
+      const templateItem = {
+        id: `template-${templateData.templateId}-${Date.now()}`,
+        name: templateData.title || `Template ${templateData.templateId}`,
+        status: "Template Selected",
+        icon: PDF, // Default icon, can be refined based on templateType if needed
+        file: null, // No actual file for a template item
+        pageCount: 1, // Templates can be considered as 1 page for simplicity
+        isTemplate: true,
+        templateId: templateData.templateId,
+        templateType: templateData.templateType,
+      };
+
+      setBasketItems([templateItem]);
+      setTotalPages(1);
+      showFeedback(`Template ${templateItem.name} added to basket`);
+
+      setOrderDetails((prevDetails) => {
+        const updatedDetails = {
+          ...prevDetails,
+          ...passedDetails,
+          turnaroundTime:
+            templateData.turnaroundTime || prevDetails.turnaroundTime, // Ensure turnaround time is passed
+          customization:
+            passedDetails?.customization || prevDetails.customization, // Ensure customization is passed
+        };
+        const calculatedPrice = calculatePrice(
+          [templateItem],
+          updatedDetails,
+          templateData?.templateType
+        );
+        console.log(
+          "BASKET: Calculated price during initialization:",
+          calculatedPrice
+        );
+        return {
+          ...updatedDetails,
+          price: calculatedPrice,
+        };
+      });
+    } else if (uploadedFiles && uploadedFiles.length > 0) {
+      console.log("BASKET: Initializing from uploaded files.", uploadedFiles);
       // Calculate total pages from all files
       let totalPageCount = 0;
 
@@ -91,6 +142,7 @@ const Basket = () => {
           file: file,
           pageCount: pageCount,
           isTemplate: file.isTemplate || false,
+          templateType: file.templateType || null, // Add templateType from file if available
         };
       });
 
@@ -99,7 +151,7 @@ const Basket = () => {
       showFeedback(`${fileItems.length} file(s) added to basket`);
 
       // Calculate price after adding items
-      if (passedDetails) {
+      if (passedDetails || templateData) {
         setOrderDetails((prevDetails) => {
           const updatedDetails = {
             ...prevDetails,
@@ -116,44 +168,63 @@ const Basket = () => {
         });
       }
     }
-  }, [uploadedFiles, passedDetails]);
+  }, [uploadedFiles, passedDetails, templateData]);
 
   // Calculate price based on specifications and file page counts
   const calculatePrice = (items, details, templateType) => {
+    // Debug logs
+    console.log("CALCULATE PRICE CALLED - Template Type:", templateType);
+    console.log("CALCULATE PRICE CALLED - Details:", details);
+    console.log("CALCULATE PRICE CALLED - Items:", items);
+
+    // Prioritize layout service pricing if templateType is 'layout'
+    if (templateType === "layout") {
+      console.log(
+        "CALCULATE PRICE: Layout service detected. Calculating price based on layout rules."
+      );
+      let totalPrice = PRICES.LAYOUT_BASE_PRICE;
+
+      if (details.turnaroundTime === "Rush") {
+        totalPrice += PRICES.RUSH_FEE;
+        console.log(
+          "CALCULATE PRICE: Added rush fee. Current total:",
+          totalPrice
+        );
+      }
+      if (details.customization && details.customization !== "None") {
+        totalPrice += PRICES.CUSTOMIZATION[details.customization];
+        console.log(
+          "CALCULATE PRICE: Added customization fee. Current total:",
+          totalPrice
+        );
+      }
+      console.log(
+        "CALCULATE PRICE: Final calculated layout price:",
+        totalPrice.toFixed(2)
+      );
+      return totalPrice.toFixed(2);
+    }
+
+    // If no items in basket and it's not a layout service, return "00.00"
     if (!items || items.length === 0) {
+      console.log(
+        "CALCULATE PRICE: No items and not layout service. Returning 00.00."
+      );
       return "00.00";
     }
 
     let totalPrice = 0;
 
-    // Normalize print option to match PRICES structure
+    // Existing logic for other template types and regular files
     const normalizedPrintOption =
       details.printOption === "Full color" ? "Colored" : details.printOption;
 
-    // Check if we have template items
     const hasTemplateItems = items.some((item) => item.isTemplate);
 
-    // Handle layout service specifically
-    if (templateType === "layout") {
-      // Base price for layout service is 50 pesos
-      totalPrice = PRICES.LAYOUT_BASE_PRICE;
-
-      // Add rush fee if turnaround time is Rush
-      if (details.turnaroundTime === "Rush") {
-        totalPrice += PRICES.RUSH_FEE;
-      }
-
-      // Note: Delivery fee will be added in the Delivery component
-
-      return totalPrice.toFixed(2);
-    } else if (templateType === "presentation" || templateType === "poster") {
-      // For presentations and posters, use a fixed price
+    if (templateType === "presentation" || templateType === "poster") {
       if (hasTemplateItems) {
-        // If using a template, base price is 50
         totalPrice = 50;
       }
-
-      // Add price for any additional files
       items.forEach((item) => {
         if (!item.isTemplate) {
           const basePrice =
@@ -162,43 +233,35 @@ const Basket = () => {
         }
       });
     } else if (templateType === "resume") {
-      // For resumes, use printing prices based on paper size and print option
       let basePrice =
         PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
-
-      // If using a template, add template fee
       if (hasTemplateItems) {
         totalPrice += 30; // Resume template base fee
       }
-
-      // Calculate price based on each file's page count
       items.forEach((item) => {
         if (!item.isTemplate) {
           totalPrice += basePrice * (item.pageCount || 1);
         }
       });
     } else {
-      // Default calculation for other template types
+      // Default calculation for other template types and regular files
       let basePrice =
         PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
 
-      // Calculate price based on each file's page count
       items.forEach((item) => {
         if (item.isTemplate) {
-          // Add template fee based on type
           totalPrice += 25; // Default template fee
         } else {
           totalPrice += basePrice * (item.pageCount || 1);
         }
       });
 
-      // Add customization fee if applicable
       if (details.customization && details.customization !== "None") {
         totalPrice += PRICES.CUSTOMIZATION[details.customization];
       }
     }
 
-    // Add rush fee if turnaround time is Rush (for all services)
+    // Add rush fee if turnaround time is Rush (for all non-layout services)
     if (details.turnaroundTime === "Rush") {
       totalPrice += PRICES.RUSH_FEE;
     }
@@ -208,10 +271,16 @@ const Basket = () => {
 
   useEffect(() => {
     // Recalculate price whenever order details or basket items change
-    if (basketItems.length > 0) {
+    // This useEffect is primarily for when orderDetails (e.g., paperSize, printOption) change AFTER initial load
+    if (basketItems.length > 0 || templateData?.templateType === "layout") {
       setOrderDetails((prev) => ({
         ...prev,
         price: calculatePrice(basketItems, prev, templateData?.templateType),
+      }));
+    } else {
+      setOrderDetails((prev) => ({
+        ...prev,
+        price: "00.00", // Reset price if basket is empty and not a layout service
       }));
     }
   }, [
@@ -220,6 +289,7 @@ const Basket = () => {
     orderDetails.printOption,
     orderDetails.turnaroundTime,
     orderDetails.customization,
+    templateData, // Added templateData to dependencies
   ]);
 
   const showFeedback = (message) => {
