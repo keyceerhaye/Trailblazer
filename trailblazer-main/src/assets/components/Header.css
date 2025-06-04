@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 * {
   box-sizing: border-box;
@@ -7,7 +7,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
 }
 
@@ -48,7 +48,14 @@ body {
 .title {
   font-size: clamp(24px, 5vw, 48px);
   font-weight: 700;
-  background: linear-gradient(to right, #326BF6 9%, #90CAF9 21%, #90CAF9 42%, #A3A8F9 58%, #C2AEFD 76%);
+  background: linear-gradient(
+    to right,
+    #326bf6 9%,
+    #90caf9 21%,
+    #90caf9 42%,
+    #a3a8f9 58%,
+    #c2aefd 76%
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -61,7 +68,7 @@ body {
   font-size: clamp(8px, 2vw, 16px);
   font-weight: 600;
   letter-spacing: clamp(1px, 0.5vw, 2.5px);
-  background: linear-gradient(to right, #2D9CF4 0%, #90CAF9 49%);
+  background: linear-gradient(to right, #2d9cf4 0%, #90caf9 49%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -79,7 +86,7 @@ body {
   display: none;
   background: none;
   border: none;
-  color: #2F2785;
+  color: #2f2785;
   cursor: pointer;
   padding: 8px;
   z-index: 101;
@@ -105,7 +112,7 @@ body {
 
 .navbar button {
   background-color: transparent;
-  color: #2F2785;
+  color: #2f2785;
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 600;
   cursor: pointer;
@@ -114,16 +121,16 @@ body {
 }
 
 .navbar button:hover {
-  color: #326BF6;
+  color: #326bf6;
   transition: all 0.3s ease-in-out;
 }
 
 .navbar button:focus {
-    outline: none;
+  outline: none;
 }
 
 .navbar button.active {
-  color: #326BF6;
+  color: #326bf6;
 }
 
 .auth-buttons {
@@ -145,11 +152,11 @@ body {
 
 .Login button {
   background-color: white;
-  color: #2F2785;
+  color: #2f2785;
 }
 
 .SignUp button {
-  background-color: #326BF6;
+  background-color: #326bf6;
   color: white;
 }
 
@@ -159,14 +166,16 @@ body {
   align-items: center;
 }
 
-.Login button:active, .Login button:focus {
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease-in-out;
+.Login button:active,
+.Login button:focus {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
 }
 
-.SignUp button:active, .SignUp button:focus {
-    box-shadow: inset 2px 2px 5px rgb(1, 10, 20);
-    transition: all 0.3s ease-in-out;
+.SignUp button:active,
+.SignUp button:focus {
+  box-shadow: inset 2px 2px 5px rgb(1, 10, 20);
+  transition: all 0.3s ease-in-out;
 }
 
 .user-dropdown {
@@ -198,7 +207,7 @@ body {
 
 .menu-icon span {
   height: 4px;
-  background-color: #2F2785;
+  background-color: #2f2785;
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -245,12 +254,12 @@ body {
   font-weight: 600;
   max-width: 150px;
   text-align: left;
-  color: #2F2785;
+  color: #2f2785;
 }
 
 .close-icon {
   font-size: 50px;
-  color: #2F2785;
+  color: #2f2785;
   position: absolute;
   top: 10px;
   right: 10px;
@@ -266,7 +275,7 @@ hr {
 .dropdown-item {
   padding: 13px 28px;
   font-size: 15px;
-  color: #2F2785;
+  color: #2f2785;
   background: none;
   border: none;
   text-align: left;
@@ -281,7 +290,7 @@ hr {
 .dropdown-item-1 {
   padding: 13px 28px;
   font-size: 15px;
-  color: #2F2785;
+  color: #2f2785;
   background: none;
   border: none;
   text-align: left;
@@ -295,12 +304,12 @@ hr {
 
 .dropdown-item:hover {
   background-color: #f1f5f9;
-  color: #326BF6;
+  color: #326bf6;
 }
 
 .dropdown-item-1:hover {
   background-color: #f1f5f9;
-  color: #326BF6;
+  color: #326bf6;
 }
 
 .dropdown-footer {
@@ -319,11 +328,11 @@ hr {
 }
 
 .dropdown-footer a {
-  color: #2F2785;
+  color: #2f2785;
 }
 
 .dropdown-footer a:hover {
-  color: #326BF6;
+  color: #326bf6;
   text-decoration: underline;
 }
 
@@ -353,7 +362,14 @@ hr {
 .center-logo .title {
   font-size: clamp(24px, 5vw, 48px);
   font-weight: 700;
-  background: linear-gradient(to right, #326BF6 9%, #90CAF9 21%, #90CAF9 42%, #A3A8F9 58%, #C2AEFD 76%);
+  background: linear-gradient(
+    to right,
+    #326bf6 9%,
+    #90caf9 21%,
+    #90caf9 42%,
+    #a3a8f9 58%,
+    #c2aefd 76%
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -365,7 +381,7 @@ hr {
   font-size: clamp(8px, 2vw, 16px);
   font-weight: 600;
   letter-spacing: clamp(1px, 0.5vw, 2.5px);
-  background: linear-gradient(to right, #2D9CF4 0%, #90CAF9 49%);
+  background: linear-gradient(to right, #2d9cf4 0%, #90caf9 49%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -379,7 +395,7 @@ hr {
   .header {
     padding: 0 20px;
   }
-  
+
   .right-section {
     margin-left: 40px;
   }
@@ -391,7 +407,7 @@ hr {
     align-items: center;
     justify-content: center;
   }
-  
+
   .right-section {
     position: fixed;
     top: 0;
@@ -409,28 +425,28 @@ hr {
     z-index: 99;
     transition: right 0.3s ease;
   }
-  
+
   .right-section.show-mobile {
     right: 0;
   }
-  
+
   .navbar-container {
     width: 100%;
   }
-  
+
   .navbar {
     flex-direction: column;
     width: 100%;
     gap: 10px;
   }
-  
+
   .navbar button {
     text-align: left;
     width: 100%;
     padding: 12px;
     border-bottom: 1px solid #eee;
   }
-  
+
   .auth-buttons {
     flex-direction: column;
     width: 100%;
@@ -438,16 +454,18 @@ hr {
     gap: 15px;
     margin-left: 0;
   }
-  
-  .Login, .SignUp {
+
+  .Login,
+  .SignUp {
     width: 100%;
   }
-  
-  .Login button, .SignUp button {
+
+  .Login button,
+  .SignUp button {
     width: 100%;
     padding: 12px;
   }
-  
+
   .user-dropdown {
     margin-top: 20px;
     margin-left: 0;
@@ -460,19 +478,19 @@ hr {
     width: 60px;
     height: 60px;
   }
-  
+
   .title {
     font-size: 24px;
   }
-  
+
   .subtext {
     font-size: 8px;
   }
-  
+
   .right-section {
     width: 90%;
   }
-  
+
   .dropdown-menu {
     width: 250px;
   }
@@ -484,4 +502,3 @@ hr {
     height: 80px;
   }
 }
-

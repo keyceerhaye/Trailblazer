@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './Header.css';
-import imageLogo from './logo.png';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { User, LayoutDashboard, History, LogOut, Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import "./Header.css";
+import imageLogo from "./logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
+import { User, LayoutDashboard, History, LogOut, Menu, X } from "lucide-react";
 
 function Header() {
   const navigate = useNavigate();
@@ -10,12 +10,13 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [activeTab, setActiveTab] = useState("");
   const dropdownRef = useRef();
   const mobileMenuRef = useRef();
 
-  const isMinimalHeader = location.pathname === "/terms" || location.pathname === "/privacy";
+  const isMinimalHeader =
+    location.pathname === "/terms" || location.pathname === "/privacy";
 
   useEffect(() => {
     const updateLoginStatus = () => {
@@ -49,7 +50,7 @@ function Header() {
     localStorage.removeItem("user");
     setShowDropdown(false);
     setShowMobileMenu(false);
-    navigate('/');
+    navigate("/");
   };
 
   const handleNavigation = (path, tab) => {
@@ -63,7 +64,11 @@ function Header() {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setShowDropdown(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target) && e.target.className !== 'mobile-menu-toggle') {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(e.target) &&
+        e.target.className !== "mobile-menu-toggle"
+      ) {
         setShowMobileMenu(false);
       }
     };
@@ -78,8 +83,8 @@ function Header() {
         setShowMobileMenu(false);
       }
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   if (isMinimalHeader) {
@@ -109,10 +114,18 @@ function Header() {
   ];
 
   return (
-    <header className={`header ${pathsWithShadow.includes(location.pathname) ? "header-shadow" : ""}`}>
+    <header
+      className={`header ${
+        pathsWithShadow.includes(location.pathname) ? "header-shadow" : ""
+      }`}
+    >
       <div className="logo-section">
         <div className="Logo">
-          <img src={imageLogo} alt="Trailblazer Logo" onClick={() => navigate('/')} />
+          <img
+            src={imageLogo}
+            alt="Trailblazer Logo"
+            onClick={() => navigate("/")}
+          />
         </div>
         <div className="text-content">
           <h1 className="title">TRAILBLAZER</h1>
@@ -121,32 +134,35 @@ function Header() {
       </div>
 
       {/* Mobile menu toggle button */}
-      <button 
-        className="mobile-menu-toggle" 
+      <button
+        className="mobile-menu-toggle"
         aria-label="Toggle menu"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       >
         {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      <div className={`right-section ${showMobileMenu ? 'show-mobile' : ''}`} ref={mobileMenuRef}>
+      <div
+        className={`right-section ${showMobileMenu ? "show-mobile" : ""}`}
+        ref={mobileMenuRef}
+      >
         <div className="navbar-container">
           <nav className="navbar">
             <button
               className={activeTab === "home" ? "active" : ""}
-              onClick={() => handleNavigation('/', 'home')}
+              onClick={() => handleNavigation("/", "home")}
             >
               Home
             </button>
             <button
               className={activeTab === "aboutus" ? "active" : ""}
-              onClick={() => handleNavigation('/aboutus', 'aboutus')}
+              onClick={() => handleNavigation("/aboutus", "aboutus")}
             >
               About Us
             </button>
             <button
               className={activeTab === "contact" ? "active" : ""}
-              onClick={() => handleNavigation('/contact', 'contact')}
+              onClick={() => handleNavigation("/contact", "contact")}
             >
               Contact Us
             </button>
@@ -156,24 +172,38 @@ function Header() {
         {!isLoggedIn ? (
           <div className="auth-buttons">
             <div className="Login">
-              <button onClick={() => {
-                navigate('/Login');
-                setShowMobileMenu(false);
-              }}>Login</button>
+              <button
+                onClick={() => {
+                  navigate("/Login");
+                  setShowMobileMenu(false);
+                }}
+              >
+                Login
+              </button>
             </div>
             <div className="SignUp">
-              <button onClick={() => {
-                navigate('/Signup');
-                setShowMobileMenu(false);
-              }}>Sign Up</button>
+              <button
+                onClick={() => {
+                  navigate("/Signup");
+                  setShowMobileMenu(false);
+                }}
+              >
+                Sign Up
+              </button>
             </div>
           </div>
         ) : (
           <div className="user-dropdown" ref={dropdownRef}>
-            <div className="user-icon" onClick={() => setShowDropdown(!showDropdown)}>
+            <div
+              className="user-icon"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
               <User size={30} />
             </div>
-            <div className="menu-icon" onClick={() => setShowDropdown(!showDropdown)}>
+            <div
+              className="menu-icon"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
               <span></span>
               <span></span>
               <span></span>
@@ -183,43 +213,61 @@ function Header() {
               <div className="dropdown-menu custom-dropdown">
                 <div className="dropdown-header">
                   <div className="user-avatar">
-                    <img src="/path-to-avatar.png" alt="User Avatar" className="avatar-img" />
+                    <img
+                      src="/path-to-avatar.png"
+                      alt="User Avatar"
+                      className="avatar-img"
+                    />
                   </div>
-                  <div className="user-name">{userName || 'User'}</div>
-                  <div className="close-icon" onClick={() => setShowDropdown(false)}>×</div>
+                  <div className="user-name">{userName || "User"}</div>
+                  <div
+                    className="close-icon"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    ×
+                  </div>
                 </div>
 
                 <hr />
 
-                <div className="dropdown-item-1" onClick={() => {
-                  navigate('/dashboard');
-                  setShowDropdown(false);
-                  setShowMobileMenu(false);
-                }}>
+                <div
+                  className="dropdown-item-1"
+                  onClick={() => {
+                    navigate("/dashboard");
+                    setShowDropdown(false);
+                    setShowMobileMenu(false);
+                  }}
+                >
                   <LayoutDashboard size={20} className="dropdown-icon" />
                   <span>Dashboard</span>
                 </div>
 
-                <div className="dropdown-item-1" onClick={() => {
-                  navigate('/profile');
-                  setShowDropdown(false);
-                  setShowMobileMenu(false);
-                }}>
+                <div
+                  className="dropdown-item-1"
+                  onClick={() => {
+                    navigate("/profile");
+                    setShowDropdown(false);
+                    setShowMobileMenu(false);
+                  }}
+                >
                   <User size={20} className="dropdown-icon" />
                   <span>Profile</span>
                 </div>
 
-                <div className="dropdown-item-1" onClick={() => {
-                  navigate('/orderhistory');
-                  setShowDropdown(false);
-                  setShowMobileMenu(false);
-                }}>
+                <div
+                  className="dropdown-item-1"
+                  onClick={() => {
+                    navigate("/orderhistory");
+                    setShowDropdown(false);
+                    setShowMobileMenu(false);
+                  }}
+                >
                   <History size={20} className="dropdown-icon" />
                   <span>Order History</span>
                 </div>
 
-                <div className="dropdown-item" onClick={handleLogout}>
-                  <LogOut size={20} />
+                <div className="dropdown-item-1" onClick={handleLogout}>
+                  <LogOut size={20} className="dropdown-icon" />
                   <span>Log Out</span>
                 </div>
 
@@ -230,7 +278,11 @@ function Header() {
                     </a>
                   </span>
                   <span className="footer-link2">
-                    <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href="/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Privacy Policy
                     </a>
                   </span>

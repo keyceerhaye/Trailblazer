@@ -179,10 +179,7 @@ const AppHeader = ({
                 About Us
               </Link>
               <hr className="app-dropdown-divider" />
-              <div
-                className="app-dropdown-item logout-item"
-                onClick={handleLogout}
-              >
+              <div className="app-dropdown-item" onClick={handleLogout}>
                 <LogOut className="app-dropdown-lucide-icon" />
                 Log Out
               </div>
