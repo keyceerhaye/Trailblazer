@@ -79,7 +79,8 @@ const DeliveryAddress = () => {
         orderDetails: {
           ...location.state?.orderDetails,
           paymentMethod: paymentMethod,
-          turnaroundTime: "Standard",
+          turnaroundTime:
+            location.state?.orderDetails?.turnaroundTime || "Standard",
           price: location.state?.orderDetails?.price || "0.00",
         },
         // Pass the delivery method to ensure delivery fees are calculated correctly

@@ -249,6 +249,21 @@
   min-height: 28px;
 }
 
+.bs-page-info {
+  margin-top: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  border-left: 3px solid #2196f3;
+}
+
+.bs-page-info p {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
 .bs-summary-price {
   position: absolute;
   bottom: 20px;
@@ -446,6 +461,14 @@
   color: white;
 }
 
+.bs-template-notes {
+  font-style: italic;
+  font-size: 14px;
+  color: #666;
+  display: inline-block;
+  margin-top: 5px;
+}
+
 @media screen and (min-width: 992px) {
   .bs-main {
   }
@@ -501,6 +524,14 @@
 
   .bs-summary-card {
     min-height: 220px;
+  }
+
+  .bs-page-info {
+    padding: 8px;
+  }
+
+  .bs-page-info p {
+    font-size: 12px;
   }
 }
 

@@ -8,6 +8,7 @@ import PPT from "../pages/img/PPT.png";
 import PNG from "../pages/img/PNG.png";
 import JPG from "../pages/img/JPG.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import { PDFDocument } from "pdf-lib";
 
 export const UploadFiles = () => {
   const fileInputRef = useRef(null);
@@ -33,6 +34,32 @@ export const UploadFiles = () => {
     { number: "4", label: "Payment", active: false },
   ];
 
+  // Determine initial template type from state or URL
+  const determineInitialTemplateType = () => {
+    // First check if we have it in previous state
+    if (previousState.templateData?.templateType) {
+      return previousState.templateData.templateType;
+    }
+
+    // Otherwise try to determine from templateId
+    if (templateInfo?.templateId) {
+      const templateId = templateInfo.templateId;
+      if (templateId.includes("resume")) {
+        return "resume";
+      } else if (
+        templateId.includes("presentation") ||
+        templateId.includes("ppt")
+      ) {
+        return "presentation";
+      } else if (templateId.includes("poster")) {
+        return "poster";
+      }
+    }
+
+    // Default fallback
+    return "other";
+  };
+
   const [specifications, setSpecifications] = useState({
     paperSize: previousSpecifications.paperSize || "A4",
     printOption: previousSpecifications.printOption || "Full color",
@@ -46,10 +73,22 @@ export const UploadFiles = () => {
     phoneNumber: previousSpecifications.phoneNumber || "",
   });
 
-  const [hasTemplate, setHasTemplate] = useState(false);
+  const [hasTemplate, setHasTemplate] = useState(!!templateInfo);
   const [templateType, setTemplateType] = useState(
-    previousState.templateData?.templateType || ""
-  ); // To track the template type
+    determineInitialTemplateType()
+  );
+
+  // Function to get page count from a PDF file
+  const getPdfPageCount = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      return pdfDoc.getPageCount();
+    } catch (error) {
+      console.error("Error counting PDF pages:", error);
+      return 1; // Default to 1 page if there's an error
+    }
+  };
 
   // Handle back navigation to template page
   const handleBack = () => {
@@ -68,29 +107,21 @@ export const UploadFiles = () => {
     }
   };
 
+  // Initialize component state once on mount
   useEffect(() => {
     // Check if coming from template selection
-    if (templateInfo) {
+    if (templateInfo && !hasTemplate) {
       setHasTemplate(true);
+
       setSpecifications((prev) => ({
         ...prev,
-        turnaroundTime: templateInfo.turnaroundTime,
-        notes: templateInfo.notes,
+        turnaroundTime: templateInfo.turnaroundTime || prev.turnaroundTime,
+        notes: templateInfo.notes || prev.notes,
       }));
-
-      // Determine template type based on templateId
-      const templateId = templateInfo.templateId || "";
-      if (templateId.includes("resume")) {
-        setTemplateType("resume");
-      } else if (templateId.includes("presentation")) {
-        setTemplateType("presentation");
-      } else {
-        setTemplateType("other");
-      }
     }
 
     // Restore files from previous state if available
-    if (previousFiles.length > 0) {
+    if (previousFiles.length > 0 && selectedFiles.length === 0) {
       // Convert file objects back to the format needed
       const restoredFiles = previousFiles.map((fileInfo) => {
         // Create a placeholder file object since we can't restore the actual File object
@@ -104,6 +135,7 @@ export const UploadFiles = () => {
         return {
           file: placeholderFile,
           id: fileInfo.id,
+          pageCount: fileInfo.pageCount || 1, // Use the page count from previous state or default to 1
         };
       });
 
@@ -116,7 +148,7 @@ export const UploadFiles = () => {
       });
       setUploadProgress(progressObj);
     }
-  }, [templateInfo, previousFiles]);
+  }, []); // Empty dependency array means this runs once on mount
 
   // Price constants
   const PRICES = {
@@ -140,14 +172,23 @@ export const UploadFiles = () => {
     RUSH_FEE: 7,
   };
 
-  // Calculate price based on specifications and number of files
+  // Calculate price based on specifications and number of files/pages
   const calculatePrice = () => {
+    if (selectedFiles.length === 0) {
+      return "00.00";
+    }
+
+    // Check required fields based on template type
     if (
-      selectedFiles.length === 0 ||
-      (templateType === "resume" &&
-        (specifications.paperSize === "" ||
-          specifications.printOption === "")) ||
-      (templateType === "presentation" && specifications.paymentMethod === "")
+      templateType === "resume" &&
+      (specifications.paperSize === "" || specifications.printOption === "")
+    ) {
+      return "00.00";
+    }
+
+    if (
+      (templateType === "presentation" || templateType === "poster") &&
+      specifications.paymentMethod === ""
     ) {
       return "00.00";
     }
@@ -160,9 +201,9 @@ export const UploadFiles = () => {
         PRICES.PRINTING[specifications.printOption]?.[
           specifications.paperSize
         ] || 0;
-    } else if (templateType === "presentation") {
-      // For presentations, use a fixed price
-      basePrice = 50; // Example fixed price for presentations
+    } else if (templateType === "presentation" || templateType === "poster") {
+      // For presentations and posters, use a fixed price
+      basePrice = 50; // Example fixed price for presentations and posters
     } else {
       // For other template types
       basePrice =
@@ -171,8 +212,14 @@ export const UploadFiles = () => {
         ] || 0;
     }
 
-    // Multiply by number of files
-    let totalPrice = basePrice * selectedFiles.length;
+    // Calculate total price by multiplying price by page count for each file
+    let totalPrice = 0;
+
+    // For each file, get its page count and multiply by the base price
+    selectedFiles.forEach((fileObj) => {
+      const pageCount = fileObj.pageCount || 1; // Use pageCount if available, default to 1
+      totalPrice += basePrice * pageCount;
+    });
 
     // Add rush fee if applicable
     if (specifications.turnaroundTime === "Rush") {
@@ -246,21 +293,42 @@ export const UploadFiles = () => {
       return;
     }
 
-    // Add unique IDs to each file for tracking progress
-    const filesWithIds = validFiles.map((file) => {
+    // Add unique IDs to each file and process PDFs for page counting
+    const filesWithIds = [];
+
+    // Process each file, counting pages for PDFs
+    for (const file of validFiles) {
       const fileId = `${file.name}-${Date.now()}-${Math.random()
         .toString(36)
         .substr(2, 9)}`;
-      return { file, id: fileId };
-    });
+
+      // If it's a PDF, count the pages
+      let pageCount = 1; // Default for non-PDF files
+
+      if (file.type === "application/pdf") {
+        // Show a progress of 50% while counting pages
+        setUploadProgress((prev) => ({ ...prev, [fileId]: 50 }));
+
+        try {
+          pageCount = await getPdfPageCount(file);
+          console.log(`PDF ${file.name} has ${pageCount} pages`);
+        } catch (error) {
+          console.error("Error counting PDF pages:", error);
+          // Keep default page count of 1
+        }
+      }
+
+      filesWithIds.push({
+        file,
+        id: fileId,
+        pageCount: pageCount,
+      });
+
+      // Start upload simulation for this file
+      simulateUpload(fileId);
+    }
 
     setSelectedFiles((prev) => [...prev, ...filesWithIds]);
-
-    // Start upload simulation for each file
-    filesWithIds.forEach((fileObj) => {
-      simulateUpload(fileObj.id);
-    });
-
     setIsProcessingFiles(false);
   };
 
@@ -306,7 +374,7 @@ export const UploadFiles = () => {
         );
         return;
       }
-    } else if (templateType === "presentation") {
+    } else if (templateType === "presentation" || templateType === "poster") {
       if (
         !specifications.emailAddress ||
         !specifications.phoneNumber ||
@@ -353,7 +421,7 @@ export const UploadFiles = () => {
       type: fileObj.file.type,
       size: fileObj.file.size,
       lastModified: fileObj.file.lastModified,
-      pageCount: 1, // Default to 1 page per file
+      pageCount: fileObj.pageCount || 1, // Include the page count information
     }));
 
     // Include template information if it exists
@@ -395,7 +463,7 @@ export const UploadFiles = () => {
           stateKey: "paymentMethod",
         },
       ];
-    } else if (templateType === "presentation") {
+    } else if (templateType === "presentation" || templateType === "poster") {
       return [
         {
           label: "Email address:",
@@ -573,6 +641,11 @@ export const UploadFiles = () => {
                 <div className="uf-template-info">
                   <h3>Selected Template</h3>
                   <p>Template ID: {templateInfo.templateId}</p>
+                  <p>
+                    Template Type:{" "}
+                    {templateType.charAt(0).toUpperCase() +
+                      templateType.slice(1)}
+                  </p>
                   {specifications.notes && (
                     <div className="uf-template-notes">
                       <h4>Notes:</h4>

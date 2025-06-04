@@ -101,7 +101,9 @@ const Payment = () => {
   const deliveryFee =
     isCashOnDelivery || userDetails.deliveryMethod === "deliver" ? 10.0 : 0.0;
 
-  const turnaroundFee = 0.0;
+  // Calculate turnaround fee based on selected turnaround time
+  const turnaroundFee = userDetails.turnaround === "Rush" ? 7.0 : 0.0;
+
   const filesFee = parseFloat(orderDetails.price || 0);
   const totalAmount = (deliveryFee + turnaroundFee + filesFee).toFixed(2);
 
@@ -322,14 +324,7 @@ const Payment = () => {
           <div className="pay-breakdown">
             <div className="pay-row">
               <span>Delivery Fee</span>
-              <span>
-                {!isCashOnDelivery &&
-                userDetails.deliveryMethod === "pickup" ? (
-                  <span style={{ color: "#4CAF50" }}>FREE</span>
-                ) : (
-                  `₱${deliveryFee.toFixed(2)}`
-                )}
-              </span>
+              <span>₱{deliveryFee.toFixed(2)}</span>
             </div>
             <div className="pay-row">
               <span>Turnaround Fee</span>

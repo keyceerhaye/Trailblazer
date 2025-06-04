@@ -66,12 +66,13 @@ const Basket = () => {
 
   useEffect(() => {
     if (uploadedFiles && uploadedFiles.length > 0) {
-      // Calculate total pages - now just count files
-      let pages = uploadedFiles.length;
+      // Calculate total pages from all files
+      let totalPageCount = 0;
 
       const fileItems = uploadedFiles.map((file) => {
-        // Each file is 1 page
-        const pageCount = 1;
+        // Get page count from file or default to 1
+        const pageCount = file.pageCount || 1;
+        totalPageCount += pageCount;
 
         return {
           id:
@@ -88,7 +89,7 @@ const Basket = () => {
       });
 
       setBasketItems(fileItems);
-      setTotalPages(pages);
+      setTotalPages(totalPageCount);
       showFeedback(`${fileItems.length} file(s) added to basket`);
 
       // Calculate price after adding items
@@ -101,7 +102,7 @@ const Basket = () => {
           return {
             ...updatedDetails,
             price: calculatePrice(
-              pages,
+              fileItems,
               updatedDetails,
               templateData?.templateType
             ),
@@ -111,16 +112,16 @@ const Basket = () => {
     }
   }, [uploadedFiles, passedDetails]);
 
-  // Calculate price based on specifications and number of pages
-  const calculatePrice = (pageCount, details, templateType) => {
-    if (pageCount === 0) {
+  // Calculate price based on specifications and file page counts
+  const calculatePrice = (items, details, templateType) => {
+    if (!items || items.length === 0) {
       return "00.00";
     }
 
     let totalPrice = 0;
 
-    if (templateType === "presentation") {
-      // For presentations, use a fixed price
+    if (templateType === "presentation" || templateType === "poster") {
+      // For presentations and posters, use a fixed price
       totalPrice = 50;
     } else if (templateType === "resume") {
       // For resumes, use printing prices based on paper size and print option
@@ -129,16 +130,20 @@ const Basket = () => {
         details.printOption === "Full color" ? "Colored" : details.printOption;
       let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
 
-      // Multiply by number of pages
-      totalPrice = basePrice * pageCount;
+      // Calculate price based on each file's page count
+      items.forEach((item) => {
+        totalPrice += basePrice * (item.pageCount || 1);
+      });
     } else {
       // Default calculation for other templates
       const printOption =
         details.printOption === "Full color" ? "Colored" : details.printOption;
       let basePrice = PRICES.PRINTING[printOption]?.[details.paperSize] || 0;
 
-      // Multiply by number of pages
-      totalPrice = basePrice * pageCount;
+      // Calculate price based on each file's page count
+      items.forEach((item) => {
+        totalPrice += basePrice * (item.pageCount || 1);
+      });
 
       // Add customization fee if applicable
       if (details.customization && details.customization !== "None") {
@@ -159,11 +164,11 @@ const Basket = () => {
     if (basketItems.length > 0) {
       setOrderDetails((prev) => ({
         ...prev,
-        price: calculatePrice(totalPages, prev, templateData?.templateType),
+        price: calculatePrice(basketItems, prev, templateData?.templateType),
       }));
     }
   }, [
-    totalPages,
+    basketItems,
     orderDetails.paperSize,
     orderDetails.printOption,
     orderDetails.turnaroundTime,
@@ -181,8 +186,12 @@ const Basket = () => {
     setBasketItems((prev) => {
       const newItems = prev.filter((item) => item.id !== itemId);
 
-      // Update total pages - each file is 1 page
-      setTotalPages(newItems.length);
+      // Recalculate total pages after removing an item
+      const newTotalPages = newItems.reduce(
+        (total, item) => total + (item.pageCount || 1),
+        0
+      );
+      setTotalPages(newTotalPages);
 
       // If basket is now empty, reset order details
       if (newItems.length === 0) {
@@ -223,13 +232,20 @@ const Basket = () => {
           status: "Uploaded Successfully",
           icon: getFileIcon(file),
           file: file,
-          pageCount: 1, // Each file is 1 page
+          pageCount: 1, // Default to 1 page for newly added files
         };
       });
 
       const updatedBasketItems = [...basketItems, ...fileItems];
       setBasketItems(updatedBasketItems);
-      setTotalPages(updatedBasketItems.length);
+
+      // Update total pages count
+      const newTotalPages = updatedBasketItems.reduce(
+        (total, item) => total + (item.pageCount || 1),
+        0
+      );
+      setTotalPages(newTotalPages);
+
       showFeedback(`${fileItems.length} file(s) added to basket`);
     }
   };
@@ -279,7 +295,10 @@ const Basket = () => {
           {orderDetails.paymentMethod}
         </p>
       );
-    } else if (templateData?.templateType === "presentation") {
+    } else if (
+      templateData?.templateType === "presentation" ||
+      templateData?.templateType === "poster"
+    ) {
       return (
         <p>
           <strong>Email:</strong> {orderDetails.emailAddress}
@@ -317,7 +336,7 @@ const Basket = () => {
           type: item.file?.type,
           size: item.file?.size,
           lastModified: item.file?.lastModified,
-          pageCount: item.pageCount,
+          pageCount: item.pageCount || 1,
         })),
         specifications: orderDetails,
         templateInfo: templateData
@@ -385,7 +404,10 @@ const Basket = () => {
                   />
                   <div className="bs-file-info">
                     <p className="bs-file-name">{item.name}</p>
-                    <p className="bs-file-status">{item.status}</p>
+                    <p className="bs-file-status">
+                      {item.status}
+                      {item.pageCount > 1 && ` • ${item.pageCount} pages`}
+                    </p>
                   </div>
                   <img
                     src={uploadCheck}
@@ -427,6 +449,11 @@ const Basket = () => {
                     ₱{orderDetails.price}
                   </span>
                 </p>
+                {totalPages > basketItems.length && (
+                  <div className="bs-page-info">
+                    <p>Total pages: {totalPages}</p>
+                  </div>
+                )}
               </div>
             </div>
           </>
