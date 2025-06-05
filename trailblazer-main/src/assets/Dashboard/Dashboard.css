@@ -207,8 +207,8 @@
   content: "";
   position: absolute;
   top: clamp(35px, 6vw, 50px);
-  left: clamp(40px, 8vw, 60px);
-  right: clamp(40px, 8vw, 60px);
+  left: clamp(55px, 9vw, 75px);
+  right: clamp(55px, 9vw, 75px);
   height: clamp(8px, 1.5vw, 15px);
   background: #2f2785;
   z-index: 0;

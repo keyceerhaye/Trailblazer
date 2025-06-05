@@ -34,7 +34,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: clamp(5px, 1vw, 15px);
+  gap: 0;
   flex-shrink: 0;
   min-width: fit-content;
   max-width: none;
