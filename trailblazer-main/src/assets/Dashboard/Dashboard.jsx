@@ -9,11 +9,15 @@ import OrderReceived from "../pages/1.png";
 import OrderProcessing from "../pages/2.png";
 import Otw from "../pages/3.png";
 import Delivered from "../pages/4.png";
+import BusinesswomanWavingHello from "../pages/businesswomanwavinghello.svg";
 
 export default function Dashboard() {
   const [fileName, setFileName] = useState("SDE Docs");
   const [price, setPrice] = useState(25.0);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const savedCollapsedState = localStorage.getItem("sidebarCollapsed");
+    return savedCollapsedState ? JSON.parse(savedCollapsedState) : false;
+  });
   const navigate = useNavigate();
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -46,6 +50,33 @@ export default function Dashboard() {
     }
   }, [location.state]);
 
+  // Auto-collapse sidebar on mobile screens
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile && !sidebarCollapsed) {
+        setSidebarCollapsed(true);
+        localStorage.setItem("sidebarCollapsed", JSON.stringify(true));
+      } else if (!isMobile && sidebarCollapsed) {
+        // Auto-expand on larger screens if it was collapsed due to mobile view
+        const savedCollapsedState = localStorage.getItem("sidebarCollapsed");
+        if (savedCollapsedState === "true" && window.innerWidth > 768) {
+          setSidebarCollapsed(false);
+          localStorage.setItem("sidebarCollapsed", JSON.stringify(false));
+        }
+      }
+    };
+
+    // Check on initial load
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener
+    return () => window.removeEventListener("resize", handleResize);
+  }, [sidebarCollapsed]);
+
   const handleSidebarCollapse = (collapsed) => {
     setSidebarCollapsed(collapsed);
   };
@@ -58,8 +89,16 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       <Sidebar onCollapseChange={handleSidebarCollapse} />
-      <div className={`main-content-wrapper ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
-        <div className={`page-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+      <div
+        className={`main-content-wrapper ${
+          sidebarCollapsed ? "sidebar-collapsed" : ""
+        }`}
+      >
+        <div
+          className={`page-header ${
+            sidebarCollapsed ? "sidebar-collapsed" : ""
+          }`}
+        >
           <div className="page-header-title">
             <h2>Dashboard</h2>
             <p className="date">{currentDate}</p>
@@ -74,12 +113,19 @@ export default function Dashboard() {
 
         <main className="main-dashboard">
           <div className="welcome-card">
-            <h2>Hi, {user?.firstName}!</h2>
-            <p>
-              Welcome To Trailblazer Printing And
-              <br />
-              Layout Services.
-            </p>
+            <div>
+              <h2>Hi, {user?.firstName}!</h2>
+              <p>
+                Welcome To Trailblazer Printing And
+                <br />
+                Layout Services.
+              </p>
+            </div>
+            <img
+              src={BusinesswomanWavingHello}
+              alt="Welcome Illustration"
+              className="welcome-card-svg"
+            />
           </div>
 
           <div className="order-progress">

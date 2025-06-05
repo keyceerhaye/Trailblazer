@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Header.css";
 import imageLogo from "./logo.png";
+import defaultUserAvatar from "../pages/profile.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   User,
@@ -219,7 +220,11 @@ function Header() {
               className={`user-icon ${showDropdown ? "active" : ""}`}
               onClick={() => setShowDropdown(!showDropdown)}
             >
-              <User size={30} color={showDropdown ? "white" : "#2F2785"} />
+              <img
+                src={defaultUserAvatar}
+                alt="User"
+                className="user-icon-avatar-img"
+              />
             </div>
             <div
               className="menu-icon"
@@ -233,11 +238,11 @@ function Header() {
             {showDropdown && (
               <div className="dropdown-menu custom-dropdown">
                 <div className="dropdown-header">
-                  <div className="user-avatar">
+                  <div className="dropdown-avatar-container">
                     <img
-                      src="/path-to-avatar.png"
+                      src={defaultUserAvatar}
                       alt="User Avatar"
-                      className="avatar-img"
+                      className="avatar-img-header"
                     />
                   </div>
                   <div className="user-name">{userName || "User"}</div>

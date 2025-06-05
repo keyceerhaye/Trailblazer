@@ -152,8 +152,11 @@ body {
   justify-content: center;
   width: 100%;
   flex: 1;
-  min-height: 600px;
+  min-height: max(600px, 40vh);
   align-items: stretch;
+  position: relative;
+  overflow: visible;
+  max-height: none;
 }
 
 .uf-upload-box {
@@ -166,10 +169,12 @@ body {
   align-items: center;
   width: 100%;
   max-width: 100%;
-  min-height: 550px;
+  min-height: max(600px, 40vh);
   height: auto;
   padding: 2rem;
   transition: background-color 0.5s ease;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .uf-upload-box.transparent {
@@ -220,6 +225,7 @@ body {
 }
 
 .uf-card {
+  flex: 1;
   width: 100%;
   max-width: 447px;
   background: linear-gradient(to bottom, #e8ecf7 0%, #fef9f6 27%);
@@ -230,8 +236,10 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
-  min-height: 550px;
+  min-height: max(600px, 40vh);
+  height: auto;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .uf-card-content {
@@ -240,6 +248,9 @@ body {
   flex-direction: column;
   height: 100%;
   flex: 1;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .uf-card-title {
@@ -258,6 +269,7 @@ body {
   overflow-y: auto;
   min-height: 0;
   margin-bottom: 20px;
+  max-height: calc(100% - 200px);
 }
 
 .uf-spec-item {
@@ -291,6 +303,7 @@ body {
   width: 100%;
   padding: 0 20px;
   flex-shrink: 0;
+  margin-top: auto;
 }
 
 .uf-payment-info {
@@ -647,18 +660,30 @@ body {
   .uf-content {
     gap: 2rem;
     flex-direction: row;
+    align-items: stretch;
+    max-height: none;
+    min-height: 500px;
   }
 
   .uf-card {
     margin-top: 0;
+    min-height: 500px;
+    height: auto;
   }
 
   .uf-upload-box {
     min-height: 500px;
+    height: auto;
   }
 
-  .uf-card {
-    min-height: 500px;
+  .uf-card-content {
+    height: 100%;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .uf-specs {
+    max-height: calc(100% - 180px);
   }
 }
 
@@ -676,23 +701,34 @@ body {
     flex-direction: column;
     gap: 1.5rem;
     min-height: auto;
+    align-items: stretch;
+    max-height: none;
   }
 
   .uf-upload-box {
     max-width: 100%;
     min-height: 400px;
     height: auto;
+    flex: none;
   }
 
   .uf-card {
     max-width: 100%;
     min-height: 400px;
     height: auto;
+    flex: none;
   }
 
   .uf-card-content {
-    height: 100%;
+    height: auto;
+    min-height: 0;
     padding: 1rem;
+    overflow: visible;
+  }
+
+  .uf-specs {
+    max-height: none;
+    overflow-y: visible;
   }
 
   .uf-step-circles {
@@ -756,19 +792,33 @@ body {
     flex-direction: column;
     gap: 1rem;
     min-height: auto;
+    align-items: stretch;
+    max-height: none;
   }
 
   .uf-upload-box {
     min-height: 350px;
+    height: auto;
     padding: 1.5rem;
+    flex: none;
   }
 
   .uf-card {
     min-height: 350px;
+    height: auto;
+    flex: none;
   }
 
   .uf-card-content {
     padding: 1rem;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .uf-specs {
+    max-height: none;
+    overflow-y: visible;
   }
 
   .uf-title {
@@ -786,11 +836,6 @@ body {
     margin-left: 0;
     margin-right: 0;
     font-size: clamp(16px, 4vw, 20px);
-  }
-
-  .uf-specs {
-    margin-top: 10px;
-    margin-bottom: 15px;
   }
 
   .uf-spec-item {
@@ -859,8 +904,9 @@ body {
   }
 
   .uf-upload-box {
-    min-height: 600px;
+    min-height: 650px;
     max-width: 65%;
+    height: auto;
   }
 
   .uf-btn-browse {
@@ -872,16 +918,24 @@ body {
   .uf-content {
     min-height: 650px;
     gap: 3rem;
+    align-items: stretch;
+    max-height: none;
   }
 
   .uf-card {
-    height: 100%;
-    min-height: 600px;
+    height: auto;
+    min-height: 650px;
   }
 
   .uf-card-content {
     height: 100%;
     padding: 2rem;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .uf-specs {
+    max-height: calc(100% - 220px);
   }
 
   .uf-card-title {
@@ -897,19 +951,29 @@ body {
 
 @media screen and (min-width: 1600px) {
   .uf-upload-box {
-    min-height: 700px;
+    min-height: 750px;
+    height: auto;
   }
 
   .uf-card {
-    height: 100%;
+    height: auto;
+    min-height: 750px;
   }
 
   .uf-card-content {
     height: 100%;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .uf-specs {
+    max-height: calc(100% - 240px);
   }
 
   .uf-content {
     min-height: 750px;
+    align-items: stretch;
+    max-height: none;
   }
 
   .uf-upload-icon {
@@ -945,3 +1009,77 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Add zoom responsiveness and consistent height rules */
+@media screen and (min-resolution: 1.25dppx) {
+  .uf-upload-box,
+  .uf-card {
+    min-height: calc(max(600px, 40vh) / 1.25);
+  }
+
+  .uf-content {
+    min-height: calc(max(600px, 40vh) / 1.25);
+  }
+}
+
+@media screen and (min-resolution: 1.5dppx) {
+  .uf-upload-box,
+  .uf-card {
+    min-height: calc(max(600px, 40vh) / 1.5);
+  }
+
+  .uf-content {
+    min-height: calc(max(600px, 40vh) / 1.5);
+  }
+}
+
+@media screen and (min-resolution: 2dppx) {
+  .uf-upload-box,
+  .uf-card {
+    min-height: calc(max(600px, 40vh) / 2);
+  }
+
+  .uf-content {
+    min-height: calc(max(600px, 40vh) / 2);
+  }
+}
+
+/* Zoom level adjustments using CSS zoom detection */
+@media screen and (-webkit-min-device-pixel-ratio: 1.1) {
+  .uf-content {
+    min-height: 55vh;
+  }
+
+  .uf-upload-box,
+  .uf-card {
+    min-height: 55vh;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.25) {
+  .uf-content {
+    min-height: 50vh;
+  }
+
+  .uf-upload-box,
+  .uf-card {
+    min-height: 50vh;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+  .uf-content {
+    min-height: 45vh;
+  }
+
+  .uf-upload-box,
+  .uf-card {
+    min-height: 45vh;
+  }
+}
+
+/* Enhanced flex container for equal heights */
+/* Additional rules can be added here if needed */
+
+/* Enhanced card content with better flex handling */
+/* Additional rules can be added here if needed */

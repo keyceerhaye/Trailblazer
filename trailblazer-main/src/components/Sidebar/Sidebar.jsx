@@ -29,10 +29,18 @@ const navItems = [
 export default function Sidebar({ onCollapseChange }) {
   const location = useLocation(); // Get current location
   const currentPath = location.pathname;
-  const [collapsed, setCollapsed] = useState(false);
+
+  // Initialize collapsed state from localStorage, default to false if not found
+  const [collapsed, setCollapsed] = useState(() => {
+    const savedCollapsedState = localStorage.getItem("sidebarCollapsed");
+    return savedCollapsedState ? JSON.parse(savedCollapsedState) : false;
+  });
 
   const toggleCollapse = () => {
-    setCollapsed(!collapsed);
+    const newCollapsedState = !collapsed;
+    setCollapsed(newCollapsedState);
+    // Persist the new state to localStorage
+    localStorage.setItem("sidebarCollapsed", JSON.stringify(newCollapsedState));
   };
 
   useEffect(() => {

@@ -637,10 +637,6 @@ export const UploadFiles = () => {
                   ))}
                 </div>
 
-                <button className="uf-btn-add-more" onClick={handleBrowseClick}>
-                  + Add More Files
-                </button>
-
                 <p className="uf-accepted-label">Accepted file types</p>
                 <div className="uf-file-icons">
                   <img src={PDF} alt="PDF" />

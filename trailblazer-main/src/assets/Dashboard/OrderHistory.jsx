@@ -10,7 +10,10 @@ export default function OrderHistoryPage() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [currentDate, setCurrentDate] = useState("");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const savedCollapsedState = localStorage.getItem("sidebarCollapsed");
+    return savedCollapsedState ? JSON.parse(savedCollapsedState) : false;
+  });
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -82,16 +85,17 @@ export default function OrderHistoryPage() {
       payment: "Paid (Cash)",
       status: "Processing",
       amount: "₱95.00",
-    }
+    },
   ]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredOrders = orders.filter(order => 
-    order.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrders = orders.filter(
+    (order) =>
+      order.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSort = (criteria) => {
@@ -113,8 +117,8 @@ export default function OrderHistoryPage() {
   // Format date as "dd-MM-yy"
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear().toString().slice(2);
     return `${day}-${month}-${year}`;
   };
@@ -122,8 +126,16 @@ export default function OrderHistoryPage() {
   return (
     <div className="oh-container">
       <Sidebar onCollapseChange={handleSidebarCollapse} />
-      <div className={`main-content-wrapper ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
-        <div className={`page-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+      <div
+        className={`main-content-wrapper ${
+          sidebarCollapsed ? "sidebar-collapsed" : ""
+        }`}
+      >
+        <div
+          className={`page-header ${
+            sidebarCollapsed ? "sidebar-collapsed" : ""
+          }`}
+        >
           <div className="page-header-title">
             <h2>Order History</h2>
           </div>
@@ -179,7 +191,9 @@ export default function OrderHistoryPage() {
                     <td>{order.type}</td>
                     <td>{formatDate(order.date)}</td>
                     <td>{order.payment}</td>
-                    <td className={`status-${order.status.toLowerCase()}`}>{order.status}</td>
+                    <td className={`status-${order.status.toLowerCase()}`}>
+                      {order.status}
+                    </td>
                     <td>{order.amount}</td>
                   </tr>
                 ))}

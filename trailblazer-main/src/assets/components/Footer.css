@@ -61,6 +61,7 @@ footer {
   min-width: 0;
   flex-shrink: 1;
   white-space: nowrap;
+  margin-left: -10px;
 }
 
 .footer-title {
