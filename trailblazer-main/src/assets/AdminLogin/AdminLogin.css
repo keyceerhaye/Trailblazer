@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   overflow-x: hidden;
 }
 
@@ -53,18 +53,18 @@ body {
   flex-direction: column;
 }
 
-.logo-container {
+.admin-logo-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.logo-img {
+.admin-logo-img {
   height: clamp(80px, 10vw, 121px);
   width: clamp(80px, 10vw, 121px);
 }
 
-.brand-text {
+.admin-brand-text {
   font-size: clamp(28px, 5vw, 48px);
   font-weight: 700;
   background: linear-gradient(
@@ -85,7 +85,7 @@ body {
   line-height: 0.8;
 }
 
-.sub-text {
+.admin-sub-text {
   display: flex;
   font-size: clamp(10px, 2vw, 16px);
   font-weight: 600;
@@ -211,14 +211,14 @@ body {
   cursor: pointer;
 }
 
-.admin-forgot-password-container {
+.admin-forgot-password-and-button-container {
   display: flex;
   width: 100%;
   max-width: 350px;
   flex-direction: row;
-  text-align: left;
-  justify-content: flex-start;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .admin-forgot-password-link {
@@ -243,8 +243,6 @@ body {
   transition: background-color 0.2s;
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 700;
-  margin-top: 0.5rem;
-  align-self: center;
 }
 
 .admin-login-button:hover {
@@ -260,7 +258,7 @@ body {
   .admin-login-right-panel {
     width: 50%;
   }
-  
+
   .admin-login-form-container {
     margin: 0;
   }
@@ -271,7 +269,7 @@ body {
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
-  
+
   .admin-login-form-container {
     margin-top: 1rem;
     margin-bottom: 3rem;
@@ -279,22 +277,22 @@ body {
 }
 
 @media (max-width: 480px) {
-  .logo-container {
+  .admin-logo-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  
-  .brand-text {
+
+  .admin-brand-text {
     margin-left: 0;
     margin-top: 1rem;
   }
-  
+
   .welcome-content {
     text-align: center;
     margin-left: 0;
   }
-  
+
   .admin-login-form-container {
     padding: 1rem;
   }

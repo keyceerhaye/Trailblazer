@@ -36,20 +36,51 @@ body {
 .logo-section {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   flex-shrink: 0;
-  display: flex;
-  justify-content: center;
+  min-width: 0;
+  max-width: fit-content;
+  height: 100%;
 }
 
-.Logo img {
-  width: clamp(60px, 10vw, 121px);
-  height: clamp(60px, 10vw, 121px);
+.brand-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(5px, 1vw, 15px);
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: fit-content;
+  height: 100%;
+}
+
+.logo-container {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.logo-container img {
+  width: clamp(50px, 8vw, 121px);
+  height: clamp(50px, 8vw, 121px);
   display: block;
   cursor: pointer;
 }
 
+.text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+  flex-shrink: 1;
+  height: 100%;
+}
+
 .title {
-  font-size: clamp(24px, 5vw, 48px);
+  font-size: clamp(18px, 4vw, 48px);
   font-weight: 700;
   background: linear-gradient(
     to right,
@@ -63,25 +94,28 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
-  line-height: 0.8;
-  margin-left: clamp(-15px, -3vw, -30px);
+  padding: 0;
+  line-height: 1;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 .subtext {
-  font-size: clamp(8px, 2vw, 16px);
+  font-size: clamp(6px, 1.5vw, 16px);
   font-weight: 600;
-  letter-spacing: clamp(1px, 0.5vw, 2.5px);
+  letter-spacing: clamp(0.5px, 0.3vw, 2.5px);
   background: linear-gradient(to right, #2d9cf4 0%, #90caf9 49%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin: 0;
+  padding: 0;
   line-height: 1;
-  margin-left: clamp(-15px, -3vw, -30px);
-}
-
-.text-content {
+  white-space: nowrap;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  margin-top: 2px;
 }
 
 /* Mobile menu toggle button */
@@ -93,6 +127,7 @@ body {
   cursor: pointer;
   padding: 8px;
   z-index: 101;
+  flex-shrink: 0;
 }
 
 .right-section {
@@ -100,27 +135,41 @@ body {
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  margin-left: clamp(20px, 6vw, 120px);
+  margin-left: clamp(10px, 3vw, 60px);
   transition: all 0.3s ease;
+  min-width: 0;
+  height: 100%;
 }
 
 .navbar-container {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .navbar {
   display: flex;
   gap: clamp(8px, 1vw, 16px);
+  flex-wrap: nowrap;
+  align-items: center;
+  height: 100%;
 }
 
 .navbar button {
   background-color: transparent;
   color: #2f2785;
-  font-size: clamp(16px, 2vw, 20px);
+  font-size: clamp(14px, 1.8vw, 20px);
   font-weight: 600;
   cursor: pointer;
   border: none;
   padding: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navbar button:hover {
@@ -140,17 +189,24 @@ body {
   display: flex;
   gap: clamp(8px, 1vw, 16px);
   margin-left: auto;
+  flex-shrink: 0;
+  align-items: center;
+  height: 100%;
 }
 
 .Login button,
 .SignUp button {
-  font-size: clamp(14px, 2vw, 20px);
+  font-size: clamp(12px, 1.6vw, 20px);
   font-weight: 600;
   border: none;
   outline: none;
   cursor: pointer;
   padding: clamp(6px, 1vw, 10px) clamp(10px, 2vw, 20px);
   border-radius: 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .Login button {
@@ -174,6 +230,7 @@ body {
 .SignUp {
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .Login button:active,
@@ -195,106 +252,108 @@ body {
   align-items: center;
   gap: 10px;
   margin-left: auto;
+  flex-shrink: 0;
+  height: 100%;
 }
 
 .user-icon {
-  background-color: #f7f7f8;
-  padding: 10px;
+  color: #2f2785;
+  cursor: pointer;
+  padding: 8px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .user-icon:hover {
-  background-color: transparent;
+  background-color: rgba(50, 107, 246, 0.1);
 }
 
 .user-icon.active {
-  background-color: #2f2785;
-  color: white;
+  background-color: rgba(50, 107, 246, 0.1);
 }
 
 .menu-icon {
-  width: 30px;
-  height: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   cursor: pointer;
+  padding: 4px;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-icon span {
-  height: 4px;
+  width: 20px;
+  height: 2px;
   background-color: #2f2785;
-  border-radius: 2px;
   transition: all 0.3s ease;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 50px;
   right: 0;
-  margin-top: 10px;
   background-color: white;
-  border-radius: 20px 0 20px 20px;
-  width: 284px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+  z-index: 1000;
 }
 
 .dropdown-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  position: relative;
+  gap: 15px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
 }
 
 .user-avatar {
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  background-color: #326bf6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar-img {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
-  display: block;
 }
 
 .user-name {
   font-size: 16px;
   font-weight: 600;
-  max-width: 150px;
-  text-align: left;
   color: #2f2785;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .close-icon {
-  font-size: 50px;
-  color: #2f2785;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  margin-left: auto;
   cursor: pointer;
+  color: #666;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 hr {
-  margin: 0 16px;
   border: none;
-  border-top: 1px solid #000000;
+  border-top: 1px solid #eee;
+  margin: 0;
 }
 
 .dropdown-item {
-  padding: 13px 28px;
+  padding: 15px 20px;
   font-size: 15px;
   color: #2f2785;
   background: none;
@@ -306,10 +365,11 @@ hr {
   gap: 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  width: 100%;
 }
 
 .dropdown-item-1 {
-  padding: 13px 0px;
+  padding: 13px 20px;
   font-size: 15px;
   color: #2f2785;
   background: none;
@@ -349,8 +409,8 @@ hr {
   color: #2f2785;
   background-color: white;
   font-weight: 500;
-  margin-left: 15px;
-
+  margin-left: 20px;
+  padding: 10px 0;
   border-top: 1px solid #eee;
 }
 
@@ -373,60 +433,50 @@ hr {
   z-index: 100;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   background-color: white;
+  justify-content: center;
 }
 
-.center-logo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  text-align: center;
+.minimal-header .logo-section {
+  justify-content: center;
 }
 
-.center-logo .Logo img {
-  width: clamp(60px, 10vw, 121px);
-  height: clamp(60px, 10vw, 121px);
-  display: block;
-}
-
-.center-logo .title {
-  font-size: clamp(24px, 5vw, 48px);
-  font-weight: 700;
-  background: linear-gradient(
-    to right,
-    #326bf6 9%,
-    #90caf9 21%,
-    #90caf9 42%,
-    #a3a8f9 58%,
-    #c2aefd 76%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 0.8;
-  margin-left: clamp(-15px, -3vw, -30px);
-}
-
-.center-logo .subtext {
-  font-size: clamp(8px, 2vw, 16px);
-  font-weight: 600;
-  letter-spacing: clamp(1px, 0.5vw, 2.5px);
-  background: linear-gradient(to right, #2d9cf4 0%, #90caf9 49%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 0.8;
-  letter-spacing: 2.5px;
-  margin-left: clamp(-15px, -3vw, -30px);
+.minimal-header .brand-container {
+  justify-content: center;
 }
 
 /* Responsive styles */
+@media screen and (max-width: 1200px) {
+  .header {
+    padding: 0 clamp(15px, 3vw, 40px);
+  }
+
+  .right-section {
+    margin-left: clamp(10px, 2vw, 30px);
+  }
+
+  .navbar {
+    gap: clamp(5px, 1vw, 12px);
+  }
+}
+
 @media screen and (max-width: 992px) {
   .header {
     padding: 0 20px;
   }
 
   .right-section {
-    margin-left: 40px;
+    margin-left: 20px;
+  }
+
+  .navbar button {
+    font-size: clamp(12px, 2vw, 16px);
+    padding: 6px;
+  }
+
+  .Login button,
+  .SignUp button {
+    font-size: clamp(11px, 2vw, 16px);
+    padding: clamp(5px, 1vw, 8px) clamp(8px, 2vw, 16px);
   }
 }
 
@@ -461,12 +511,14 @@ hr {
 
   .navbar-container {
     width: 100%;
+    height: auto;
   }
 
   .navbar {
     flex-direction: column;
     width: 100%;
     gap: 10px;
+    height: auto;
   }
 
   .navbar button {
@@ -474,6 +526,8 @@ hr {
     width: 100%;
     padding: 12px;
     border-bottom: 1px solid #eee;
+    font-size: 16px;
+    justify-content: flex-start;
   }
 
   .auth-buttons {
@@ -482,38 +536,77 @@ hr {
     margin-top: 20px;
     gap: 15px;
     margin-left: 0;
+    height: auto;
   }
 
   .Login,
   .SignUp {
     width: 100%;
+    height: auto;
   }
 
   .Login button,
   .SignUp button {
     width: 100%;
     padding: 12px;
+    font-size: 16px;
   }
 
   .user-dropdown {
     margin-top: 20px;
     margin-left: 0;
     width: 100%;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .header {
+    padding: 0 15px;
+  }
+
+  .logo-section {
+    gap: clamp(3px, 1vw, 8px);
+  }
+
+  .logo-container img {
+    width: clamp(45px, 10vw, 60px);
+    height: clamp(45px, 10vw, 60px);
+  }
+
+  .title {
+    font-size: clamp(16px, 5vw, 24px);
+  }
+
+  .subtext {
+    font-size: clamp(5px, 2vw, 10px);
+    letter-spacing: clamp(0.3px, 0.5vw, 1px);
   }
 }
 
 @media screen and (max-width: 480px) {
-  .Logo img {
-    width: 60px;
-    height: 60px;
+  .header {
+    padding: 0 10px;
+    height: clamp(70px, 12vw, 90px);
+  }
+
+  .logo-section {
+    gap: 5px;
+  }
+
+  .logo-container img {
+    width: 45px;
+    height: 45px;
   }
 
   .title {
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .subtext {
-    font-size: 8px;
+    font-size: 6px;
+    letter-spacing: 0.5px;
+    margin-top: 1px;
   }
 
   .right-section {
@@ -527,7 +620,22 @@ hr {
 
 @media screen and (max-width: 360px) {
   .header {
-    padding: 0 10px;
-    height: 80px;
+    padding: 0 8px;
+    height: 70px;
+  }
+
+  .logo-container img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .subtext {
+    font-size: 5px;
+    letter-spacing: 0.3px;
+    margin-top: 1px;
   }
 }

@@ -65,21 +65,20 @@ body {
   flex-direction: row;
   justify-content: center;
   flex-wrap: nowrap;
-  gap: clamp(10px, 3vw, 30px);
+  gap: clamp(90px, 3vw, 100px);
   margin: 20px auto;
   padding: 0 clamp(10px, 2vw, 20px);
   max-width: 1200px;
   width: 100%;
 }
 
-.step,
-.step1 {
+.services-feature-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
-  width: clamp(200px, calc(25% - 30px), 250px);
-  min-width: 200px;
+  flex: 1;
+  min-width: 280px;
+  max-width: 300px;
 }
 
 .circle1,
@@ -98,6 +97,7 @@ body {
   align-items: center;
   padding: 5px;
   box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 15px;
 }
 
 .upload,
@@ -139,12 +139,13 @@ body {
   font-weight: 700;
   color: white;
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 15px;
   padding: 0;
-  height: 2.5em;
+  min-height: 2.5em;
   align-items: center;
   justify-content: center;
+  line-height: 1.2;
 }
 
 .upload-text,
@@ -155,14 +156,32 @@ body {
 .modify-text,
 .get-layout-text {
   display: flex;
-  font-size: clamp(14px, 2vw, 20px);
+  font-size: clamp(14px, 2vw, 18px);
   font-weight: 400;
   color: white;
   text-align: center;
   margin-top: 0;
-  padding: 0 5px;
+  padding: 0;
   align-items: flex-start;
   justify-content: center;
+  line-height: 1.4;
+  width: 100%;
+}
+
+/* Feature description styling for paragraph text */
+.feature-description {
+  text-align: justify;
+  text-justify: inter-word;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  width: 100%;
+  word-spacing: normal;
+  letter-spacing: normal;
+  hyphens: auto;
 }
 
 /* Responsive adjustments */
@@ -173,10 +192,9 @@ body {
     gap: 40px;
   }
 
-  .step,
-  .step1 {
-    width: calc(50% - 30px);
-    margin-bottom: 30px;
+  .services-feature-container {
+    min-width: 180px;
+    max-width: 220px;
   }
 
   .circle1,
@@ -215,6 +233,11 @@ body {
     margin-top: 30px;
   }
 
+  .services-feature-container {
+    min-width: 160px;
+    max-width: 200px;
+  }
+
   .circle1,
   .circle2,
   .circle3,
@@ -242,13 +265,12 @@ body {
   .layout-circles {
     flex-direction: column;
     align-items: center;
+    gap: 30px;
   }
 
-  .step,
-  .step1 {
-    width: 100%;
-    max-width: 280px;
-    margin-bottom: 40px;
+  .services-feature-container {
+    min-width: 200px;
+    max-width: 300px;
   }
 
   .printing-subtext1,
@@ -258,7 +280,7 @@ body {
   .layout-subtext1,
   .layout-subtext2,
   .layout-subtext3 {
-    height: auto;
+    min-height: auto;
   }
 
   .circle1,

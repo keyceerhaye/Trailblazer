@@ -98,13 +98,15 @@ function Header() {
   if (isMinimalHeader) {
     return (
       <header className="header minimal-header">
-        <div className="logo-section center-logo">
-          <div className="Logo">
-            <img src={imageLogo} alt="Trailblazer Logo" />
-          </div>
-          <div className="text-content">
-            <h1 className="title">TRAILBLAZER</h1>
-            <span className="subtext">PRINTING AND LAYOUT SERVICES</span>
+        <div className="logo-section">
+          <div className="brand-container">
+            <div className="logo-container">
+              <img src={imageLogo} alt="Trailblazer Logo" />
+            </div>
+            <div className="text-content">
+              <h1 className="title">TRAILBLAZER</h1>
+              <span className="subtext">PRINTING AND LAYOUT SERVICES</span>
+            </div>
           </div>
         </div>
       </header>
@@ -112,9 +114,6 @@ function Header() {
   }
 
   const pathsWithShadow = [
-    "/",
-    "/aboutus",
-    "/contact",
     "/upload/print",
     "/upload/layout",
     "/upload",
@@ -125,6 +124,7 @@ function Header() {
     "/confirmation",
     "/layout",
     "/service",
+    "/specifications",
   ];
 
   // Check if the current path starts with /template/
@@ -139,16 +139,18 @@ function Header() {
       }`}
     >
       <div className="logo-section">
-        <div className="Logo">
-          <img
-            src={imageLogo}
-            alt="Trailblazer Logo"
-            onClick={() => navigate("/")}
-          />
-        </div>
-        <div className="text-content">
-          <h1 className="title">TRAILBLAZER</h1>
-          <span className="subtext">PRINTING AND LAYOUT SERVICES</span>
+        <div className="brand-container">
+          <div className="logo-container">
+            <img
+              src={imageLogo}
+              alt="Trailblazer Logo"
+              onClick={() => navigate("/")}
+            />
+          </div>
+          <div className="text-content">
+            <h1 className="title">TRAILBLAZER</h1>
+            <span className="subtext">PRINTING AND LAYOUT SERVICES</span>
+          </div>
         </div>
       </div>
 

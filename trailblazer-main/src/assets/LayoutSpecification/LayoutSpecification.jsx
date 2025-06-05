@@ -449,9 +449,6 @@ const LayoutSpecification = () => {
           </div>
         </div>
 
-        <h2 className="uf-title">Specifications</h2>
-        <p className="uf-subtitle">Provide specifications for your template</p>
-
         <div className="uf-content" style={{ justifyContent: "center" }}>
           <div className="uf-card" style={{ maxWidth: "600px", width: "100%" }}>
             <div className="uf-card-content" style={{ padding: "2rem" }}>

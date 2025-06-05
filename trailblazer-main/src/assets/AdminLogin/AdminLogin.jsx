@@ -27,17 +27,19 @@ function AdminLogin() {
     <div className="admin-login-container">
       <div className="admin-login-layout">
         <div className="admin-login-left-panel">
-          <div className="logo-container">
+          <div className="admin-logo-container">
             <img
               src={logoImage || "/placeholder.svg"}
               alt="Trailblazer Printing Logo"
-              className="logo-img"
+              className="admin-logo-img"
             />
             <div>
-              <h1 className="brand-text">
+              <h1 className="admin-brand-text">
                 TRAILBLAZER
                 <br />
-                <span className="sub-text">PRINTING & LAYOUT SERVICES</span>
+                <span className="admin-sub-text">
+                  PRINTING & LAYOUT SERVICES
+                </span>
               </h1>
             </div>
           </div>
@@ -92,18 +94,17 @@ function AdminLogin() {
                 </button>
               </div>
 
-              <div className="admin-forgot-password-container">
+              <div className="admin-forgot-password-and-button-container">
                 <Link
                   to="/forgot-password"
                   className="admin-forgot-password-link"
                 >
                   Forgot your password?
                 </Link>
+                <button type="submit" className="admin-login-button">
+                  LOGIN
+                </button>
               </div>
-
-              <button type="submit" className="admin-login-button">
-                LOGIN
-              </button>
             </form>
           </div>
         </div>

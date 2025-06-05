@@ -48,17 +48,19 @@ function Login() {
     <div className="login-container">
       <div className="login-layout">
         <div className="login-left-panel">
-          <div className="logo-container">
+          <div className="login-logo-container">
             <img
               src={logoImage}
               alt="Trailblazer Printing Logo"
-              className="logo-img"
+              className="login-logo-img"
             />
             <div>
-              <h1 className="brand-text">
+              <h1 className="login-brand-text">
                 TRAILBLAZER
                 <br />
-                <span className="sub-text">PRINTING & LAYOUT SERVICES</span>
+                <span className="login-sub-text">
+                  PRINTING & LAYOUT SERVICES
+                </span>
               </h1>
             </div>
           </div>
@@ -120,22 +122,19 @@ function Login() {
                 </button>
               </div>
 
-              <div className="login-forgot-password-container">
+              <div className="login-forgot-password-and-button-container">
                 <Link
                   to="/forgot-password"
                   className="login-forgot-password-link"
                 >
                   Forgot your password?
                 </Link>
-              </div>
-
-              {message && <div className="login-message">{message}</div>}
-
-              <div className="login-button-container">
                 <button type="submit" className="login-button">
                   Login
                 </button>
               </div>
+
+              {message && <div className="login-message">{message}</div>}
 
               <div className="login-signup-link">
                 Don't have an account?{" "}
