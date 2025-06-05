@@ -222,10 +222,13 @@ body {
   cursor: pointer;
 }
 
-.su-submit-btn-container {
+.su-submit-and-login-container {
   display: flex;
-  justify-content: center;
   width: 100%;
+  max-width: 350px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-top: 1rem;
 }
 
@@ -247,20 +250,15 @@ body {
 }
 
 .su-login-link {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: clamp(14px, 1.5vw, 16px);
-  color: #243f6a;
-}
-
-.su-auth-link {
+  text-align: left;
+  font-size: clamp(12px, 1.2vw, 14px);
   color: #2f2785;
   font-weight: 600;
   text-decoration: underline;
   transition: color 0.2s;
 }
 
-.su-auth-link:hover {
+.su-login-link:hover {
   color: #283593;
 }
 

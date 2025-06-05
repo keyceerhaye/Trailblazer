@@ -199,17 +199,13 @@ export default function SignUp() {
               </div>
             )}
 
-            <div className="su-submit-btn-container">
+            <div className="su-submit-and-login-container">
+              <Link to="/Login" className="su-login-link">
+                Already have an account?
+              </Link>
               <button type="submit" className="su-submit-btn">
                 Submit
               </button>
-            </div>
-
-            <div className="su-login-link">
-              Already have an account?{" "}
-              <Link to="/Login" className="su-auth-link">
-                Login here
-              </Link>
             </div>
           </form>
         </div>
