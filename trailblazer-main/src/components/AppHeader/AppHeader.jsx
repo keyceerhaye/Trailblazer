@@ -9,15 +9,16 @@ import {
   Home,
   User as UserIcon,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
 } from "lucide-react"; // Added ChevronDown and ChevronUp icons
 import defaultProfilePic from "../../assets/pages/profile.png"; // Default profile picture
+import { orderManager } from "../../utils/dataManager";
 
 const AppHeader = ({
   user,
   profilePic: propProfilePic,
   handleLogout: propHandleLogout,
-  sidebarCollapsed
+  sidebarCollapsed,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -76,7 +77,9 @@ const AppHeader = ({
   };
 
   return (
-    <header className={`app-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+    <header
+      className={`app-header ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}
+    >
       <div className="app-header-title-section">
         <h2 className="app-header-title">{getPageTitle()}</h2>
         {location.pathname === "/dashboard" && (
@@ -105,7 +108,10 @@ const AppHeader = ({
             }`}
           >
             {isDropdownOpen ? (
-              <ChevronUp size={16} color={isDropdownOpen ? "white" : "#2c2480"} />
+              <ChevronUp
+                size={16}
+                color={isDropdownOpen ? "white" : "#2c2480"}
+              />
             ) : (
               <ChevronDown size={16} color="#2c2480" />
             )}
@@ -129,20 +135,24 @@ const AppHeader = ({
                   </div>
                 </div>
               </div>
-              
+
               <Link
                 to="/"
                 className="app-dropdown-item"
-                onClick={() => setIsDropdownOpen(false)}
+                onClick={() => {
+                  orderManager.clearOrderQueue();
+                  setIsDropdownOpen(false);
+                }}
               >
                 <Home size={20} className="app-dropdown-lucide-icon" />
                 Home
               </Link>
-              
+
               <Link
                 to="/#service"
                 className="app-dropdown-item"
                 onClick={() => {
+                  orderManager.clearOrderQueue();
                   navigate("/");
                   setTimeout(() => {
                     const serviceSection = document.getElementById("service");
@@ -154,7 +164,7 @@ const AppHeader = ({
                 <Settings size={20} className="app-dropdown-lucide-icon" />
                 Services
               </Link>
-              
+
               <Link
                 to="/contact"
                 className="app-dropdown-item"
@@ -163,7 +173,7 @@ const AppHeader = ({
                 <Phone size={20} className="app-dropdown-lucide-icon" />
                 Contact Us
               </Link>
-              
+
               <Link
                 to="/aboutus"
                 className="app-dropdown-item"
@@ -172,12 +182,12 @@ const AppHeader = ({
                 <Info size={20} className="app-dropdown-lucide-icon" />
                 About Us
               </Link>
-              
+
               <div className="app-dropdown-item" onClick={handleLogout}>
                 <LogOut size={20} className="app-dropdown-lucide-icon" />
                 Log Out
               </div>
-              
+
               <div className="app-dropdown-footer">
                 <Link
                   className="app-footer-link"

@@ -3,6 +3,7 @@ import "./Services.css";
 import printing from "./printing-icon.png";
 import layout from "./layouting.png";
 import { useNavigate } from "react-router-dom";
+import { orderManager } from "../../utils/dataManager";
 
 function Services() {
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ function Services() {
 
   const handleRedirect = (path) => {
     if (isLoggedIn) {
+      // Clear order queue when starting a new service
+      orderManager.clearOrderQueue();
       navigate(path);
     } else {
       navigate("/Signup");

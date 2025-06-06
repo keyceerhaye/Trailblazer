@@ -5,15 +5,20 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import "./Dashboard.css";
 import { LogOut, Phone, Info, Settings, Home } from "lucide-react";
 import profilePic from "../pages/profile.png";
-import OrderReceived from "../pages/1.png";
+import OrderReceived from "../pages/orderreceived.png";
 import OrderProcessing from "../pages/2.png";
 import Otw from "../pages/3.png";
 import Delivered from "../pages/4.png";
 import BusinesswomanWavingHello from "../pages/businesswomanwavinghello.svg";
+import {
+  orderManager,
+  ORDER_STATUS,
+  formatPrice,
+} from "../../utils/dataManager";
 
 export default function Dashboard() {
-  const [fileName, setFileName] = useState("SDE Docs");
-  const [price, setPrice] = useState(25.0);
+  const [currentOrder, setCurrentOrder] = useState(null);
+  const [userOrders, setUserOrders] = useState([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     const savedCollapsedState = localStorage.getItem("sidebarCollapsed");
     return savedCollapsedState ? JSON.parse(savedCollapsedState) : false;
@@ -23,32 +28,33 @@ export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [currentDate, setCurrentDate] = useState("");
 
+  // Debug: Log image imports
+  useEffect(() => {
+    console.log("Dashboard images loaded:", {
+      OrderReceived,
+      OrderProcessing,
+      Otw,
+      Delivered,
+    });
+  }, []);
+
   useEffect(() => {
     const today = new Date();
     const options = { year: "numeric", month: "long", day: "numeric" };
     setCurrentDate(today.toLocaleDateString("en-US", options));
 
-    const basketItems = location.state?.basketItems || [];
-    const orderDetails = location.state?.orderDetails || {};
+    // Get the most recent order for this user
+    if (user?.id) {
+      const orders = orderManager.getOrdersByUser(user.id);
+      setUserOrders(orders);
 
-    if (basketItems.length > 0) {
-      setFileName(basketItems[0].name);
-    } else {
-      const savedOrder = JSON.parse(localStorage.getItem("order"));
-      if (savedOrder?.fileName) {
-        setFileName(savedOrder.fileName);
+      // Get the most recent order
+      if (orders.length > 0) {
+        const recentOrder = orders[orders.length - 1];
+        setCurrentOrder(recentOrder);
       }
     }
-
-    if (orderDetails.price !== undefined) {
-      setPrice(orderDetails.price);
-    } else {
-      const savedOrder = JSON.parse(localStorage.getItem("order"));
-      if (savedOrder?.price !== undefined) {
-        setPrice(savedOrder.price);
-      }
-    }
-  }, [location.state]);
+  }, [location.state, user?.id]);
 
   // Auto-collapse sidebar on mobile screens
   useEffect(() => {
@@ -133,40 +139,126 @@ export default function Dashboard() {
             <div className="order-info">
               <div className="order-line">
                 <div className="order-row">
-                  <span className="order-label">File Name:</span>
-                  <span className="order-value">{fileName}</span>
+                  <span className="order-label">Order ID:</span>
+                  <span className="order-value">
+                    {currentOrder?.id || "No orders yet"}
+                  </span>
                 </div>
                 <div className="order-row">
-                  <span className="order-label">Payment:</span>
-                  <span className="order-value1">₱{price.toFixed(2)}</span>
+                  <span className="order-label">Files:</span>
+                  <span className="order-value">
+                    {currentOrder?.files?.length || 0} file(s)
+                  </span>
+                </div>
+                <div className="order-row">
+                  <span className="order-label">Total Amount:</span>
+                  <span className="order-value1">
+                    {formatPrice(currentOrder?.totalAmount || 0)}
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="progress-steps">
-              <div className="step active">
-                <div className="icon-circle highlight">
-                  <img src={OrderReceived} alt="1" className="step-img" />
+              <div
+                className={`step ${
+                  currentOrder?.status === ORDER_STATUS.RECEIVED ||
+                  currentOrder?.status === ORDER_STATUS.PROCESSING ||
+                  currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
+                  currentOrder?.status === ORDER_STATUS.DELIVERED
+                    ? "active"
+                    : ""
+                }`}
+              >
+                <div
+                  className={`icon-circle ${
+                    currentOrder?.status === ORDER_STATUS.RECEIVED ||
+                    currentOrder?.status === ORDER_STATUS.PROCESSING ||
+                    currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
+                    currentOrder?.status === ORDER_STATUS.DELIVERED
+                      ? "highlight"
+                      : ""
+                  }`}
+                >
+                  <img
+                    src={OrderReceived}
+                    alt="1"
+                    className="step-img"
+                    onLoad={() =>
+                      console.log(
+                        "OrderReceived image loaded successfully, src:",
+                        OrderReceived
+                      )
+                    }
+                    onError={(e) =>
+                      console.error(
+                        "Failed to load OrderReceived image:",
+                        e.target.src
+                      )
+                    }
+                  />
                 </div>
                 <p>Order Received</p>
               </div>
               <div className="line"></div>
-              <div className="step">
-                <div className="icon-circle">
+              <div
+                className={`step ${
+                  currentOrder?.status === ORDER_STATUS.PROCESSING ||
+                  currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
+                  currentOrder?.status === ORDER_STATUS.DELIVERED
+                    ? "active"
+                    : ""
+                }`}
+              >
+                <div
+                  className={`icon-circle ${
+                    currentOrder?.status === ORDER_STATUS.PROCESSING ||
+                    currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
+                    currentOrder?.status === ORDER_STATUS.DELIVERED
+                      ? "highlight"
+                      : ""
+                  }`}
+                >
                   <img src={OrderProcessing} alt="2" className="step-img" />
                 </div>
                 <p>Order Processing</p>
               </div>
               <div className="line"></div>
-              <div className="step">
-                <div className="icon-circle">
+              <div
+                className={`step ${
+                  currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
+                  currentOrder?.status === ORDER_STATUS.DELIVERED
+                    ? "active"
+                    : ""
+                }`}
+              >
+                <div
+                  className={`icon-circle ${
+                    currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
+                    currentOrder?.status === ORDER_STATUS.DELIVERED
+                      ? "highlight"
+                      : ""
+                  }`}
+                >
                   <img src={Otw} alt="3" className="step-img" />
                 </div>
                 <p>On the way</p>
               </div>
               <div className="line"></div>
-              <div className="step">
-                <div className="icon-circle">
+              <div
+                className={`step ${
+                  currentOrder?.status === ORDER_STATUS.DELIVERED
+                    ? "active"
+                    : ""
+                }`}
+              >
+                <div
+                  className={`icon-circle ${
+                    currentOrder?.status === ORDER_STATUS.DELIVERED
+                      ? "highlight"
+                      : ""
+                  }`}
+                >
                   <img src={Delivered} alt="4" className="step-img" />
                 </div>
                 <p>Delivered!</p>

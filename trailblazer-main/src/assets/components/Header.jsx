@@ -12,6 +12,7 @@ import {
   X,
   Home,
 } from "lucide-react";
+import { orderManager } from "../../utils/dataManager";
 
 function Header() {
   const navigate = useNavigate();
@@ -63,6 +64,10 @@ function Header() {
   };
 
   const handleNavigation = (path, tab) => {
+    // Clear order queue when navigating to homepage
+    if (path === "/") {
+      orderManager.clearOrderQueue();
+    }
     navigate(path);
     setActiveTab(tab);
     setShowMobileMenu(false);
@@ -145,7 +150,10 @@ function Header() {
             <img
               src={imageLogo}
               alt="Trailblazer Logo"
-              onClick={() => navigate("/")}
+              onClick={() => {
+                orderManager.clearOrderQueue();
+                navigate("/");
+              }}
             />
           </div>
           <div className="text-content">

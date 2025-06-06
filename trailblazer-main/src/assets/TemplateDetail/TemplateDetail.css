@@ -1,5 +1,5 @@
 .detail-page {
-  padding: 40px 60px;
+  padding: 0px 60px 40px;
   background: linear-gradient(
     to right,
     #e4eaf7 0%,
@@ -12,16 +12,9 @@
   font-family: "Montserrat", sans-serif;
   min-height: 100vh;
   margin-top: 130px;
-  padding-top: 40px;
 }
 
-.template-back-button-container {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-  padding-left: clamp(20px, 10vw, 140px);
-}
+/* Back button container styles moved to shared BackButton component */
 
 .template-steps {
   display: flex;
@@ -96,22 +89,7 @@
   text-align: center;
 }
 
-.back-btn {
-  background-color: #1981e4;
-  color: white;
-  padding: 10px 20px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-  background-color: #1668c1;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+/* Back button styles moved to shared BackButton component */
 
 .template-title {
   font-size: clamp(20px, 4vw, 28px);
@@ -272,14 +250,11 @@
 /* Responsive breakpoints for template detail page */
 @media (max-width: 992px) {
   .detail-page {
-    padding: 30px 40px;
+    padding: 0px 40px 30px;
     margin-top: 120px;
-    padding-top: 30px;
   }
 
-  .template-back-button-container {
-    padding-left: 20px;
-  }
+  /* Back button responsive styles moved to shared BackButton component */
 
   .template-steps {
     margin-bottom: 25px;
@@ -309,14 +284,11 @@
 
 @media (max-width: 768px) {
   .detail-page {
-    padding: 20px 20px;
+    padding: 0px 20px 20px;
     margin-top: 100px;
-    padding-top: 20px;
   }
 
-  .template-back-button-container {
-    padding-left: 10px;
-  }
+  /* Back button responsive styles moved to shared BackButton component */
 
   .template-steps {
     margin-bottom: 20px;
@@ -366,14 +338,11 @@
 
 @media (max-width: 480px) {
   .detail-page {
-    padding: 15px 10px;
+    padding: 0px 10px 15px;
     margin-top: 90px;
-    padding-top: 15px;
   }
 
-  .template-back-button-container {
-    padding-left: 5px;
-  }
+  /* Back button responsive styles moved to shared BackButton component */
 
   .template-steps {
     margin-bottom: 15px;
@@ -396,9 +365,5 @@
     height: auto;
   }
 
-  .back-btn {
-    width: 100%;
-    max-width: 150px;
-    justify-content: center;
-  }
+  /* Back button responsive styles moved to shared BackButton component */
 }

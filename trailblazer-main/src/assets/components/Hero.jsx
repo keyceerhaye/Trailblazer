@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 import image from "./printer.png";
+import { orderManager } from "../../utils/dataManager";
 
 function Hero() {
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +37,8 @@ function Hero() {
   };
 
   const handleServiceClick = (service) => {
+    // Clear order queue when starting a new service
+    orderManager.clearOrderQueue();
     navigate(`/upload/${service}`);
     setShowModal(false);
   };

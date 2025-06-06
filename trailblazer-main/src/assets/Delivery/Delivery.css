@@ -227,6 +227,12 @@
   margin: 0;
 }
 
+.delivery-constraint-message {
+  margin-top: 8px !important;
+  color: #2196f3 !important;
+  font-weight: 500 !important;
+}
+
 /* Media queries for responsive design */
 @media screen and (max-width: 768px) {
   .delivery-wrapper {
@@ -266,27 +272,4 @@
   }
 }
 
-.delivery-back-button-container {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-  padding: 0 20px;
-}
-
-.delivery-back-btn {
-  background-color: #1981e4;
-  color: white;
-  padding: 10px 20px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.delivery-back-btn:hover {
-  background-color: #1668c1;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+/* Back button styles moved to shared BackButton component */

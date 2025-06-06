@@ -276,12 +276,14 @@
   width: clamp(40px, 8vw, 70px); /* Bigger icons */
   height: clamp(40px, 8vw, 70px); /* Bigger icons */
   object-fit: contain;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   border-radius: 0;
-  margin: 0 auto 0.5rem;
+  margin: 0;
   z-index: 3;
+  opacity: 1;
+  visibility: visible;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .step.active .icon-circle {
@@ -290,6 +292,8 @@
 
 .step.active img {
   filter: brightness(0) invert(1);
+  opacity: 1;
+  visibility: visible;
 }
 
 .step.active p {

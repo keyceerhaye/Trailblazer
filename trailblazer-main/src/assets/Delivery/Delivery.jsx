@@ -5,28 +5,75 @@ import {
   getStepConfig,
   getStepsWithActiveStates,
 } from "../../utils/stepsConfig";
+import BackButton from "../../components/BackButton/BackButton";
 
 const Delivery = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedOption, setSelectedOption] = useState("pickup");
-  const [isCashOnDelivery, setIsCashOnDelivery] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [deliveryConstraints, setDeliveryConstraints] = useState({
+    pickupAllowed: true,
+    deliveryAllowed: true,
+    message: "",
+  });
 
   // Dynamically determine step configuration based on service type
   const stepConfig = getStepConfig(location.state?.templateData, location);
   const steps = getStepsWithActiveStates(stepConfig, "delivery");
 
-  // Check if the payment method is Cash on Delivery
+  // Check payment method and set delivery constraints
   useEffect(() => {
     const orderDetails = location.state?.orderDetails || {};
-    const paymentMethod = orderDetails.paymentMethod || "";
+    const paymentMethodFromState = orderDetails.paymentMethod || "";
+    setPaymentMethod(paymentMethodFromState);
 
-    // Check if the payment method is Cash on Delivery
-    if (paymentMethod === "Cash on Delivery") {
-      setIsCashOnDelivery(true);
-      // Automatically set to deliver since Cash on Delivery requires delivery
-      setSelectedOption("deliver");
+    // Set constraints based on payment method
+    let constraints = {
+      pickupAllowed: true,
+      deliveryAllowed: true,
+      message: "",
+    };
+
+    switch (paymentMethodFromState) {
+      case "GCash":
+        constraints = {
+          pickupAllowed: true,
+          deliveryAllowed: true,
+          message: "GCash payment allows both pickup and delivery options.",
+        };
+        break;
+      case "Cash":
+        constraints = {
+          pickupAllowed: true,
+          deliveryAllowed: true,
+          message: "Cash payment allows both pickup and delivery options.",
+        };
+        break;
+      case "Cash on Delivery":
+        constraints = {
+          pickupAllowed: false,
+          deliveryAllowed: true,
+          message: "Cash on Delivery requires delivery to your location.",
+        };
+        // Force delivery option for Cash on Delivery
+        setSelectedOption("deliver");
+        break;
+      default:
+        constraints = {
+          pickupAllowed: true,
+          deliveryAllowed: true,
+          message: "Please select a payment method in the previous step.",
+        };
     }
+
+    setDeliveryConstraints(constraints);
+    console.log(
+      "DELIVERY: Payment method:",
+      paymentMethodFromState,
+      "Constraints:",
+      constraints
+    );
   }, [location.state]);
 
   const handleNext = () => {
@@ -67,11 +114,7 @@ const Delivery = () => {
 
   return (
     <div className="delivery-wrapper">
-      <div className="delivery-back-button-container">
-        <button className="delivery-back-btn" onClick={handleBack}>
-          Back
-        </button>
-      </div>
+      <BackButton onClick={handleBack} />
 
       <div className="delivery-steps">
         <div className="delivery-step-circles">
@@ -105,9 +148,16 @@ const Delivery = () => {
 
       <h2 className="delivery-title">Delivery Method</h2>
 
-      {isCashOnDelivery && (
+      {paymentMethod && (
         <div className="delivery-notice">
-          <p>Cash on Delivery requires delivery to your location.</p>
+          <p>
+            <strong>Payment Method:</strong> {paymentMethod}
+          </p>
+          {deliveryConstraints.message && (
+            <p className="delivery-constraint-message">
+              {deliveryConstraints.message}
+            </p>
+          )}
         </div>
       )}
 
@@ -115,17 +165,21 @@ const Delivery = () => {
         <div
           className={`delivery-option ${
             selectedOption === "pickup" ? "selected" : ""
-          } ${isCashOnDelivery ? "disabled" : ""}`}
-          onClick={() => !isCashOnDelivery && setSelectedOption("pickup")}
+          } ${!deliveryConstraints.pickupAllowed ? "disabled" : ""}`}
+          onClick={() =>
+            deliveryConstraints.pickupAllowed && setSelectedOption("pickup")
+          }
         >
           <input
             type="radio"
             name="delivery"
             value="pickup"
             checked={selectedOption === "pickup"}
-            onChange={() => !isCashOnDelivery && setSelectedOption("pickup")}
+            onChange={() =>
+              deliveryConstraints.pickupAllowed && setSelectedOption("pickup")
+            }
             id="pickup-radio"
-            disabled={isCashOnDelivery}
+            disabled={!deliveryConstraints.pickupAllowed}
           />
           <div className="delivery-info">
             <h4>Pick-up</h4>
@@ -149,16 +203,22 @@ const Delivery = () => {
         <div
           className={`delivery-option ${
             selectedOption === "deliver" ? "selected" : ""
-          }`}
-          onClick={() => setSelectedOption("deliver")}
+          } ${!deliveryConstraints.deliveryAllowed ? "disabled" : ""}`}
+          onClick={() =>
+            deliveryConstraints.deliveryAllowed && setSelectedOption("deliver")
+          }
         >
           <input
             type="radio"
             name="delivery"
             value="deliver"
             checked={selectedOption === "deliver"}
-            onChange={() => setSelectedOption("deliver")}
+            onChange={() =>
+              deliveryConstraints.deliveryAllowed &&
+              setSelectedOption("deliver")
+            }
             id="deliver-radio"
+            disabled={!deliveryConstraints.deliveryAllowed}
           />
           <div className="delivery-info">
             <h4>Deliver</h4>

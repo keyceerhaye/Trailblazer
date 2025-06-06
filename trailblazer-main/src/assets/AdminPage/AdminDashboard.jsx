@@ -46,6 +46,12 @@ import profilePic from "../pages/profile.png";
 // Placeholder avatars for messages - replace with actual if available
 import avatar1 from "../pages/profile.png"; // Example, replace
 import avatar2 from "../pages/logo.png"; // Example, replace
+import {
+  orderManager,
+  ORDER_STATUS,
+  formatPrice,
+  formatDate,
+} from "../../utils/dataManager";
 
 const AdminDashboard = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -111,129 +117,74 @@ const AdminDashboard = () => {
     }
   };
 
-  const orders = [
-    {
-      id: "#12345",
-      name: "Vice Ganda",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱50.00",
-    },
-    {
-      id: "#12346",
-      name: "Ryan Bang",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱50.00",
-    },
-    {
-      id: "#12347",
-      name: "Jhong Hilario",
-      type: "Pick-up",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱50.00",
-    },
-    {
-      id: "#12348",
-      name: "Anne Curtis",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱50.00",
-    },
-    // Add more orders if needed for different views
-    {
-      id: "#10001",
-      name: "Karylle Tatlonghari",
-      type: "Delivery",
-      payment: "Paid (Card)",
-      status: "On The Way",
-      total: "₱75.00",
-    },
-    {
-      id: "#10003",
-      name: "Vhong Navarro",
-      type: "Pick-up",
-      payment: "COD",
-      status: "Ready",
-      total: "₱120.00",
-    },
-    {
-      id: "#10004",
-      name: "Toni Gonzaga",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱85.00",
-    },
-    {
-      id: "#10005",
-      name: "Piolo Pascual",
-      type: "Pick-up",
-      payment: "COD",
-      status: "Ready",
-      total: "₱65.00",
-    },
-    {
-      id: "#10006",
-      name: "Angel Locsin",
-      type: "Delivery",
-      payment: "Paid (Card)",
-      status: "On The Way",
-      total: "₱95.00",
-    },
-    {
-      id: "#10007",
-      name: "John Lloyd Cruz",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱110.00",
-    },
-    {
-      id: "#10008",
-      name: "Sarah Geronimo",
-      type: "Pick-up",
-      payment: "COD",
-      status: "Ready",
-      total: "₱45.00",
-    },
-    {
-      id: "#10009",
-      name: "Gerald Anderson",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱80.00",
-    },
-    {
-      id: "#10010",
-      name: "Bea Alonzo",
-      type: "Delivery",
-      payment: "Paid (Card)",
-      status: "On The Way",
-      total: "₱70.00",
-    },
-    {
-      id: "#10011",
-      name: "Dingdong Dantes",
-      type: "Pick-up",
-      payment: "COD",
-      status: "Ready",
-      total: "₱55.00",
-    },
-    {
-      id: "#10012",
-      name: "Marian Rivera",
-      type: "Delivery",
-      payment: "Paid(Gcash)",
-      status: "Delivered",
-      total: "₱125.00",
-    },
-  ];
+  // Get real orders from data manager
+  const [orders, setOrders] = useState([]);
+  const [orderStats, setOrderStats] = useState({});
+
+  useEffect(() => {
+    // Load orders and statistics
+    const allOrders = orderManager.getAllOrders();
+    const stats = orderManager.getOrderStatistics();
+
+    // Transform orders to admin dashboard format
+    const transformedOrders = allOrders.map((order) => ({
+      id: order.id,
+      name: order.customerName,
+      type: order.deliveryMethod === "deliver" ? "Delivery" : "Pick-up",
+      payment:
+        order.paymentMethod === "Cash on Delivery"
+          ? "COD"
+          : `Paid(${order.paymentMethod})`,
+      status: getDisplayStatus(order.status),
+      total: formatPrice(order.totalAmount),
+      orderDate: order.orderDate,
+      files: order.files,
+    }));
+
+    setOrders(transformedOrders);
+    setOrderStats(stats);
+  }, []);
+
+  const getDisplayStatus = (status) => {
+    switch (status) {
+      case ORDER_STATUS.RECEIVED:
+        return "Order Received";
+      case ORDER_STATUS.PROCESSING:
+        return "Processing";
+      case ORDER_STATUS.ON_THE_WAY:
+        return "On The Way";
+      case ORDER_STATUS.READY_FOR_PICKUP:
+        return "Ready";
+      case ORDER_STATUS.DELIVERED:
+        return "Delivered";
+      case ORDER_STATUS.CANCELLED:
+        return "Cancelled";
+      default:
+        return "Pending";
+    }
+  };
+
+  const handleStatusUpdate = (orderId, newStatus) => {
+    const success = orderManager.updateOrderStatus(orderId, newStatus);
+    if (success) {
+      // Refresh orders
+      const allOrders = orderManager.getAllOrders();
+      const transformedOrders = allOrders.map((order) => ({
+        id: order.id,
+        name: order.customerName,
+        type: order.deliveryMethod === "deliver" ? "Delivery" : "Pick-up",
+        payment:
+          order.paymentMethod === "Cash on Delivery"
+            ? "COD"
+            : `Paid(${order.paymentMethod})`,
+        status: getDisplayStatus(order.status),
+        total: formatPrice(order.totalAmount),
+        orderDate: order.orderDate,
+        files: order.files,
+      }));
+      setOrders(transformedOrders);
+    }
+  };
 
   // Mock chat message data
   const chatUsers = [

@@ -12,24 +12,28 @@ import {
   getStepConfig,
   getStepsWithActiveStates,
 } from "../../utils/stepsConfig";
+import BackButton from "../../components/BackButton/BackButton";
+import {
+  orderManager,
+  getFileIcon,
+  formatPrice,
+} from "../../utils/dataManager";
 
 const Basket = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Handle both single file (legacy) and multiple files (new)
-  const uploadedFiles =
-    location.state?.files ||
-    (location.state?.file ? [location.state.file] : null);
-  const passedBasketItems = location.state?.basketItems || null;
-  const passedDetails =
-    location.state?.specifications || location.state?.orderDetails || null;
+  // Get current order from data manager or handle legacy data
+  const currentOrderFromState = location.state?.currentOrder;
+  const currentOrderFromManager = orderManager.getCurrentOrder();
+  const currentOrder = currentOrderFromState || currentOrderFromManager;
   const templateData = location.state?.templateData || null;
+  const isFromUpload = location.state?.fromUpload || false;
 
   // Debug logs
+  console.log("BASKET: Current Order:", currentOrder);
   console.log("Template Data:", templateData);
-  console.log("Template Type:", templateData?.templateType);
-  console.log("Passed Details:", passedDetails);
+  console.log("Is From Upload:", isFromUpload);
 
   // Dynamically determine step configuration based on service type
   const stepConfig = getStepConfig(templateData, location);
@@ -37,26 +41,13 @@ const Basket = () => {
 
   const [basketItems, setBasketItems] = useState([]);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [orderDetails, setOrderDetails] = useState({});
   const [totalPages, setTotalPages] = useState(0);
 
   // Check if user is coming from layoutspecification page
   const isFromLayoutSpecification = templateData && templateData.hasTemplate;
 
-  const [orderDetails, setOrderDetails] = useState({
-    paperSize: passedDetails?.paperSize || "A4",
-    printOption: passedDetails?.printOption || "Black&White",
-    turnaroundTime: passedDetails?.turnaroundTime || "Standard",
-    paymentMethod: passedDetails?.paymentMethod || "Cash",
-    emailAddress: passedDetails?.emailAddress || "",
-    phoneNumber: passedDetails?.phoneNumber || "",
-    price:
-      templateData?.templateType === "layout"
-        ? PRICES.LAYOUT_BASE_PRICE.toFixed(2)
-        : "00.00",
-    customization: "None", // Added customization level
-  });
-
-  // Price constants
+  // Price constants (must match UploadFiles.jsx)
   const PRICES = {
     PRINTING: {
       "Black&White": {
@@ -64,7 +55,7 @@ const Basket = () => {
         A4: 3,
         Long: 3,
       },
-      Colored: {
+      "Full color": {
         Short: 10,
         A4: 12,
         Long: 12,
@@ -81,133 +72,190 @@ const Basket = () => {
   };
 
   useEffect(() => {
-    // First priority: If we have existing basket items (coming from delivery/payment pages)
-    if (passedBasketItems && passedBasketItems.length > 0) {
-      console.log(
-        "BASKET: Restoring existing basket items.",
-        passedBasketItems
-      );
-      setBasketItems(passedBasketItems);
+    console.log("BASKET: Initializing with currentOrder:", currentOrder);
+    console.log("BASKET: Template data:", templateData);
+    console.log("BASKET: Is from upload:", isFromUpload);
+    console.log("BASKET: Location state:", location.state);
 
-      // Calculate total pages
-      const totalPageCount = passedBasketItems.reduce((total, item) => {
-        return total + (item.pageCount || 1);
-      }, 0);
-      setTotalPages(totalPageCount);
-
-      // Restore order details if they exist
-      if (passedDetails) {
-        setOrderDetails((prevDetails) => {
-          const updatedDetails = {
-            ...prevDetails,
-            ...passedDetails,
-          };
-          return {
-            ...updatedDetails,
-            price:
-              passedDetails.price ||
-              calculatePrice(
-                passedBasketItems,
-                updatedDetails,
-                templateData?.templateType
-              ),
-          };
-        });
-      }
-
-      showFeedback(`Basket restored with ${passedBasketItems.length} item(s)`);
-    }
-    // Second priority: If coming from layout specification page, prioritize template data
-    else if (templateData && templateData.hasTemplate) {
-      console.log("BASKET: Initializing from template data.", templateData);
-      const templateItem = {
-        id: `template-${templateData.templateId}-${Date.now()}`,
-        name: templateData.title || `Template ${templateData.templateId}`,
-        status: "Template Selected",
-        icon: PDF, // Default icon, can be refined based on templateType if needed
-        file: null, // No actual file for a template item
-        pageCount: 1, // Templates can be considered as 1 page for simplicity
-        isTemplate: true,
-        templateId: templateData.templateId,
-        templateType: templateData.templateType,
-      };
-
-      setBasketItems([templateItem]);
-      setTotalPages(1);
-      showFeedback(`Template ${templateItem.name} added to basket`);
-
-      setOrderDetails((prevDetails) => {
-        const updatedDetails = {
-          ...prevDetails,
-          ...passedDetails,
-          turnaroundTime:
-            templateData.turnaroundTime || prevDetails.turnaroundTime, // Ensure turnaround time is passed
-          customization:
-            passedDetails?.customization || prevDetails.customization, // Ensure customization is passed
-        };
-        const calculatedPrice = calculatePrice(
-          [templateItem],
-          updatedDetails,
-          templateData?.templateType
-        );
+    // Add error handling wrapper
+    try {
+      // Check if we have basketItems in location state (from back navigation)
+      // This takes priority over orderManager data to preserve deletions
+      if (
+        location.state?.basketItems &&
+        location.state.basketItems.length > 0
+      ) {
         console.log(
-          "BASKET: Calculated price during initialization:",
-          calculatedPrice
+          "BASKET: Using basketItems from location state (back navigation)"
         );
-        return {
-          ...updatedDetails,
-          price: calculatedPrice,
-        };
-      });
-    } else if (uploadedFiles && uploadedFiles.length > 0) {
-      console.log("BASKET: Initializing from uploaded files.", uploadedFiles);
-      // Calculate total pages from all files
-      let totalPageCount = 0;
+        setBasketItems(location.state.basketItems);
 
-      const fileItems = uploadedFiles.map((file) => {
-        // Get page count from file or default to 1
-        const pageCount = file.pageCount || 1;
-        totalPageCount += pageCount;
+        if (location.state.orderDetails) {
+          setOrderDetails(location.state.orderDetails);
+        }
 
-        return {
-          id:
-            file.id ||
-            `${file.name}-${Date.now()}-${Math.random()
-              .toString(36)
-              .substr(2, 9)}`,
-          name: file.name,
+        showFeedback(
+          `Basket restored with ${location.state.basketItems.length} item(s)`
+        );
+      }
+      // Otherwise, use currentOrder data for fresh initialization
+      else if (
+        currentOrder &&
+        currentOrder.files &&
+        currentOrder.files.length > 0
+      ) {
+        // Convert order files to basket items
+        const basketItemsFromOrder = currentOrder.files.map((file) => ({
+          id: file.id,
+          name: file.fileName,
           status: "Uploaded Successfully",
-          icon: getFileIcon(file),
-          file: file,
-          pageCount: pageCount,
-          isTemplate: file.isTemplate || false,
-          templateType: file.templateType || null, // Add templateType from file if available
+          icon: getFileIconImage(file.fileType),
+          file: {
+            name: file.fileName,
+            type: file.fileType,
+            size: file.fileSize,
+          },
+          pageCount: file.pageCount,
+          isTemplate: false,
+          specifications: file.specifications,
+          pricing: file.pricing,
+        }));
+
+        setBasketItems(basketItemsFromOrder);
+
+        // Set order details from current order
+        setOrderDetails({
+          paperSize: "", // Individual files have their own paper sizes
+          printOption: "", // Individual files have their own print options
+          turnaroundTime: currentOrder.turnaroundTime,
+          paymentMethod: currentOrder.paymentMethod,
+          emailAddress: currentOrder.customerEmail,
+          phoneNumber: currentOrder.customerPhone,
+          price: currentOrder.totalAmount.toFixed(2),
+          customization: "None",
+          deliveryMethod: currentOrder.deliveryMethod,
+          notes: currentOrder.notes,
+        });
+
+        showFeedback(
+          `Basket loaded with ${basketItemsFromOrder.length} file(s)`
+        );
+      }
+      // Handle template-based orders
+      else if (templateData && templateData.hasTemplate) {
+        console.log("BASKET: Initializing from template data.", templateData);
+        const templateItem = {
+          id: `template-${templateData.templateId}-${Date.now()}`,
+          name: templateData.title || `Template ${templateData.templateId}`,
+          status: "Template Selected",
+          icon: PDF,
+          file: null,
+          pageCount: 1,
+          isTemplate: true,
+          templateId: templateData.templateId,
+          templateType: templateData.templateType,
+          specifications: templateData.specifications || null,
+          turnaroundTime: templateData.turnaroundTime || null,
         };
-      });
 
-      setBasketItems(fileItems);
-      setTotalPages(totalPageCount);
-      showFeedback(`${fileItems.length} file(s) added to basket`);
+        setBasketItems([templateItem]);
 
-      // Calculate price after adding items
-      if (passedDetails || templateData) {
-        setOrderDetails((prevDetails) => {
-          const updatedDetails = {
-            ...prevDetails,
-            ...passedDetails,
-          };
-          return {
-            ...updatedDetails,
-            price: calculatePrice(
-              fileItems,
-              updatedDetails,
-              templateData?.templateType
-            ),
-          };
+        setOrderDetails({
+          paperSize: templateData.specifications?.paperSize || "",
+          printOption: templateData.specifications?.printOption || "",
+          turnaroundTime: templateData.turnaroundTime || "Standard",
+          paymentMethod: "cash",
+          emailAddress: "",
+          phoneNumber: "",
+          price: PRICES.LAYOUT_BASE_PRICE.toFixed(2),
+          customization: templateData.specifications?.customization || "None",
+          templateType: templateData.templateType,
+          hasTemplate: true,
+        });
+
+        showFeedback(`Template ${templateItem.name} added to basket`);
+      } else {
+        // Check if we're coming back from delivery/payment with an empty basket
+        if (
+          location.state?.basketItems &&
+          location.state.basketItems.length === 0
+        ) {
+          console.log("BASKET: Restored empty basket from back navigation");
+          setBasketItems([]);
+          setOrderDetails(
+            location.state.orderDetails || {
+              paperSize: "",
+              printOption: "",
+              turnaroundTime: "Standard",
+              paymentMethod: "cash",
+              emailAddress: "",
+              phoneNumber: "",
+              price: "0.00",
+              customization: "None",
+            }
+          );
+        } else {
+          // Empty basket or no current order
+          console.log(
+            "BASKET: No current order or files, showing empty basket"
+          );
+          setBasketItems([]);
+          setOrderDetails({
+            paperSize: "",
+            printOption: "",
+            turnaroundTime: "Standard",
+            paymentMethod: "cash",
+            emailAddress: "",
+            phoneNumber: "",
+            price: "0.00",
+            customization: "None",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("BASKET: Error during initialization:", error);
+
+      // If there's an error but we have location state, try to use it
+      if (location.state?.basketItems) {
+        console.log("BASKET: Error recovery using location state");
+        setBasketItems(location.state.basketItems);
+        setOrderDetails(
+          location.state.orderDetails || {
+            paperSize: "",
+            printOption: "",
+            turnaroundTime: "Standard",
+            paymentMethod: "cash",
+            emailAddress: "",
+            phoneNumber: "",
+            price: "0.00",
+            customization: "None",
+          }
+        );
+      } else {
+        // Fallback to empty basket
+        setBasketItems([]);
+        setOrderDetails({
+          paperSize: "",
+          printOption: "",
+          turnaroundTime: "Standard",
+          paymentMethod: "cash",
+          emailAddress: "",
+          phoneNumber: "",
+          price: "0.00",
+          customization: "None",
         });
       }
     }
-  }, [passedBasketItems, uploadedFiles, passedDetails, templateData]);
+  }, [currentOrder, templateData]);
+
+  // Calculate total pages whenever basketItems change
+  useEffect(() => {
+    const newTotalPages = basketItems.reduce(
+      (total, item) => total + (item.pageCount || 1),
+      0
+    );
+    setTotalPages(newTotalPages);
+  }, [basketItems]);
 
   // Calculate price based on specifications and file page counts
   const calculatePrice = (items, details, templateType) => {
@@ -216,101 +264,77 @@ const Basket = () => {
     console.log("CALCULATE PRICE CALLED - Details:", details);
     console.log("CALCULATE PRICE CALLED - Items:", items);
 
-    // Prioritize layout service pricing if templateType is 'layout'
-    if (templateType === "layout") {
-      console.log(
-        "CALCULATE PRICE: Layout service detected. Calculating price based on layout rules."
-      );
-      let totalPrice = PRICES.LAYOUT_BASE_PRICE;
-
-      if (details.turnaroundTime === "Rush") {
-        totalPrice += PRICES.RUSH_FEE;
-        console.log(
-          "CALCULATE PRICE: Added rush fee. Current total:",
-          totalPrice
-        );
-      }
-      if (details.customization && details.customization !== "None") {
-        totalPrice += PRICES.CUSTOMIZATION[details.customization];
-        console.log(
-          "CALCULATE PRICE: Added customization fee. Current total:",
-          totalPrice
-        );
-      }
-      console.log(
-        "CALCULATE PRICE: Final calculated layout price:",
-        totalPrice.toFixed(2)
-      );
-      return totalPrice.toFixed(2);
-    }
-
-    // If no items in basket and it's not a layout service, return "00.00"
+    // If no items in basket, return "00.00"
     if (!items || items.length === 0) {
-      console.log(
-        "CALCULATE PRICE: No items and not layout service. Returning 00.00."
-      );
+      console.log("CALCULATE PRICE: No items. Returning 00.00.");
       return "00.00";
     }
 
     let totalPrice = 0;
 
-    // Existing logic for other template types and regular files
-    const normalizedPrintOption =
-      details.printOption === "Full color" ? "Colored" : details.printOption;
+    // Calculate price for each item individually based on its specifications
+    items.forEach((item) => {
+      const itemSpecs = item.specifications || details;
 
-    const hasTemplateItems = items.some((item) => item.isTemplate);
+      // Layout service pricing
+      if (
+        item.isTemplate &&
+        (templateType === "layout" || item.templateType === "layout")
+      ) {
+        totalPrice += PRICES.LAYOUT_BASE_PRICE;
 
-    if (templateType === "presentation" || templateType === "poster") {
-      if (hasTemplateItems) {
-        totalPrice = 50;
-      }
-      items.forEach((item) => {
-        if (!item.isTemplate) {
-          const basePrice =
-            PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
-          totalPrice += basePrice * (item.pageCount || 1);
+        if (itemSpecs.turnaroundTime === "Rush") {
+          totalPrice += PRICES.RUSH_FEE;
         }
-      });
-    } else if (templateType === "resume") {
-      let basePrice =
-        PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
-      if (hasTemplateItems) {
-        totalPrice += 30; // Resume template base fee
-      }
-      items.forEach((item) => {
-        if (!item.isTemplate) {
-          totalPrice += basePrice * (item.pageCount || 1);
+        if (itemSpecs.customization && itemSpecs.customization !== "None") {
+          totalPrice += PRICES.CUSTOMIZATION[itemSpecs.customization];
         }
-      });
-    } else {
-      // Default calculation for other template types and regular files
-      let basePrice =
-        PRICES.PRINTING[normalizedPrintOption]?.[details.paperSize] || 0;
-
-      items.forEach((item) => {
-        if (item.isTemplate) {
-          totalPrice += 25; // Default template fee
+      }
+      // Template pricing for other types
+      else if (item.isTemplate) {
+        if (
+          item.templateType === "presentation" ||
+          item.templateType === "poster"
+        ) {
+          totalPrice += 50;
+        } else if (item.templateType === "resume") {
+          totalPrice += 30;
         } else {
-          totalPrice += basePrice * (item.pageCount || 1);
+          totalPrice += 25; // Default template fee
         }
-      });
 
-      if (details.customization && details.customization !== "None") {
-        totalPrice += PRICES.CUSTOMIZATION[details.customization];
+        // Add rush fee for templates if applicable
+        if (itemSpecs.turnaroundTime === "Rush") {
+          totalPrice += PRICES.RUSH_FEE;
+        }
       }
-    }
+      // Regular file pricing
+      else {
+        const normalizedPrintOption = itemSpecs.printOption;
 
-    // Add rush fee if turnaround time is Rush (for all non-layout services)
-    if (details.turnaroundTime === "Rush") {
-      totalPrice += PRICES.RUSH_FEE;
-    }
+        if (itemSpecs.paperSize && normalizedPrintOption) {
+          const basePrice =
+            PRICES.PRINTING[normalizedPrintOption]?.[itemSpecs.paperSize] || 0;
+          totalPrice += basePrice * (item.pageCount || 1);
 
+          // Add rush fee for individual files if applicable (flat fee, not per page)
+          if (itemSpecs.turnaroundTime === "Rush") {
+            totalPrice += PRICES.RUSH_FEE;
+          }
+        }
+      }
+    });
+
+    console.log(
+      "CALCULATE PRICE: Final calculated total price:",
+      totalPrice.toFixed(2)
+    );
     return totalPrice.toFixed(2);
   };
 
   useEffect(() => {
-    // Recalculate price whenever order details or basket items change
-    // This useEffect is primarily for when orderDetails (e.g., paperSize, printOption) change AFTER initial load
+    // Recalculate price whenever specific order details change (not basket items to avoid loops)
+    // basketItems changes are handled in handleDeleteItem and other item manipulation functions
     if (basketItems.length > 0 || templateData?.templateType === "layout") {
       setOrderDetails((prev) => ({
         ...prev,
@@ -319,16 +343,16 @@ const Basket = () => {
     } else {
       setOrderDetails((prev) => ({
         ...prev,
-        price: "00.00", // Reset price if basket is empty and not a layout service
+        price: "0.00", // Reset price if basket is empty and not a layout service
       }));
     }
   }, [
-    basketItems,
+    // Removed basketItems from dependencies to avoid loops since item changes are handled elsewhere
     orderDetails.paperSize,
     orderDetails.printOption,
     orderDetails.turnaroundTime,
     orderDetails.customization,
-    templateData, // Added templateData to dependencies
+    templateData?.templateType, // Only track templateType to avoid full templateData dependency
   ]);
 
   const showFeedback = (message) => {
@@ -338,36 +362,131 @@ const Basket = () => {
     }, 3000);
   };
 
+  // Function to update specifications for individual items
+  const updateItemSpecifications = (itemId, newSpecifications) => {
+    setBasketItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId
+          ? {
+              ...item,
+              specifications: {
+                ...item.specifications,
+                ...newSpecifications,
+              },
+            }
+          : item
+      )
+    );
+
+    // Recalculate total price after specification change
+    const updatedItems = basketItems.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            specifications: {
+              ...item.specifications,
+              ...newSpecifications,
+            },
+          }
+        : item
+    );
+
+    setOrderDetails((prevDetails) => ({
+      ...prevDetails,
+      price: calculatePrice(
+        updatedItems,
+        prevDetails,
+        templateData?.templateType
+      ),
+    }));
+
+    showFeedback("Item specifications updated");
+  };
+
   const handleDeleteItem = (itemId) => {
+    // Find the item being deleted to determine if it's a file in orderManager
+    const itemToDelete = basketItems.find((item) => item.id === itemId);
+
     setBasketItems((prev) => {
       const newItems = prev.filter((item) => item.id !== itemId);
 
-      // Recalculate total pages after removing an item
-      const newTotalPages = newItems.reduce(
-        (total, item) => total + (item.pageCount || 1),
-        0
+      // Recalculate price with the updated items
+      const newPrice = calculatePrice(
+        newItems,
+        orderDetails,
+        templateData?.templateType
       );
-      setTotalPages(newTotalPages);
 
-      // If basket is now empty, reset order details
+      // If basket is now empty, reset order details and clear orderManager
       if (newItems.length === 0) {
         setOrderDetails({
-          paperSize: "A4",
-          printOption: "Black&White",
+          paperSize: "",
+          printOption: "",
           turnaroundTime: "Standard",
-          paymentMethod: "Cash",
+          paymentMethod: "",
           customization: "None",
-          price: "00.00",
+          price: "0.00",
+        });
+
+        // Clear the entire current order since basket is empty
+        orderManager.clearCurrentOrder();
+      } else {
+        // Update order details with new price
+        setOrderDetails((prevDetails) => ({
+          ...prevDetails,
+          price: newPrice,
+        }));
+
+        // Update orderManager to reflect the updated total amount
+        orderManager.updateOrderDetails({
+          totalAmount: parseFloat(newPrice),
         });
       }
 
       return newItems;
     });
 
+    // Remove the file from orderManager if it's a regular file (not template)
+    if (itemToDelete && !itemToDelete.isTemplate) {
+      const success = orderManager.removeFileFromOrder(itemId);
+      console.log(`BASKET: Removed file ${itemId} from orderManager:`, success);
+    }
+
     showFeedback("Item removed from basket");
   };
 
   const handleAddFiles = () => {
+    // Update orderManager with current basket state before navigating
+    orderManager.updateOrderDetails({
+      totalAmount: parseFloat(orderDetails.price || "0.00"),
+      turnaroundTime: orderDetails.turnaroundTime,
+      paymentMethod: orderDetails.paymentMethod,
+      deliveryMethod: orderDetails.deliveryMethod,
+      notes: orderDetails.notes || "",
+    });
+
+    // Create comprehensive specifications object for upload page
+    const comprehensiveSpecifications = {
+      ...orderDetails,
+      // Include template-specific information
+      templateType: orderDetails.templateType || templateData?.templateType,
+      hasTemplate:
+        orderDetails.hasTemplate || templateData?.hasTemplate || false,
+      // Include any template-specific notes
+      templateNotes: templateData?.notes || orderDetails.templateNotes,
+      templateTurnaroundTime:
+        templateData?.turnaroundTime || orderDetails.templateTurnaroundTime,
+      // Ensure all current specification values are preserved
+      totalFiles: basketItems.filter((item) => !item.isTemplate).length,
+      totalPrice: orderDetails.price,
+    };
+
+    console.log(
+      "BASKET: Navigating back to upload with comprehensive specifications:",
+      comprehensiveSpecifications
+    );
+    console.log("BASKET: Updated orderManager before navigating to upload");
+
     // Navigate back to upload page while preserving current basket state
     // This allows users to add more files through the full upload interface
     navigate("/upload", {
@@ -383,61 +502,78 @@ const Basket = () => {
             lastModified: item.file?.lastModified,
             pageCount: item.pageCount || 1,
             isTemplate: item.isTemplate || false,
+            specifications: item.specifications || comprehensiveSpecifications,
+            templateType: item.templateType || orderDetails.templateType,
           })),
-        specifications: orderDetails,
+        specifications: comprehensiveSpecifications, // Enhanced specifications
         basketItems: basketItems, // Pass current basket items
         orderDetails: orderDetails, // Pass current order details
         templateInfo: templateData
           ? {
               templateId: templateData.templateId,
-              notes: templateData.notes,
+              notes: templateData.notes || orderDetails.notes,
               turnaroundTime:
                 templateData.turnaroundTime || orderDetails.turnaroundTime,
               title: templateData.title,
               description: templateData.description,
-              templateType: templateData.templateType,
+              templateType:
+                templateData.templateType || orderDetails.templateType,
+              imageSrc: templateData.imageSrc,
             }
           : null,
-        templateData,
+        templateData: templateData
+          ? {
+              ...templateData,
+              templateType:
+                templateData.templateType || orderDetails.templateType,
+              hasTemplate: templateData.hasTemplate || orderDetails.hasTemplate,
+            }
+          : null,
         fromBasket: true, // Flag to indicate we're coming from basket
+        // Additional metadata for better state management
+        uploadMetadata: {
+          timestamp: Date.now(),
+          fromBasket: true,
+          basketItemCount: basketItems.length,
+          templateType: orderDetails.templateType || templateData?.templateType,
+          hasTemplate:
+            orderDetails.hasTemplate || templateData?.hasTemplate || false,
+        },
       },
     });
   };
 
-  const getFileIcon = (file) => {
-    const extension = file.name.split(".").pop().toLowerCase();
-    switch (extension) {
-      case "pdf":
-        return PDF;
-      case "doc":
-      case "docx":
-        return DOC;
-      case "ppt":
-      case "pptx":
-        return PPT;
-      case "jpg":
-      case "jpeg":
-        return JPG;
-      case "png":
-        return PNG;
-      default:
-        return PDF;
-    }
+  // Use the imported getFileIcon function from dataManager
+  const getFileIconImage = (fileType) => {
+    const type = fileType.toLowerCase();
+    if (type.includes("pdf")) return PDF;
+    if (type.includes("doc")) return DOC;
+    if (type.includes("ppt")) return PPT;
+    if (type.includes("png")) return PNG;
+    if (type.includes("jpg") || type.includes("jpeg")) return JPG;
+    return PDF;
   };
 
   const handleNextClick = () => {
-    // Ensure printOption is consistent ("Full color" from upload should be "Colored" in basket)
+    // Ensure price is calculated and included
     const normalizedOrderDetails = {
       ...orderDetails,
-      printOption:
-        orderDetails.printOption === "Full color"
-          ? "Colored"
-          : orderDetails.printOption,
-      // Ensure price is calculated and included
+      // Keep printOption as is since we now use "Full color" consistently
       price:
         orderDetails.price ||
         calculatePrice(basketItems, orderDetails, templateData?.templateType),
     };
+
+    // Update orderManager with current basket state before navigating
+    orderManager.updateOrderDetails({
+      totalAmount: parseFloat(normalizedOrderDetails.price),
+      turnaroundTime: normalizedOrderDetails.turnaroundTime,
+      paymentMethod: normalizedOrderDetails.paymentMethod,
+      deliveryMethod: normalizedOrderDetails.deliveryMethod,
+      notes: normalizedOrderDetails.notes || "",
+    });
+
+    console.log("BASKET: Updated orderManager before navigation");
 
     navigate("/delivery", {
       state: {
@@ -483,6 +619,134 @@ const Basket = () => {
           orderDetails.customization !== "None" && (
             <div>{orderDetails.customization}</div>
           )}
+      </div>
+    );
+  };
+
+  const renderItemDetails = (item) => {
+    // Use item-specific specifications if available, otherwise fall back to global orderDetails
+    const itemSpecs = item.specifications || orderDetails;
+
+    // Calculate individual item price based on page count and its specific specifications (includes rush fee, excludes delivery fee)
+    const itemPrice = (item) => {
+      const specs = item.specifications || orderDetails;
+      let totalItemPrice = 0;
+      let rushFee = 0;
+
+      console.log(`BASKET: Calculating price for item ${item.name}:`, {
+        specs,
+        pageCount: item.pageCount,
+        turnaroundTime: specs.turnaroundTime,
+      });
+
+      // Handle templates
+      if (item.isTemplate) {
+        if (
+          templateData?.templateType === "layout" ||
+          item.templateType === "layout"
+        ) {
+          // Layout service pricing
+          totalItemPrice = PRICES.LAYOUT_BASE_PRICE;
+        } else if (
+          item.templateType === "presentation" ||
+          item.templateType === "poster"
+        ) {
+          // Presentation and poster templates
+          totalItemPrice = 50;
+        } else if (item.templateType === "resume") {
+          // Resume template
+          totalItemPrice = 30;
+        } else {
+          // Default template fee
+          totalItemPrice = 25;
+        }
+
+        // Add rush fee for templates if applicable
+        if (specs.turnaroundTime === "Rush") {
+          rushFee = PRICES.RUSH_FEE;
+          totalItemPrice += rushFee;
+        }
+
+        console.log(
+          `BASKET: Template ${item.name} - Base: ₱${
+            totalItemPrice - rushFee
+          }, Rush: ₱${rushFee}, Total: ₱${totalItemPrice}`
+        );
+        return totalItemPrice.toFixed(2);
+      }
+
+      // Handle regular files
+      if (!item.isTemplate && specs.paperSize && specs.printOption) {
+        const basePrice =
+          PRICES.PRINTING[specs.printOption]?.[specs.paperSize] || 0;
+        const baseTotalPrice = basePrice * (item.pageCount || 1);
+        totalItemPrice = baseTotalPrice;
+
+        // Add rush fee if applicable (flat fee, not per page)
+        if (specs.turnaroundTime === "Rush") {
+          rushFee = PRICES.RUSH_FEE;
+          totalItemPrice += rushFee;
+        }
+
+        console.log(
+          `BASKET: File ${item.name} - Base: ₱${baseTotalPrice}, Rush: ₱${rushFee}, Total: ₱${totalItemPrice}`
+        );
+        return totalItemPrice.toFixed(2);
+      }
+
+      return "0.00";
+    };
+
+    return (
+      <div className="bs-order-details">
+        {/* Show Paper Size for all except pure layout service */}
+        {((templateData?.templateType !== "layout" &&
+          item.templateType !== "layout") ||
+          (!templateData && !item.templateType)) && (
+          <div>{itemSpecs.paperSize}</div>
+        )}
+
+        {/* Show Printing Option for all except pure layout service */}
+        {((templateData?.templateType !== "layout" &&
+          item.templateType !== "layout") ||
+          (!templateData && !item.templateType)) && (
+          <div>{itemSpecs.printOption}</div>
+        )}
+
+        {/* Show Service Type for layout */}
+        {(templateData?.templateType === "layout" ||
+          item.templateType === "layout") && <div>Layout Design</div>}
+
+        {/* Turnaround Time for all types */}
+        <div>
+          {item.turnaroundTime ||
+            templateData?.turnaroundTime ||
+            itemSpecs.turnaroundTime ||
+            "Standard"}
+        </div>
+
+        {/* Payment Method for all types */}
+        <div>{itemSpecs.paymentMethod}</div>
+
+        {/* Customization Level only for layout */}
+        {(templateData?.templateType === "layout" ||
+          item.templateType === "layout") &&
+          itemSpecs.customization &&
+          itemSpecs.customization !== "None" && (
+            <div>{itemSpecs.customization}</div>
+          )}
+
+        {/* Item-specific details */}
+        {!item.isTemplate && item.pageCount > 1 && (
+          <div className="bs-page-info">
+            <p>Pages: {item.pageCount}</p>
+          </div>
+        )}
+
+        {/* Item price */}
+        <div className="bs-summary-price">
+          <span> ₱{itemPrice(item)}</span>
+        </div>
       </div>
     );
   };
@@ -556,139 +820,183 @@ const Basket = () => {
             Add Files
           </button>
         )}
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="bs-wrapper">
-      {feedbackMessage && (
-        <div className="bs-feedback-message">{feedbackMessage}</div>
-      )}
-
-      <div className="bs-back-button-container">
-        <button className="bs-back-btn" onClick={handleBack}>
-          Back
+        <button
+          className="bs-add-btn bs-empty-add-btn"
+          onClick={() => navigate("/upload")}
+          style={{ marginLeft: "10px" }}
+        >
+          Go to Upload
         </button>
       </div>
-
-      <div className="bs-steps">
-        <div className="bs-step-circles">
-          {steps.map((step, index) => (
-            <React.Fragment key={step.number}>
-              {index > 0 && (
-                <div
-                  className={`bs-line ${
-                    steps[index - 1].active ? "active" : ""
-                  }`}
-                ></div>
-              )}
-              <div className={`bs-step-circle ${step.active ? "active" : ""}`}>
-                <span className="bs-step-num">{step.number}</span>
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-        <div className="bs-step-labels">
-          {steps.map((step) => (
-            <div key={`label-${step.number}`} className="bs-step-label">
-              {step.label}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <h2 className="bs-title">Your Basket ({basketItems.length})</h2>
-
-      <div className="bs-main">
-        {basketItems.length > 0 ? (
-          <>
-            <div className="bs-basket-card bs-card">
-              {basketItems.map((item) => (
-                <div className="bs-basket-item" key={item.id}>
-                  <img
-                    src={item.icon}
-                    alt="File icon"
-                    className="bs-file-icon"
-                  />
-                  <div className="bs-file-info">
-                    <p className="bs-file-name">
-                      {item.name}
-                      {item.isTemplate && (
-                        <span style={{ color: "#1C7ED6", marginLeft: "6px" }}>
-                          (Template)
-                        </span>
-                      )}
-                    </p>
-                    <p className="bs-file-status">
-                      {item.status}
-                      {!item.isTemplate &&
-                        item.pageCount > 1 &&
-                        ` • ${item.pageCount} pages`}
-                      {item.isTemplate &&
-                        ` • ${templateData?.templateType || "Template"}`}
-                    </p>
-                  </div>
-                  <img
-                    src={uploadCheck}
-                    alt="Done"
-                    className="bs-status-icon"
-                  />
-                  <button
-                    className="bs-delete-btn"
-                    onClick={() => handleDeleteItem(item.id)}
-                    aria-label="Delete item"
-                    title="Remove item"
-                  >
-                    <img src={uploadDelete} alt="Delete" />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div className="bs-summary-card bs-card">
-              <div className="bs-summary-info">
-                {renderOrderDetails()}
-                {totalPages > basketItems.length && (
-                  <div className="bs-page-info">
-                    <p>Total pages: {totalPages}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </>
-        ) : (
-          renderEmptyBasket()
-        )}
-      </div>
-
-      {basketItems.length > 0 && (
-        <div className="bs-footer">
-          <div className="bs-footer-left">
-            {!isFromLayoutSpecification && (
-              <button className="bs-add-btn" onClick={handleAddFiles}>
-                Add files
-              </button>
-            )}
-          </div>
-
-          <div className="bs-footer-right">
-            <div className="bs-subtotal">
-              <span>Sub-Total Amount: ₱{orderDetails.price}</span>
-            </div>
-
-            <button
-              className="bs-next-btn"
-              onClick={handleNextClick}
-              disabled={basketItems.length === 0}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
+
+  try {
+    return (
+      <div className="bs-wrapper">
+        {feedbackMessage && (
+          <div className="bs-feedback-message">{feedbackMessage}</div>
+        )}
+
+        <BackButton onClick={handleBack} />
+
+        <div className="bs-steps">
+          <div className="bs-step-circles">
+            {steps.map((step, index) => (
+              <React.Fragment key={step.number}>
+                {index > 0 && (
+                  <div
+                    className={`bs-line ${
+                      steps[index - 1].active ? "active" : ""
+                    }`}
+                  ></div>
+                )}
+                <div
+                  className={`bs-step-circle ${step.active ? "active" : ""}`}
+                >
+                  <span className="bs-step-num">{step.number}</span>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+          <div className="bs-step-labels">
+            {steps.map((step) => (
+              <div key={`label-${step.number}`} className="bs-step-label">
+                {step.label}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <h2 className="bs-title">Your Basket ({basketItems.length})</h2>
+
+        <div className="bs-main">
+          {basketItems.length > 0 ? (
+            <>
+              {basketItems.map((item) => (
+                <div key={item.id} className="bs-item-card-group">
+                  {/* Basket Component Container */}
+                  <div className="bs-basket-component-container">
+                    <div className="bs-basket-item-wrapper">
+                      <div className="bs-basket-card bs-card">
+                        <div className="bs-basket-item-container">
+                          <div className="bs-basket-item">
+                            <img
+                              src={item.icon}
+                              alt="File icon"
+                              className="bs-file-icon"
+                            />
+                            <div className="bs-file-info">
+                              <p className="bs-file-name">
+                                {item.name}
+                                {item.isTemplate && (
+                                  <span
+                                    style={{
+                                      color: "#1C7ED6",
+                                      marginLeft: "6px",
+                                    }}
+                                  >
+                                    (Template)
+                                  </span>
+                                )}
+                              </p>
+                              <p className="bs-file-status">
+                                {item.status}
+                                {!item.isTemplate &&
+                                  item.pageCount > 1 &&
+                                  ` • ${item.pageCount} pages`}
+                                {item.isTemplate &&
+                                  ` • ${
+                                    templateData?.templateType || "Template"
+                                  }`}
+                              </p>
+                            </div>
+                            <img
+                              src={uploadCheck}
+                              alt="Done"
+                              className="bs-status-icon"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      className="bs-delete-btn bs-delete-btn-external"
+                      onClick={() => handleDeleteItem(item.id)}
+                      aria-label="Delete item"
+                      title="Remove item"
+                    >
+                      <img src={uploadDelete} alt="Delete" />
+                    </button>
+                  </div>
+
+                  {/* Individual Summary Card */}
+                  <div className="bs-summary-card bs-card">
+                    <div className="bs-summary-info">
+                      {renderItemDetails(item)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Footer inside bs-main */}
+              <div className="bs-footer">
+                <div className="bs-footer-left">
+                  {!isFromLayoutSpecification && (
+                    <button className="bs-add-btn" onClick={handleAddFiles}>
+                      Add files
+                    </button>
+                  )}
+                </div>
+
+                <div className="bs-footer-right">
+                  <div className="bs-subtotal">
+                    <span>Sub-Total Amount: ₱{orderDetails.price}</span>
+                  </div>
+
+                  <button
+                    className="bs-next-btn"
+                    onClick={handleNextClick}
+                    disabled={basketItems.length === 0}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            renderEmptyBasket()
+          )}
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error("BASKET: Render error:", error);
+    return (
+      <div className="bs-wrapper">
+        <div
+          className="bs-error-message"
+          style={{ padding: "20px", textAlign: "center" }}
+        >
+          <h3>Something went wrong</h3>
+          <p>Please try refreshing the page or go back to upload files.</p>
+          <button
+            onClick={() => navigate("/upload")}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#1C7ED6",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Go to Upload
+          </button>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default Basket;

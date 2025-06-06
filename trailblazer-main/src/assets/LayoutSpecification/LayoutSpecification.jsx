@@ -11,6 +11,7 @@ import DOC from "../pages/img/DOC.png";
 import PPT from "../pages/img/PPT.png";
 import PNG from "../pages/img/PNG.png";
 import JPG from "../pages/img/JPG.png";
+import BackButton from "../../components/BackButton/BackButton";
 
 const LayoutSpecification = () => {
   const navigate = useNavigate();
@@ -56,8 +57,8 @@ const LayoutSpecification = () => {
   console.log("Layout Specification - Template Type:", templateType);
 
   const [specifications, setSpecifications] = useState({
-    paperSize: previousSpecifications.paperSize || "A4",
-    printOption: previousSpecifications.printOption || "Full color",
+    paperSize: previousSpecifications.paperSize || "",
+    printOption: previousSpecifications.printOption || "",
     turnaroundTime:
       templateInfo.turnaroundTime ||
       previousSpecifications.turnaroundTime ||
@@ -415,11 +416,7 @@ const LayoutSpecification = () => {
   return (
     <div className="uf-container">
       <main className="uf-main">
-        <div className="uf-back-button-container">
-          <button className="uf-back-btn" onClick={handleBack}>
-            Back
-          </button>
-        </div>
+        <BackButton onClick={handleBack} />
 
         <div className="uf-steps">
           <div className="uf-step-circles">
@@ -464,21 +461,6 @@ const LayoutSpecification = () => {
               >
                 SPECIFICATION
               </h2>
-
-              {templateInfo && templateInfo.templateId && (
-                <div
-                  className="uf-template-info"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <h3>Selected Template</h3>
-                  <p>Template ID: {templateInfo.templateId}</p>
-                  <p>
-                    Template Type:{" "}
-                    {templateType.charAt(0).toUpperCase() +
-                      templateType.slice(1)}
-                  </p>
-                </div>
-              )}
 
               <div className="uf-specs" style={{ marginBottom: "2rem" }}>
                 {specs.map((spec, index) => (

@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./OrderConfirmed.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import checkmark from "../pages/img/checkmark.png";
 import { getStepConfig } from "../../utils/stepsConfig";
+import { orderManager } from "../../utils/dataManager";
 
 export const OrderConfirmed = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Clear order queue when order is confirmed
+  useEffect(() => {
+    orderManager.clearOrderQueue();
+  }, []);
 
   // Dynamically determine step configuration based on service type
   const stepConfig = getStepConfig(location.state?.templateData, location);

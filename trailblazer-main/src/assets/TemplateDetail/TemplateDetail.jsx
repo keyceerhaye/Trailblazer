@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./TemplateDetail.css";
+import BackButton from "../../components/BackButton/BackButton";
 
 function TemplateDetail() {
   const { templateId } = useParams();
@@ -80,8 +81,8 @@ function TemplateDetail() {
   };
 
   const handleBack = () => {
-    // Pass the current state back when navigating
-    navigate(-1, {
+    // Navigate back to layout page
+    navigate("/layout", {
       state: {
         templateInfo: {
           templateId,
@@ -197,11 +198,7 @@ function TemplateDetail() {
 
   return (
     <div className="detail-page">
-      <div className="template-back-button-container">
-        <button className="back-btn" onClick={handleBack}>
-          Back
-        </button>
-      </div>
+      <BackButton onClick={handleBack} />
 
       <div className="template-steps">
         <div className="template-step-circles">
