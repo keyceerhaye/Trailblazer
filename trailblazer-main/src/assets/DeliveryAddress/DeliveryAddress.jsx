@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import "./DeliveryAddress.css";
 import editIcon from "../pages/img/edit.png";
 import { useNavigate, useLocation } from "react-router-dom";
-
-const steps = [
-  { number: "1", label: "Template", isActive: true },
-  { number: "2", label: "Specifications", isActive: true },
-  { number: "3", label: "Basket", isActive: true },
-  { number: "4", label: "Delivery", isActive: true, isCurrent: true },
-  { number: "5", label: "Payment", isActive: false },
-];
+import {
+  getStepConfig,
+  getStepsWithActiveStates,
+} from "../../utils/stepsConfig";
 
 const DeliveryAddress = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(location.state?.templateData, location);
+  const steps = getStepsWithActiveStates(stepConfig, "delivery");
 
   // Get payment method from passed state or default
   const paymentMethod =

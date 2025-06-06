@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Delivery.css";
+import {
+  getStepConfig,
+  getStepsWithActiveStates,
+} from "../../utils/stepsConfig";
 
 const Delivery = () => {
   const navigate = useNavigate();
@@ -8,13 +12,9 @@ const Delivery = () => {
   const [selectedOption, setSelectedOption] = useState("pickup");
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(false);
 
-  const steps = [
-    { number: "1", label: "Template", active: true },
-    { number: "2", label: "Specifications", active: true },
-    { number: "3", label: "Basket", active: true },
-    { number: "4", label: "Delivery", active: true },
-    { number: "5", label: "Payment", active: false },
-  ];
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(location.state?.templateData, location);
+  const steps = getStepsWithActiveStates(stepConfig, "delivery");
 
   // Check if the payment method is Cash on Delivery
   useEffect(() => {

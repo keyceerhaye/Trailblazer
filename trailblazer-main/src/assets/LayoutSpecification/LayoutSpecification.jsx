@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import "./LayoutSpecification.css";
+import {
+  getStepConfig,
+  getStepsWithActiveStates,
+} from "../../utils/stepsConfig";
 import uploadPeso from "../pages/img/peso.png";
 import PDF from "../pages/img/PDF.png";
 import DOC from "../pages/img/DOC.png";
@@ -65,13 +69,9 @@ const LayoutSpecification = () => {
     customization: previousSpecifications.customization || "None",
   });
 
-  const steps = [
-    { number: "1", label: "Template", active: true },
-    { number: "2", label: "Specifications", active: true },
-    { number: "3", label: "Basket", active: false },
-    { number: "4", label: "Delivery", active: false },
-    { number: "5", label: "Payment", active: false },
-  ];
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(templateInfo, location);
+  const steps = getStepsWithActiveStates(stepConfig, "specifications");
 
   // Price constants
   const PRICES = {

@@ -8,6 +8,10 @@ import DOC from "../pages/img/DOC.png";
 import PPT from "../pages/img/PPT.png";
 import PNG from "../pages/img/PNG.png";
 import JPG from "../pages/img/JPG.png";
+import {
+  getStepConfig,
+  getStepsWithActiveStates,
+} from "../../utils/stepsConfig";
 
 const Basket = () => {
   const location = useLocation();
@@ -25,13 +29,9 @@ const Basket = () => {
   console.log("Template Type:", templateData?.templateType);
   console.log("Passed Details:", passedDetails);
 
-  const steps = [
-    { number: "1", label: "Template", active: true },
-    { number: "2", label: "Specifications", active: true },
-    { number: "3", label: "Basket", active: true },
-    { number: "4", label: "Delivery", active: false },
-    { number: "5", label: "Payment", active: false },
-  ];
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(templateData, location);
+  const steps = getStepsWithActiveStates(stepConfig, "basket");
 
   const [basketItems, setBasketItems] = useState([]);
   const [feedbackMessage, setFeedbackMessage] = useState("");

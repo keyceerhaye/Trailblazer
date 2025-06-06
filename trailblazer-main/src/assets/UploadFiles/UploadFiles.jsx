@@ -9,6 +9,10 @@ import PNG from "../pages/img/PNG.png";
 import JPG from "../pages/img/JPG.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PDFDocument } from "pdf-lib";
+import {
+  getStepConfig,
+  getStepsWithActiveStates,
+} from "../../utils/stepsConfig";
 
 export const UploadFiles = () => {
   const fileInputRef = useRef(null);
@@ -27,12 +31,9 @@ export const UploadFiles = () => {
   const [uploadProgress, setUploadProgress] = useState({});
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
 
-  const steps = [
-    { number: "1", label: "Upload files", active: true },
-    { number: "2", label: "Basket", active: false },
-    { number: "3", label: "Delivery", active: false },
-    { number: "4", label: "Payment", active: false },
-  ];
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(templateInfo, location);
+  const steps = getStepsWithActiveStates(stepConfig, "upload");
 
   // Determine initial template type from state or URL
   const determineInitialTemplateType = () => {

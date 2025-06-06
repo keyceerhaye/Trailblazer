@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./Payment.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import {
+  getStepConfig,
+  getStepsWithActiveStates,
+} from "../../utils/stepsConfig";
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -8,6 +12,10 @@ const Payment = () => {
 
   const basketItems = location.state?.basketItems || [];
   const orderDetails = location.state?.orderDetails || {};
+
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(location.state?.templateData, location);
+  const steps = getStepsWithActiveStates(stepConfig, "payment");
 
   // Use deliveryMethod from location.state if available, else fallback to localStorage user or default
   const initialDeliveryMethod =
@@ -230,23 +238,27 @@ const Payment = () => {
 
       <div className="pay-steps">
         <div className="pay-step-circles">
-          {[1, 2, 3, 4, 5].map((num, index) => (
-            <React.Fragment key={num}>
-              {index > 0 && <div className="pay-line active" />}
-              <div className="pay-step-circle active">
-                <span className="pay-step-num">{num}</span>
+          {steps.map((step, index) => (
+            <React.Fragment key={step.number}>
+              {index > 0 && (
+                <div
+                  className={`pay-line ${
+                    steps[index - 1].active ? "active" : ""
+                  }`}
+                />
+              )}
+              <div className={`pay-step-circle ${step.active ? "active" : ""}`}>
+                <span className="pay-step-num">{step.number}</span>
               </div>
             </React.Fragment>
           ))}
         </div>
         <div className="pay-step-labels">
-          {["Template", "Specifications", "Basket", "Delivery", "Payment"].map(
-            (label, i) => (
-              <div key={i} className="pay-step-label">
-                {label}
-              </div>
-            )
-          )}
+          {steps.map((step, i) => (
+            <div key={i} className="pay-step-label">
+              {step.label}
+            </div>
+          ))}
         </div>
       </div>
 
