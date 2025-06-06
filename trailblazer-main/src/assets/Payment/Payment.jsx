@@ -275,7 +275,7 @@ const Payment = () => {
       deliveryFee = hasLayoutService ? 20.0 : 10.0;
     }
 
-    // Calculate turnaround fee - charged per PAGE if rush is selected
+    // Calculate turnaround fee - charged as flat fee per FILE if rush is selected
     let turnaroundFee = 0.0;
     console.log(
       "PAYMENT: Calculating turnaround fee, userDetails.turnaround:",
@@ -288,16 +288,17 @@ const Payment = () => {
         if (item.isTemplate) {
           // Templates typically don't have rush fees unless it's layout
           if (item.templateType === "layout") {
-            turnaroundFee += 7.0; // Layout templates count as 1 page
+            turnaroundFee += 7.0; // Layout templates get flat ₱7 rush fee
             console.log(`PAYMENT: Added ₱7 rush fee for layout template`);
           }
         } else {
-          // Regular files: rush fee per page
-          const itemPages = item.pageCount || 1;
-          const itemRushFee = 7.0 * itemPages;
+          // Regular files: flat ₱7 rush fee per file regardless of page count
+          const itemRushFee = 7.0;
           turnaroundFee += itemRushFee;
           console.log(
-            `PAYMENT: Added ₱${itemRushFee} rush fee for ${itemPages} files`
+            `PAYMENT: Added ₱${itemRushFee} rush fee for file ${item.name} (${
+              item.pageCount || 1
+            } pages)`
           );
         }
       });
@@ -332,8 +333,10 @@ const Payment = () => {
       )
     );
     console.log(
-      "- Total pages for rush:",
-      basketItems.reduce((total, item) => total + (item.pageCount || 1), 0)
+      "- Total files for rush:",
+      basketItems.filter(
+        (item) => !item.isTemplate || item.templateType === "layout"
+      ).length
     );
 
     return {
@@ -774,8 +777,8 @@ const Payment = () => {
                 Turnaround Fee
                 {userDetails.turnaround === "Rush"
                   ? turnaroundFee > 7
-                    ? ` (₱7.00 × ${Math.round(turnaroundFee / 7)} pages)`
-                    : ` (₱7.00 per page)`
+                    ? ` (₱7.00 × ${Math.round(turnaroundFee / 7)} files)`
+                    : ` (₱7.00 per file)`
                   : " (Standard - Free)"}
               </span>
               <span>₱{turnaroundFee.toFixed(2)}</span>

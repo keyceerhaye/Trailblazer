@@ -200,10 +200,7 @@ export class OrderManager {
     const specs = fileData.specifications;
     const basePrice = PRICES.PRINTING[specs.colorMode]?.[specs.paperSize] || 0;
     const totalFilePrice = basePrice * (fileData.pageCount || 1);
-    const rushFee =
-      specs.turnaroundTime === "Rush"
-        ? PRICES.RUSH_FEE * (fileData.pageCount || 1)
-        : 0;
+    const rushFee = specs.turnaroundTime === "Rush" ? PRICES.RUSH_FEE : 0;
     const customizationFee = PRICES.CUSTOMIZATION[specs.customization] || 0;
 
     return {
