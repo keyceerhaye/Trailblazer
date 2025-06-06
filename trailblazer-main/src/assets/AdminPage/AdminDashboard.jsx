@@ -40,6 +40,7 @@ import {
 import "./AdminDashboard.css";
 import AdminSalesComponent from "./AdminSales"; // Import the separate AdminSales component
 import { AdminOrderHistoryContent } from "./AdminOrderHistory"; // Import the order history content component
+import AdminProfile from "./AdminProfile"; // Import the AdminProfile component
 import logoImage from "../pages/logo.png"; // Ensure these paths are correct
 import profilePic from "../pages/profile.png";
 // Placeholder avatars for messages - replace with actual if available
@@ -101,7 +102,7 @@ const AdminDashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleProfileClick = () => navigate("/profile");
+  const handleProfileClick = () => navigate("/admin-profile");
   const handleLogOut = () => navigate("/");
   const handleNavClick = (path) => {
     navigate(path);
@@ -534,6 +535,8 @@ const AdminDashboard = () => {
     />
   );
 
+  const AdminProfilePageContent = () => <AdminProfile />;
+
   const MessagesPageContent = () => {
     const [messageInput, setMessageInput] = useState("");
 
@@ -719,6 +722,9 @@ const AdminDashboard = () => {
     } else if (currentPath.includes("/admin-messages")) {
       console.log("Rendering Messages Route"); // DEBUG LOG
       return <MessagesPageContent />;
+    } else if (currentPath.includes("/admin-profile")) {
+      console.log("Rendering Admin Profile Route"); // DEBUG LOG
+      return <AdminProfilePageContent />;
     }
     // Default to Live Orders / AdminDashboard
     console.log("Rendering Live Orders (Default) Route"); // DEBUG LOG
