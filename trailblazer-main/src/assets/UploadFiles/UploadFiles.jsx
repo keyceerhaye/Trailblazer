@@ -121,8 +121,12 @@ export const UploadFiles = () => {
       }));
     }
 
-    // Restore files from previous state if available
-    if (previousFiles.length > 0 && selectedFiles.length === 0) {
+    // Restore files from previous state if available (but NOT when coming from basket to add files)
+    if (
+      previousFiles.length > 0 &&
+      selectedFiles.length === 0 &&
+      !isFromBasket
+    ) {
       // Convert file objects back to the format needed
       const restoredFiles = previousFiles.map((fileInfo) => {
         // Create a placeholder file object since we can't restore the actual File object
@@ -175,6 +179,55 @@ export const UploadFiles = () => {
 
   // Calculate price based on specifications and number of files/pages
   const calculatePrice = () => {
+    // When coming from basket, only show price for new files being added
+    if (isFromBasket) {
+      if (selectedFiles.length === 0) {
+        return "00.00";
+      }
+
+      // Check required fields based on template type
+      if (
+        templateType === "resume" &&
+        (specifications.paperSize === "" || specifications.printOption === "")
+      ) {
+        return "00.00";
+      }
+
+      if (
+        (templateType === "presentation" || templateType === "poster") &&
+        specifications.paymentMethod === ""
+      ) {
+        return "00.00";
+      }
+
+      // Base printing price per file
+      let basePrice = 0;
+
+      if (templateType === "resume") {
+        basePrice =
+          PRICES.PRINTING[specifications.printOption]?.[
+            specifications.paperSize
+          ] || 0;
+      } else if (templateType === "presentation" || templateType === "poster") {
+        basePrice = 50;
+      } else {
+        basePrice =
+          PRICES.PRINTING[specifications.printOption]?.[
+            specifications.paperSize
+          ] || 0;
+      }
+
+      // Calculate price only for new files being added
+      let totalPrice = 0;
+      selectedFiles.forEach((fileObj) => {
+        const pageCount = fileObj.pageCount || 1;
+        totalPrice += basePrice * pageCount;
+      });
+
+      return totalPrice.toFixed(2);
+    }
+
+    // Original logic for normal upload flow (not coming from basket)
     if (selectedFiles.length === 0) {
       return "00.00";
     }
@@ -203,29 +256,20 @@ export const UploadFiles = () => {
           specifications.paperSize
         ] || 0;
     } else if (templateType === "presentation" || templateType === "poster") {
-      // For presentations and posters, use a fixed price
-      basePrice = 50; // Example fixed price for presentations and posters
+      basePrice = 50;
     } else {
-      // For other template types
       basePrice =
         PRICES.PRINTING[specifications.printOption]?.[
           specifications.paperSize
         ] || 0;
     }
 
-    // Calculate total price by multiplying price by page count for each file
+    // Calculate price for all files
     let totalPrice = 0;
-
-    // For each file, get its page count and multiply by the base price
     selectedFiles.forEach((fileObj) => {
-      const pageCount = fileObj.pageCount || 1; // Use pageCount if available, default to 1
+      const pageCount = fileObj.pageCount || 1;
       totalPrice += basePrice * pageCount;
     });
-
-    // Remove rush fee calculation - it will be added in the Payment component
-    // if (specifications.turnaroundTime === "Rush") {
-    //   totalPrice += PRICES.RUSH_FEE;
-    // }
 
     return totalPrice.toFixed(2);
   };
@@ -444,6 +488,35 @@ export const UploadFiles = () => {
       price: finalPrice,
     };
 
+    // Check if we're coming from basket page (adding more files)
+    const existingBasketItems = previousState.basketItems || [];
+    const isFromBasket = previousState.fromBasket || false;
+
+    // Create new basket items from selected files
+    const newBasketItems = selectedFiles.map((fileObj) => ({
+      id: fileObj.id,
+      name: fileObj.file.name,
+      file: {
+        type: fileObj.file.type,
+        size: fileObj.file.size,
+        lastModified: fileObj.file.lastModified,
+      },
+      pageCount: fileObj.pageCount || 1,
+      status: "Uploaded",
+      icon: getFileIcon(fileObj.file),
+    }));
+
+    // If coming from basket, merge existing items with new items
+    // Filter out any existing files to avoid duplicates
+    const existingFileNames = existingBasketItems.map((item) => item.name);
+    const uniqueNewItems = newBasketItems.filter(
+      (newItem) => !existingFileNames.includes(newItem.name)
+    );
+
+    const finalBasketItems = isFromBasket
+      ? [...existingBasketItems, ...uniqueNewItems]
+      : newBasketItems;
+
     // Navigate to basket with all data needed for the flow
     navigate("/basket", {
       state: {
@@ -451,18 +524,7 @@ export const UploadFiles = () => {
         specifications, // Keep original specifications
         orderDetails, // Add orderDetails expected by Delivery/Payment
         templateData,
-        basketItems: selectedFiles.map((fileObj) => ({
-          id: fileObj.id,
-          name: fileObj.file.name,
-          file: {
-            type: fileObj.file.type,
-            size: fileObj.file.size,
-            lastModified: fileObj.file.lastModified,
-          },
-          pageCount: fileObj.pageCount || 1,
-          status: "Uploaded",
-          icon: getFileIcon(fileObj.file),
-        })),
+        basketItems: finalBasketItems,
       },
     });
   };
@@ -558,6 +620,14 @@ export const UploadFiles = () => {
 
   // Get the current specification fields based on template type
   const specs = getSpecFields();
+
+  // Calculate existing basket items info (used throughout component)
+  const existingBasketItems = previousState.basketItems || [];
+  const isFromBasket = previousState.fromBasket || false;
+  const existingFileCount = isFromBasket
+    ? existingBasketItems.filter((item) => !item.isTemplate).length
+    : 0;
+  const totalFileCount = selectedFiles.length + existingFileCount;
 
   return (
     <div className="uf-container">
@@ -738,7 +808,9 @@ export const UploadFiles = () => {
 
               <div className="uf-payment-section">
                 <div className="uf-payment-info">
-                  <p className="uf-payment-label">PAYMENT:</p>
+                  <p className="uf-payment-label">
+                    {isFromBasket ? "ADDITIONAL COST:" : "PAYMENT:"}
+                  </p>
                   <div className="uf-payment-amount">
                     <img
                       src={uploadPeso}

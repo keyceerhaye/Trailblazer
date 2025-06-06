@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Basket.css";
 import uploadDelete from "../pages/img/delete.png";
@@ -116,10 +116,6 @@ const Basket = () => {
       }
 
       showFeedback(`Basket restored with ${passedBasketItems.length} item(s)`);
-      console.log(
-        "BASKET: Successfully restored basketItems:",
-        passedBasketItems
-      );
     }
     // Second priority: If coming from layout specification page, prioritize template data
     else if (templateData && templateData.hasTemplate) {
@@ -372,51 +368,40 @@ const Basket = () => {
   };
 
   const handleAddFiles = () => {
-    // Check if we already have a template in the basket
-    const hasTemplate = basketItems.some((item) => item.isTemplate);
-
-    if (hasTemplate) {
-      // Show a message that we're adding files to the template
-      showFeedback("Adding files to your template order");
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const fileInputRef = useRef(null);
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files);
-
-      const fileItems = newFiles.map((file) => {
-        return {
-          id: `${file.name}-${Date.now()}-${Math.random()
-            .toString(36)
-            .substr(2, 9)}`,
-          name: file.name,
-          status: "Uploaded Successfully",
-          icon: getFileIcon(file),
-          file: file,
-          pageCount: 1, // Default to 1 page for newly added files
-          isTemplate: file.isTemplate || false,
-        };
-      });
-
-      const updatedBasketItems = [...basketItems, ...fileItems];
-      setBasketItems(updatedBasketItems);
-
-      // Update total pages count
-      const newTotalPages = updatedBasketItems.reduce(
-        (total, item) => total + (item.pageCount || 1),
-        0
-      );
-      setTotalPages(newTotalPages);
-
-      showFeedback(`${fileItems.length} file(s) added to basket`);
-    }
+    // Navigate back to upload page while preserving current basket state
+    // This allows users to add more files through the full upload interface
+    navigate("/upload", {
+      state: {
+        // Convert current basket items back to files format for upload page
+        files: basketItems
+          .filter((item) => !item.isTemplate) // Exclude template items
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            type: item.file?.type,
+            size: item.file?.size,
+            lastModified: item.file?.lastModified,
+            pageCount: item.pageCount || 1,
+            isTemplate: item.isTemplate || false,
+          })),
+        specifications: orderDetails,
+        basketItems: basketItems, // Pass current basket items
+        orderDetails: orderDetails, // Pass current order details
+        templateInfo: templateData
+          ? {
+              templateId: templateData.templateId,
+              notes: templateData.notes,
+              turnaroundTime:
+                templateData.turnaroundTime || orderDetails.turnaroundTime,
+              title: templateData.title,
+              description: templateData.description,
+              templateType: templateData.templateType,
+            }
+          : null,
+        templateData,
+        fromBasket: true, // Flag to indicate we're coming from basket
+      },
+    });
   };
 
   const getFileIcon = (file) => {
@@ -702,15 +687,6 @@ const Basket = () => {
           </div>
         </div>
       )}
-
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-        accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
-        multiple
-      />
     </div>
   );
 };

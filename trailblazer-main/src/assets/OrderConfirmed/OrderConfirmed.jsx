@@ -1,18 +1,21 @@
 import React from "react";
 import "./OrderConfirmed.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import checkmark from "../pages/img/checkmark.png";
+import { getStepConfig } from "../../utils/stepsConfig";
 
 export const OrderConfirmed = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const steps = [
-    { number: "1", label: "Template" },
-    { number: "2", label: "Specifications" },
-    { number: "3", label: "Basket" },
-    { number: "4", label: "Delivery" },
-    { number: "5", label: "Payment" },
-  ];
+  // Dynamically determine step configuration based on service type
+  const stepConfig = getStepConfig(location.state?.templateData, location);
+
+  // Mark all steps as active since order is confirmed
+  const steps = stepConfig.map((step) => ({
+    ...step,
+    active: true,
+  }));
 
   return (
     <div className="oc-container">

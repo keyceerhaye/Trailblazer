@@ -59,9 +59,6 @@ const Delivery = () => {
       templateData: location.state?.templateData || null,
     };
 
-    console.log("DELIVERY: Navigating back to basket with state:", stateToPass);
-    console.log("DELIVERY: basketItems being passed:", stateToPass.basketItems);
-
     // Pass the current state back when navigating to basket page
     navigate("/basket", {
       state: stateToPass,

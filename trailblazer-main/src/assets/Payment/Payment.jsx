@@ -62,7 +62,19 @@ const Payment = () => {
   }, [location.state]);
 
   const handleProceed = () => {
-    navigate("/confirmation");
+    navigate("/confirmation", {
+      state: {
+        ...location.state,
+        orderDetails: {
+          ...orderDetails,
+          paymentMethod: userDetails.paymentMethod,
+          deliveryMethod: userDetails.deliveryMethod,
+          turnaroundTime: userDetails.turnaround,
+        },
+        userDetails,
+        templateData: location.state?.templateData,
+      },
+    });
   };
 
   const handleBack = () => {
