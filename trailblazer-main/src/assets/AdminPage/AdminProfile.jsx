@@ -88,11 +88,7 @@ export default function AdminProfile() {
           <h2>
             {adminData.firstName} {adminData.lastName}
           </h2>
-          <p className="admin-username">
-            @{adminData.firstName.toLowerCase()}_
-            {adminData.lastName.toLowerCase()}
-          </p>
-          <p className="admin-role">Administrator</p>
+          <p className="admin-role">Admin</p>
         </div>
       </header>
 

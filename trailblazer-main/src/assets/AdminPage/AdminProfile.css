@@ -71,7 +71,8 @@
   font-size: 28px;
   font-weight: 700;
   color: #243f6a;
-  margin-bottom: 5px;
+  padding: 0px;
+  margin: 0 0 -5px 0;
 }
 
 .admin-username,
@@ -83,16 +84,12 @@
   text-align: left;
 }
 
-.admin-username {
-  font-style: italic;
-}
-
 .admin-role {
-  color: #2f2785;
-  font-weight: 700;
+  color: #5f6b7e;
+  font-weight: 500;
+  margin-top: -3px;
 }
 
-/* Admin Form Styling */
 .admin-profile-form {
   flex: 1;
   display: flex;
