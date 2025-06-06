@@ -14,13 +14,42 @@ function AdminLogin() {
     setShowPassword(!showPassword);
   };
 
+  const checkAdminExists = (email) => {
+    const adminRegistry =
+      JSON.parse(localStorage.getItem("adminRegistry")) || [];
+    return adminRegistry.find((admin) => admin.email === email);
+  };
+
+  const loadAdminProfile = (email) => {
+    const adminRegistry =
+      JSON.parse(localStorage.getItem("adminRegistry")) || [];
+    const adminProfile = adminRegistry.find((admin) => admin.email === email);
+
+    if (adminProfile) {
+      // Load this admin's profile as current admin
+      localStorage.setItem("admin", JSON.stringify(adminProfile));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Admin login attempt with:", { email, password });
 
+    // Store admin login status and current admin email
     localStorage.setItem("adminLoggedIn", "true");
+    localStorage.setItem("currentAdminEmail", email);
 
-    navigate("/admindashboard");
+    // Check if admin exists in registry
+    const existingAdmin = checkAdminExists(email);
+
+    if (existingAdmin) {
+      // Load existing admin profile and go to dashboard
+      loadAdminProfile(email);
+      navigate("/admindashboard");
+    } else {
+      // New admin - redirect to profile setup
+      navigate("/admin-profile");
+    }
   };
 
   return (

@@ -43,9 +43,6 @@ import { AdminOrderHistoryContent } from "./AdminOrderHistory"; // Import the or
 import AdminProfile from "./AdminProfile"; // Import the AdminProfile component
 import logoImage from "../pages/logo.png"; // Ensure these paths are correct
 import profilePic from "../pages/profile.png";
-// Placeholder avatars for messages - replace with actual if available
-import avatar1 from "../pages/profile.png"; // Example, replace
-import avatar2 from "../pages/logo.png"; // Example, replace
 import {
   orderManager,
   ORDER_STATUS,
@@ -67,6 +64,7 @@ const AdminDashboard = () => {
   const location = useLocation(); // Get current location
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [adminName, setAdminName] = useState("Jane Doe");
 
   const toggleUserDropdown = () => setIsUserDropdownOpen((prev) => !prev);
   const toggleMobileSidebar = () => setIsMobileSidebarOpen((prev) => !prev);
@@ -117,33 +115,124 @@ const AdminDashboard = () => {
     }
   };
 
+  // Function to refresh admin name from localStorage
+  const refreshAdminName = () => {
+    // First check email consistency
+    const emailConsistent = checkEmailConsistency();
+    if (!emailConsistent) {
+      setAdminName("Jane Doe");
+      return;
+    }
+
+    const storedAdmin = JSON.parse(localStorage.getItem("admin"));
+    if (storedAdmin && storedAdmin.firstName && storedAdmin.lastName) {
+      setAdminName(`${storedAdmin.firstName} ${storedAdmin.lastName}`);
+    } else {
+      setAdminName("Jane Doe");
+    }
+  };
+
+  // Function to check if current admin email matches stored profile
+  const checkEmailConsistency = () => {
+    const currentAdminEmail = localStorage.getItem("currentAdminEmail");
+    const storedAdmin = JSON.parse(localStorage.getItem("admin"));
+
+    // If there's a current admin email and stored admin data
+    if (currentAdminEmail && storedAdmin && storedAdmin.email) {
+      // If emails don't match, it means a different admin logged in
+      if (currentAdminEmail !== storedAdmin.email) {
+        // Load the correct admin profile from registry
+        const adminRegistry =
+          JSON.parse(localStorage.getItem("adminRegistry")) || [];
+        const correctAdmin = adminRegistry.find(
+          (admin) => admin.email === currentAdminEmail
+        );
+
+        if (correctAdmin) {
+          // Load correct admin profile
+          localStorage.setItem("admin", JSON.stringify(correctAdmin));
+          setAdminName(`${correctAdmin.firstName} ${correctAdmin.lastName}`);
+        } else {
+          // Admin not found in registry, reset to default
+          localStorage.removeItem("admin");
+          setAdminName("Jane Doe");
+          return false; // Profile needs to be set up
+        }
+      }
+    }
+    return true; // Emails match or no conflict
+  };
+
+  // Function to check if admin profile is complete
+  const checkProfileCompletion = () => {
+    // First check email consistency
+    const emailConsistent = checkEmailConsistency();
+    if (!emailConsistent) {
+      // Email mismatch detected, redirect to profile setup
+      navigate("/admin-profile");
+      return false;
+    }
+
+    const storedAdmin = JSON.parse(localStorage.getItem("admin"));
+
+    // Check if required fields are present and not empty
+    if (
+      !storedAdmin ||
+      !storedAdmin.firstName ||
+      !storedAdmin.lastName ||
+      !storedAdmin.email ||
+      storedAdmin.firstName.trim() === "" ||
+      storedAdmin.lastName.trim() === "" ||
+      storedAdmin.email.trim() === ""
+    ) {
+      // Profile is incomplete, redirect to profile page
+      navigate("/admin-profile");
+      return false;
+    }
+    return true;
+  };
+
   // Get real orders from data manager
   const [orders, setOrders] = useState([]);
   const [orderStats, setOrderStats] = useState({});
 
   useEffect(() => {
-    // Load orders and statistics
-    const allOrders = orderManager.getAllOrders();
-    const stats = orderManager.getOrderStatistics();
+    // First check if profile is complete, redirect if not
+    const isProfileComplete = checkProfileCompletion();
 
-    // Transform orders to admin dashboard format
-    const transformedOrders = allOrders.map((order) => ({
-      id: order.id,
-      name: order.customerName,
-      type: order.deliveryMethod === "deliver" ? "Delivery" : "Pick-up",
-      payment:
-        order.paymentMethod === "Cash on Delivery"
-          ? "COD"
-          : `Paid(${order.paymentMethod})`,
-      status: getDisplayStatus(order.status),
-      total: formatPrice(order.totalAmount),
-      orderDate: order.orderDate,
-      files: order.files,
-    }));
+    // Only continue loading dashboard data if profile is complete
+    if (isProfileComplete) {
+      // Load orders and statistics
+      const allOrders = orderManager.getAllOrders();
+      const stats = orderManager.getOrderStatistics();
 
-    setOrders(transformedOrders);
-    setOrderStats(stats);
-  }, []);
+      // Transform orders to admin dashboard format
+      const transformedOrders = allOrders.map((order) => ({
+        id: order.id,
+        name: order.customerName,
+        type: order.deliveryMethod === "deliver" ? "Delivery" : "Pick-up",
+        payment:
+          order.paymentMethod === "Cash on Delivery"
+            ? "COD"
+            : `Paid(${order.paymentMethod})`,
+        status: getDisplayStatus(order.status),
+        total: formatPrice(order.totalAmount),
+        orderDate: order.orderDate,
+        files: order.files,
+      }));
+
+      setOrders(transformedOrders);
+      setOrderStats(stats);
+
+      // Load admin name from localStorage
+      refreshAdminName();
+    }
+  }, [navigate]);
+
+  // Effect to refresh admin name when location changes (e.g., returning from profile page)
+  useEffect(() => {
+    refreshAdminName();
+  }, [location.pathname]);
 
   const getDisplayStatus = (status) => {
     switch (status) {
@@ -186,152 +275,39 @@ const AdminDashboard = () => {
     }
   };
 
-  // Mock chat message data
-  const chatUsers = [
-    {
-      id: 1,
-      name: "Vice Ganda",
-      avatar: avatar1,
-      preview: "pwede e hatud dapit sa caa building? tnx",
-      online: true,
-      messages: [
-        {
-          id: 1,
-          sender: "user",
-          text: "pwede e hatud dapit sa caa building? tnx",
-          time: "11:20 a.m",
-        },
-        {
-          id: 2,
-          sender: "admin",
-          text: "yes maam, pwede ra po",
-          time: "11:25 a.m",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Kathryn Bernardo",
-      avatar: avatar1,
-      preview: "Hi! I would like to ask about the pricing.",
-      online: false,
-      messages: [
-        {
-          id: 1,
-          sender: "user",
-          text: "Hi! I would like to ask about the pricing for printing colored documents.",
-          time: "9:30 a.m",
-        },
-        {
-          id: 2,
-          sender: "admin",
-          text: "Hello! For colored documents, our price is ₱10 per page for standard paper and ₱15 for glossy paper.",
-          time: "9:45 a.m",
-        },
-        {
-          id: 3,
-          sender: "user",
-          text: "Thank you! Do you offer discounts for bulk printing?",
-          time: "10:00 a.m",
-        },
-        {
-          id: 4,
-          sender: "admin",
-          text: "Yes, we offer 15% discount for 50+ pages and 25% for 100+ pages.",
-          time: "10:05 a.m",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Daniel Padilla",
-      avatar: avatar2,
-      preview: "Thank you for your service! The prints are great.",
-      online: true,
-      messages: [
-        {
-          id: 1,
-          sender: "user",
-          text: "Hi, I received my prints today.",
-          time: "2:15 p.m",
-        },
-        {
-          id: 2,
-          sender: "user",
-          text: "Thank you for your service! The prints are great.",
-          time: "2:16 p.m",
-        },
-        {
-          id: 3,
-          sender: "admin",
-          text: "We're glad you liked them! Thank you for choosing Trailblazer.",
-          time: "2:30 p.m",
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "Anne Curtis",
-      avatar: avatar1,
-      preview: "Hello, is my order ready for pickup?",
-      online: false,
-      messages: [
-        {
-          id: 1,
-          sender: "user",
-          text: "Hello, is my order ready for pickup? Order #12348",
-          time: "3:40 p.m",
-        },
-        {
-          id: 2,
-          sender: "admin",
-          text: "Hi Anne, your order is ready for pickup. You can come anytime during our business hours.",
-          time: "3:45 p.m",
-        },
-        {
-          id: 3,
-          sender: "user",
-          text: "Great! I'll be there in about an hour.",
-          time: "3:50 p.m",
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: "Ryan Bang",
-      avatar: avatar2,
-      preview: "Can I get a rush printing service?",
-      online: true,
-      messages: [
-        {
-          id: 1,
-          sender: "user",
-          text: "Can I get a rush printing service? I need 50 copies by tomorrow morning.",
-          time: "4:10 p.m",
-        },
-        {
-          id: 2,
-          sender: "admin",
-          text: "We can accommodate your request. There's a 20% rush fee for next-day delivery.",
-          time: "4:15 p.m",
-        },
-        {
-          id: 3,
-          sender: "user",
-          text: "That works for me. I'll send the files right away.",
-          time: "4:20 p.m",
-        },
-      ],
-    },
-  ];
+  // Real chat message data - empty by default, will be populated from a real messaging system
+  const chatUsers = [];
 
-  const summaryCardsData = {
-    liveOrders: [
-      { title: "25", subtitle: "Total Orders", icon: ShoppingBag },
-      { title: "16", subtitle: "Pending", icon: Clock },
-      { title: "09", subtitle: "Completed Today", icon: Truck },
-    ],
-    // Define more for other pages if needed
+  // Calculate dynamic summary data based on real orders
+  const getSummaryCardsData = () => {
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(
+      (order) => order.status !== "Delivered" && order.status !== "Cancelled"
+    ).length;
+
+    // Count orders delivered today
+    const today = new Date().toDateString();
+    const completedToday = orders.filter((order) => {
+      const orderDate = new Date(order.orderDate);
+      return order.status === "Delivered" && orderDate.toDateString() === today;
+    }).length;
+
+    return {
+      liveOrders: [
+        {
+          title: totalOrders.toString(),
+          subtitle: "Total Orders",
+          icon: ShoppingBag,
+        },
+        { title: pendingOrders.toString(), subtitle: "Pending", icon: Clock },
+        {
+          title: completedToday.toString(),
+          subtitle: "Completed Today",
+          icon: Truck,
+        },
+      ],
+      // Define more for other pages if needed
+    };
   };
 
   const navItems = [
@@ -454,7 +430,7 @@ const AdminDashboard = () => {
     >
       <h2 className="ad-title">Live Orders</h2>
       <div className="ad-summary">
-        {summaryCardsData.liveOrders.map((card, index) => (
+        {getSummaryCardsData().liveOrders.map((card, index) => (
           <div key={index} className="ad-summary-card">
             <div className="ad-summary-icon-wrapper">
               <card.icon size={30} className="summary-icon-svg" />
@@ -482,7 +458,6 @@ const AdminDashboard = () => {
     <AdminSalesComponent
       OrdersTableComponent={OrdersTable}
       ordersData={orders}
-      messagesPreviewData={chatUsers}
     />
   );
 
@@ -541,34 +516,58 @@ const AdminDashboard = () => {
           <div className="ad-messages-users-list">
             <h3 className="ad-messages-preview-card__header">Chatlist</h3>
             <div className="ad-messages-preview-card__list">
-              {chatUsers.map((user) => (
-                <div
-                  key={user.id}
-                  className={`ad-messages-preview-card__item ${
-                    selectedChatUser?.id === user.id ? "active" : ""
-                  }`}
-                  onClick={() => handleUserClick(user)}
-                >
-                  <div className="ad-messages-user-avatar-container">
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="ad-messages-preview-card__avatar"
-                    />
-                    {user.online && (
-                      <span className="ad-messages-user-status"></span>
-                    )}
+              {chatUsers.length > 0 ? (
+                chatUsers.map((user) => (
+                  <div
+                    key={user.id}
+                    className={`ad-messages-preview-card__item ${
+                      selectedChatUser?.id === user.id ? "active" : ""
+                    }`}
+                    onClick={() => handleUserClick(user)}
+                  >
+                    <div className="ad-messages-user-avatar-container">
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="ad-messages-preview-card__avatar"
+                      />
+                      {user.online && (
+                        <span className="ad-messages-user-status"></span>
+                      )}
+                    </div>
+                    <div className="ad-messages-preview-card__content">
+                      <div className="ad-messages-preview-card__name">
+                        {user.name}
+                      </div>
+                      <div className="ad-messages-preview-card__text">
+                        {user.preview}
+                      </div>
+                    </div>
                   </div>
-                  <div className="ad-messages-preview-card__content">
-                    <div className="ad-messages-preview-card__name">
-                      {user.name}
+                ))
+              ) : (
+                <div className="ad-empty-chatlist">
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: "40px 20px",
+                      color: "#666",
+                      fontSize: "14px",
+                    }}
+                  >
+                    <div style={{ fontSize: "48px", marginBottom: "16px" }}>
+                      💬
                     </div>
-                    <div className="ad-messages-preview-card__text">
-                      {user.preview}
-                    </div>
+                    <h4 style={{ color: "#333", marginBottom: "8px" }}>
+                      No Messages Yet
+                    </h4>
+                    <p style={{ margin: 0, lineHeight: "1.4" }}>
+                      Customer messages will appear here when they contact you
+                      through the platform.
+                    </p>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
@@ -653,7 +652,43 @@ const AdminDashboard = () => {
             </div>
           ) : (
             <div className="ad-chat-placeholder">
-              <p>Select a conversation to start chatting</p>
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "60px 40px",
+                  color: "#666",
+                  fontSize: "16px",
+                }}
+              >
+                {chatUsers.length > 0 ? (
+                  <>
+                    <div style={{ fontSize: "64px", marginBottom: "20px" }}>
+                      💬
+                    </div>
+                    <h3 style={{ color: "#333", marginBottom: "12px" }}>
+                      Select a conversation
+                    </h3>
+                    <p style={{ margin: 0, lineHeight: "1.5" }}>
+                      Choose a conversation from the left to start chatting with
+                      customers.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ fontSize: "64px", marginBottom: "20px" }}>
+                      📭
+                    </div>
+                    <h3 style={{ color: "#333", marginBottom: "12px" }}>
+                      No Messages
+                    </h3>
+                    <p style={{ margin: 0, lineHeight: "1.5" }}>
+                      Your customer messages will appear here. When customers
+                      contact you through the platform, their conversations will
+                      be listed on the left.
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -734,7 +769,7 @@ const AdminDashboard = () => {
           </div>
           <div className="ad-user-profile" onClick={toggleUserDropdown}>
             <img src={profilePic} alt="Avatar" className="ad-avatar" />
-            <span>Kryzl Castañeda</span> {/* Replace with dynamic user name */}
+            <span>{adminName}</span>
             <div
               className={`ad-dropdown-arrow ${
                 isUserDropdownOpen ? "rotate" : ""

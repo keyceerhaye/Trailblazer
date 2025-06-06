@@ -1,22 +1,43 @@
 import React, { useState } from "react";
 
-const SalesPageContent = ({
-  OrdersTableComponent,
-  ordersData,
-  messagesPreviewData,
-}) => {
+const SalesPageContent = ({ OrdersTableComponent, ordersData }) => {
   console.log("Rendering SalesPageContent component"); // DEBUG LOG
   console.log("SalesPageContent Props:", {
     OrdersTableComponent,
     ordersData,
-    messagesPreviewData,
   }); // DEBUG LOG
 
   const [activeSalesTab, setActiveSalesTab] = useState("printing"); // Default to 'printing'
 
-  // Example sales figures - these should ideally come from state or props
-  const printingSalesAmount = "₱300.00";
-  const layoutSalesAmount = "₱150.00";
+  // Calculate real sales figures from orders data
+  const calculateSalesAmounts = () => {
+    if (!ordersData || ordersData.length === 0) {
+      return {
+        printing: "₱0.00",
+        layout: "₱0.00",
+      };
+    }
+
+    let printingTotal = 0;
+    let layoutTotal = 0;
+
+    ordersData.forEach((order) => {
+      // Extract numeric value from total (remove ₱ symbol)
+      const orderAmount = parseFloat(order.total.replace("₱", ""));
+
+      // For now, categorize all orders as printing
+      // You can later add logic to distinguish between printing and layout orders
+      // based on order.files or other properties
+      printingTotal += orderAmount;
+    });
+
+    return {
+      printing: `₱${printingTotal.toFixed(2)}`,
+      layout: `₱${layoutTotal.toFixed(2)}`,
+    };
+  };
+
+  const salesAmounts = calculateSalesAmounts();
 
   // Filter orders for the table based on the active tab if needed.
   // For this example, it shows all orders or could be filtered if orders have a category.
@@ -70,7 +91,7 @@ const SalesPageContent = ({
         {activeSalesTab === "printing" && (
           <div className="ad-sales-figure-card">
             <div className="ad-sales-figure-card__amount">
-              {printingSalesAmount}
+              {salesAmounts.printing}
             </div>
             <div className="ad-sales-figure-card__label">Printing Sales</div>
           </div>
@@ -78,7 +99,7 @@ const SalesPageContent = ({
         {activeSalesTab === "layout" && (
           <div className="ad-sales-figure-card">
             <div className="ad-sales-figure-card__amount">
-              {layoutSalesAmount}
+              {salesAmounts.layout}
             </div>
             <div className="ad-sales-figure-card__label">Layout Sales</div>
           </div>

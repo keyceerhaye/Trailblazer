@@ -4,30 +4,65 @@ import "./AdminProfile.css";
 import Profile from "../pages/profile.png"; // Using the same profile image
 import { useNavigate } from "react-router-dom";
 
+// Common country codes for dropdown
+const COUNTRY_CODES = [
+  { code: "+63", country: "PH", name: "Philippines" },
+  { code: "+1", country: "US", name: "United States" },
+  { code: "+44", country: "GB", name: "United Kingdom" },
+  { code: "+86", country: "CN", name: "China" },
+  { code: "+81", country: "JP", name: "Japan" },
+  { code: "+82", country: "KR", name: "South Korea" },
+  { code: "+65", country: "SG", name: "Singapore" },
+  { code: "+60", country: "MY", name: "Malaysia" },
+  { code: "+66", country: "TH", name: "Thailand" },
+  { code: "+84", country: "VN", name: "Vietnam" },
+];
+
 export default function AdminProfile() {
   const [adminData, setAdminData] = useState({
-    firstName: "Raisy",
-    lastName: "Cadia",
-    email: "RaisyGadia@Gmail.Com",
+    firstName: "",
+    lastName: "",
+    email: "",
     countryCode: "+63",
-    phoneNumber: "9900112233",
-    location: "Lawesbra, Lapasan CDO",
+    phoneNumber: "",
+    location: "",
   });
 
+  const [isFirstTimeSetup, setIsFirstTimeSetup] = useState(false);
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get admin data from localStorage if available
+    // Get current admin email from login
+    const currentAdminEmail = localStorage.getItem("currentAdminEmail");
     const storedAdmin = JSON.parse(localStorage.getItem("admin"));
-    if (storedAdmin) {
+
+    // Check if this is first time setup
+    const isFirstTime =
+      !storedAdmin ||
+      !storedAdmin.firstName ||
+      !storedAdmin.lastName ||
+      !storedAdmin.email ||
+      (currentAdminEmail && storedAdmin.email !== currentAdminEmail);
+
+    setIsFirstTimeSetup(isFirstTime);
+
+    if (storedAdmin && !isFirstTime) {
+      // Load existing profile data
       setAdminData({
-        firstName: storedAdmin.firstName || "Raisy",
-        lastName: storedAdmin.lastName || "Cadia",
-        email: storedAdmin.email || "RaisyGadia@Gmail.Com",
+        firstName: storedAdmin.firstName || "",
+        lastName: storedAdmin.lastName || "",
+        email: storedAdmin.email || currentAdminEmail || "",
         countryCode: storedAdmin.countryCode || "+63",
-        phoneNumber: storedAdmin.phoneNumber || "9900112233",
-        location: storedAdmin.location || "Lawesbra, Lapasan CDO",
+        phoneNumber: storedAdmin.phoneNumber || "",
+        location: storedAdmin.location || "",
       });
+    } else {
+      // First time setup - use current admin email
+      setAdminData((prev) => ({
+        ...prev,
+        email: currentAdminEmail || "",
+      }));
     }
   }, []);
 
@@ -39,12 +74,77 @@ export default function AdminProfile() {
     }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!adminData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+
+    if (!adminData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
+
+    if (!adminData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(adminData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const saveAdminToRegistry = (adminData) => {
+    // Get existing admin registry or create new one
+    const adminRegistry =
+      JSON.parse(localStorage.getItem("adminRegistry")) || [];
+
+    // Check if admin already exists (by email)
+    const existingAdminIndex = adminRegistry.findIndex(
+      (admin) => admin.email === adminData.email
+    );
+
+    if (existingAdminIndex !== -1) {
+      // Update existing admin
+      adminRegistry[existingAdminIndex] = {
+        ...adminData,
+        lastUpdated: new Date().toISOString(),
+      };
+    } else {
+      // Add new admin to registry
+      adminRegistry.push({
+        ...adminData,
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      });
+    }
+
+    // Save updated registry back to localStorage
+    localStorage.setItem("adminRegistry", JSON.stringify(adminRegistry));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Update admin data in localStorage
+    if (!validateForm()) {
+      return;
+    }
+
+    // Save admin to registry (list of all created admins)
+    saveAdminToRegistry(adminData);
+
+    // Update current admin data in localStorage
     localStorage.setItem("admin", JSON.stringify(adminData));
-    alert("Admin profile updated successfully!");
+
+    const successMessage = isFirstTimeSetup
+      ? "Profile setup completed successfully!"
+      : "Profile updated successfully!";
+
+    alert(successMessage);
+
+    // Redirect to dashboard after successful save
+    navigate("/admindashboard");
   };
 
   const handleEditClick = () => {
@@ -62,108 +162,168 @@ export default function AdminProfile() {
 
   return (
     <div className="admin-profile-content-wrapper">
-      <h2 className="ad-title">Admin Profile</h2>
+      <h2 className="ad-title">
+        {isFirstTimeSetup ? "Setup Your Profile" : "Admin Profile"}
+      </h2>
 
-      <header className="admin-profile-header">
-        <div className="admin-avatar-container">
-          <div className="admin-avatar">
-            <img
-              src={Profile}
-              alt="Admin Profile"
-              className="admin-avatar-img"
+      <div className="admin-profile-container">
+        <header className="admin-profile-header">
+          <div className="admin-avatar-container">
+            <div className="admin-avatar">
+              <img
+                src={Profile}
+                alt="Admin Profile"
+                className="admin-avatar-img"
+              />
+            </div>
+            <button className="admin-edit-badge" onClick={handleEditClick}>
+              <PencilIcon className="admin-edit-icon" />
+            </button>
+            <input
+              type="file"
+              id="upload-admin-profile"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleImageChange}
             />
           </div>
-          <button className="admin-edit-badge" onClick={handleEditClick}>
-            <PencilIcon className="admin-edit-icon" />
-          </button>
-          <input
-            type="file"
-            id="upload-admin-profile"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={handleImageChange}
-          />
-        </div>
-        <div className="admin-user-info">
-          <h2>
-            {adminData.firstName} {adminData.lastName}
-          </h2>
-          <p className="admin-role">Admin</p>
-        </div>
-      </header>
-
-      <form onSubmit={handleSubmit} className="admin-profile-form">
-        <div className="admin-form-grid">
-          <div className="admin-form-row admin-form-double">
-            <div className="admin-form-field">
-              <label htmlFor="firstName">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={adminData.firstName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="admin-form-field">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={adminData.email}
-                onChange={handleChange}
-              />
-            </div>
+          <div className="admin-user-info">
+            <h2>
+              {adminData.firstName && adminData.lastName
+                ? `${adminData.firstName} ${adminData.lastName}`
+                : "Admin Profile"}
+            </h2>
+            <p className="admin-role">Admin</p>
           </div>
-          <div className="admin-form-row admin-form-double">
-            <div className="admin-form-field">
-              <label htmlFor="lastName">Last Name</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={adminData.lastName}
-                onChange={handleChange}
-              />
+        </header>
+
+        <form onSubmit={handleSubmit} className="admin-profile-form">
+          <div className="admin-form-grid">
+            {/* First Row - First Name and Email Address */}
+            <div className="admin-form-row">
+              <div className="admin-form-field">
+                <label htmlFor="firstName">First Name</label>
+                <div className="admin-input-container">
+                  <div className="admin-input-wrapper">
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      value={adminData.firstName}
+                      onChange={handleChange}
+                      className={errors.firstName ? "error" : ""}
+                      required
+                    />
+                  </div>
+                </div>
+                {errors.firstName && (
+                  <span className="error-message">{errors.firstName}</span>
+                )}
+              </div>
+              <div className="admin-form-field">
+                <label htmlFor="email">Email Address</label>
+                <div className="admin-input-container">
+                  <div className="admin-input-wrapper">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={adminData.email}
+                      onChange={handleChange}
+                      className={errors.email ? "error" : ""}
+                      required
+                    />
+                  </div>
+                </div>
+                {errors.email && (
+                  <span className="error-message">{errors.email}</span>
+                )}
+              </div>
             </div>
-            <div className="admin-form-field">
-              <label htmlFor="phone">Phone Number</label>
-              <div className="admin-phone-input">
-                <input
-                  type="text"
-                  name="countryCode"
-                  value={adminData.countryCode}
-                  onChange={handleChange}
-                  className="admin-country-code"
-                />
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  value={adminData.phoneNumber}
-                  onChange={handleChange}
-                  className="admin-phone-number"
-                />
+
+            {/* Second Row - Last Name and Phone Number */}
+            <div className="admin-form-row">
+              <div className="admin-form-field">
+                <label htmlFor="lastName">Last Name</label>
+                <div className="admin-input-container">
+                  <div className="admin-input-wrapper">
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={adminData.lastName}
+                      onChange={handleChange}
+                      className={errors.lastName ? "error" : ""}
+                      required
+                    />
+                  </div>
+                </div>
+                {errors.lastName && (
+                  <span className="error-message">{errors.lastName}</span>
+                )}
+              </div>
+              <div className="admin-form-field">
+                <label htmlFor="phone">Phone Number</label>
+                <div className="admin-input-container">
+                  <div className="admin-input-wrapper">
+                    <div className="admin-phone-input">
+                      <div className="admin-country-code-wrapper">
+                        <select
+                          name="countryCode"
+                          value={adminData.countryCode}
+                          onChange={handleChange}
+                          className="admin-country-code"
+                        >
+                          {COUNTRY_CODES.map((country) => (
+                            <option key={country.code} value={country.code}>
+                              {country.code}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="admin-phone-number-wrapper">
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          value={adminData.phoneNumber}
+                          onChange={handleChange}
+                          className="admin-phone-number"
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Third Row - Location (Full Width) */}
+            <div className="admin-form-row">
+              <div className="admin-form-field admin-form-field-full">
+                <label htmlFor="location">Location</label>
+                <div className="admin-input-container">
+                  <div className="admin-input-wrapper">
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      value={adminData.location}
+                      onChange={handleChange}
+                      placeholder="Enter your location"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="admin-form-row admin-form-single">
-            <div className="admin-form-field">
-              <label htmlFor="location">Location</label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                value={adminData.location}
-                onChange={handleChange}
-              />
-            </div>
+
+          <div className="admin-form-actions">
+            <button type="submit">
+              {isFirstTimeSetup ? "Complete Setup" : "Save Changes"}
+            </button>
           </div>
-        </div>
-        <div className="admin-form-actions">
-          <button type="submit">Save Changes</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
