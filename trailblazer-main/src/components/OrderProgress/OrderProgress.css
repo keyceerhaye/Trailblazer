@@ -1,0 +1,446 @@
+/* OrderProgress Component Styles */
+
+.op-container {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.op-title {
+  font-size: 36px;
+  font-weight: 600;
+  color: #2f2785;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.op-no-order {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.op-cancelled-message {
+  text-align: center;
+  padding: 2rem;
+  background: #ffeaea;
+  border-radius: 10px;
+  border-left: 4px solid #e74c3c;
+  margin-top: 1rem;
+}
+
+.op-cancelled-message p {
+  margin: 0;
+  color: #c0392b;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.op-order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.op-order-line {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.op-order-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.op-order-label {
+  font-weight: 600;
+  color: #2f2785;
+  min-width: 120px;
+}
+
+.op-order-value {
+  font-weight: 600;
+  color: #2f2785;
+  margin-left: 10px;
+}
+
+.op-order-value-amount {
+  font-weight: 600;
+  color: #2f2785;
+  margin-left: 20px;
+}
+
+.op-progress-steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(15px, 3vw, 30px);
+  position: relative;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0 10px;
+}
+
+.op-line {
+  display: block;
+  width: calc(clamp(15px, 3vw, 30px) + clamp(70px, 14vw, 120px));
+  height: clamp(12px, 2.5vw, 20px);
+  background-color: #e0e0e0; /* Default gray for unfinished */
+  align-self: center;
+  border-radius: 10px;
+  flex-shrink: 1;
+  margin-top: -3.5rem;
+  margin-left: calc(-1 * clamp(70px, 14vw, 120px) / 2);
+  margin-right: calc(-1 * clamp(70px, 14vw, 120px) / 2);
+  z-index: 0;
+  transition: background-color 0.3s ease;
+}
+
+.op-line.op-completed {
+  background-color: #2f2785; /* Purple for completed */
+}
+
+.op-step {
+  position: relative;
+  font-size: clamp(16px, 3vw, 24px);
+  font-weight: 600;
+  color: #2f2785;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
+  min-width: clamp(80px, 15vw, 120px);
+  max-width: 150px;
+  flex-shrink: 0;
+}
+
+.op-step-label {
+  margin: 0;
+  margin-top: 0.5rem;
+  line-height: 1.2;
+  color: #2f2785;
+}
+
+.op-step.op-active .op-step-label {
+  color: #2f2785;
+  font-weight: 700;
+}
+
+.op-icon-circle {
+  width: clamp(70px, 14vw, 120px);
+  height: clamp(70px, 14vw, 120px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.op-icon-circle.op-completed {
+  background-color: #2f2785; /* Purple for completed */
+  border-color: #1f1a6b;
+  box-shadow: 0 4px 12px rgba(47, 39, 133, 0.3);
+}
+
+.op-icon-circle.op-pending {
+  background-color: #ffffff; /* White for unfinished */
+  border-color: #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.op-step-img {
+  width: clamp(40px, 8vw, 70px);
+  height: clamp(40px, 8vw, 70px);
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.op-step.op-active .op-step-img {
+  transform: scale(1.1);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .op-title {
+    font-size: clamp(20px, 4vw, 28px);
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .op-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    margin-bottom: 0.75rem;
+  }
+
+  .op-order-info {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .op-order-row {
+    margin-bottom: 0.15rem;
+  }
+
+  .op-order-label,
+  .op-order-value,
+  .op-order-value-amount {
+    font-size: 13px;
+  }
+
+  .op-progress-steps {
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(12px, 2.5vw, 20px);
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  .op-line {
+    width: clamp(6px, 1.5vw, 10px);
+    height: calc(clamp(12px, 2.5vw, 20px) + clamp(40px, 8vw, 60px));
+    margin-top: calc(-1 * clamp(40px, 8vw, 60px) / 2);
+    margin-bottom: calc(-1 * clamp(40px, 8vw, 60px) / 2);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .op-step {
+    width: 100%;
+    max-width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+    justify-content: flex-start;
+    padding-left: 12%;
+  }
+
+  .op-step-label {
+    margin: 0;
+    text-align: left;
+    font-size: clamp(14px, 3vw, 18px);
+    line-height: 1.2;
+  }
+
+  .op-step.op-active .op-step-label {
+    font-size: clamp(14px, 3vw, 18px);
+  }
+
+  .op-icon-circle {
+    margin-bottom: 0;
+    margin-top: 0;
+    width: clamp(40px, 8vw, 60px);
+    height: clamp(40px, 8vw, 60px);
+  }
+
+  .op-step-img {
+    width: clamp(24px, 5vw, 36px);
+    height: clamp(24px, 5vw, 36px);
+  }
+
+  .op-cancelled-message,
+  .op-pending-message {
+    padding: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .op-cancelled-message p,
+  .op-pending-message p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .op-title {
+    font-size: clamp(18px, 4vw, 24px);
+    margin-bottom: 0.5rem;
+  }
+
+  .op-container {
+    text-align: center;
+    margin-top: 0;
+    padding: 0.75rem 0.5rem;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    margin-bottom: 0.5rem;
+  }
+
+  .op-order-info {
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+  }
+
+  .op-order-line {
+    text-align: center;
+    gap: 0.25rem;
+  }
+
+  .op-order-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.1rem;
+    flex-wrap: wrap;
+  }
+
+  .op-order-label {
+    font-size: 12px;
+    white-space: nowrap;
+    min-width: auto;
+  }
+
+  .op-order-value,
+  .op-order-value-amount {
+    font-size: 12px;
+    word-break: break-word;
+    margin-left: 0;
+  }
+
+  .op-progress-steps {
+    gap: clamp(8px, 2vw, 12px);
+    margin-top: 0.75rem;
+  }
+
+  .op-line {
+    width: 4px;
+    height: calc(clamp(8px, 2vw, 12px) + clamp(32px, 6vw, 48px));
+    margin-top: calc(-1 * clamp(32px, 6vw, 48px) / 2);
+    margin-bottom: calc(-1 * clamp(32px, 6vw, 48px) / 2);
+  }
+
+  .op-step {
+    padding-left: 6%;
+    gap: 8px;
+  }
+
+  .op-step-label {
+    font-size: clamp(12px, 2.5vw, 14px);
+  }
+
+  .op-step.op-active .op-step-label {
+    font-size: clamp(12px, 2.5vw, 14px);
+  }
+
+  .op-icon-circle {
+    width: clamp(32px, 6vw, 48px);
+    height: clamp(32px, 6vw, 48px);
+    border-width: 2px;
+  }
+
+  .op-step-img {
+    width: clamp(20px, 4vw, 32px);
+    height: clamp(20px, 4vw, 32px);
+  }
+
+  .op-cancelled-message,
+  .op-pending-message {
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .op-cancelled-message p,
+  .op-pending-message p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  .op-title {
+    font-size: 16px;
+    margin-bottom: 0.25rem;
+  }
+
+  .op-container {
+    padding: 0.5rem 0.25rem;
+    margin-bottom: 0.25rem;
+    border-radius: 4px;
+  }
+
+  .op-order-info {
+    margin-bottom: 0.5rem;
+    padding: 0.25rem;
+    border-radius: 3px;
+  }
+
+  .op-order-row {
+    margin-bottom: 0.05rem;
+    gap: 0.15rem;
+  }
+
+  .op-order-label,
+  .op-order-value,
+  .op-order-value-amount {
+    font-size: 10px;
+  }
+
+  .op-progress-steps {
+    gap: clamp(6px, 1.5vw, 10px);
+    margin-top: 0.5rem;
+  }
+
+  .op-line {
+    width: 3px;
+    height: calc(clamp(6px, 1.5vw, 10px) + clamp(28px, 5vw, 40px));
+    margin-top: calc(-1 * clamp(28px, 5vw, 40px) / 2);
+    margin-bottom: calc(-1 * clamp(28px, 5vw, 40px) / 2);
+  }
+
+  .op-step {
+    padding-left: 4%;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+
+  .op-step-label {
+    font-size: clamp(10px, 2vw, 12px);
+    line-height: 1.1;
+  }
+
+  .op-step.op-active .op-step-label {
+    font-size: clamp(10px, 2vw, 12px);
+  }
+
+  .op-icon-circle {
+    width: clamp(28px, 5vw, 40px);
+    height: clamp(28px, 5vw, 40px);
+    border-width: 1.5px;
+  }
+
+  .op-step-img {
+    width: clamp(18px, 3.5vw, 28px);
+    height: clamp(18px, 3.5vw, 28px);
+  }
+
+  .op-cancelled-message,
+  .op-pending-message {
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .op-cancelled-message p,
+  .op-pending-message p {
+    font-size: 10px;
+  }
+}

@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppHeader from "../../components/AppHeader/AppHeader";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import OrderProgress from "../../components/OrderProgress/OrderProgress";
 import "./Dashboard.css";
 import { LogOut, Phone, Info, Settings, Home } from "lucide-react";
 import profilePic from "../pages/profile.png";
-import OrderReceived from "../pages/orderreceived.png";
-import OrderProcessing from "../pages/2.png";
-import Otw from "../pages/3.png";
-import Delivered from "../pages/4.png";
 import BusinesswomanWavingHello from "../pages/businesswomanwavinghello.svg";
 import {
   orderManager,
@@ -19,6 +16,7 @@ import {
 export default function Dashboard() {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
+  const [mockOrders, setMockOrders] = useState([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     const savedCollapsedState = localStorage.getItem("sidebarCollapsed");
     return savedCollapsedState ? JSON.parse(savedCollapsedState) : false;
@@ -28,30 +26,176 @@ export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [currentDate, setCurrentDate] = useState("");
 
-  // Debug: Log image imports
-  useEffect(() => {
-    console.log("Dashboard images loaded:", {
-      OrderReceived,
-      OrderProcessing,
-      Otw,
-      Delivered,
-    });
-  }, []);
+  // Create mock order data with different progress stages
+  const createMockOrders = () => {
+    return [
+      {
+        id: "#12346",
+        userId: user?.id || "user1",
+        customerName: `${user?.firstName || "Jane"} ${
+          user?.lastName || "Smith"
+        }`,
+        customerEmail: user?.email || "jane.smith@example.com",
+        status: ORDER_STATUS.PROCESSING,
+        orderType: "layout",
+        deliveryMethod: "pickup",
+        files: [
+          {
+            id: "file3",
+            fileName: "Wedding Invitation.png",
+            fileType: "image/png",
+            pageCount: 1,
+          },
+        ],
+        totalAmount: 350.0,
+        orderDate: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        turnaroundTime: "Rush",
+        templateData: {
+          templateType: "Invitation",
+          title: "Wedding Invitation Design",
+          description: "Custom wedding invitation with floral theme",
+        },
+      },
+      {
+        id: "#12347",
+        userId: user?.id || "user1",
+        customerName: `${user?.firstName || "Alex"} ${
+          user?.lastName || "Garcia"
+        }`,
+        customerEmail: user?.email || "alex.garcia@example.com",
+        status: ORDER_STATUS.ON_THE_WAY,
+        orderType: "layout",
+        deliveryMethod: "delivery",
+        files: [
+          {
+            id: "file4a",
+            fileName: "Company Brochure.psd",
+            fileType: "image/psd",
+            pageCount: 6,
+          },
+          {
+            id: "file4b",
+            fileName: "Business Card Design.ai",
+            fileType: "application/illustrator",
+            pageCount: 2,
+          },
+        ],
+        totalAmount: 480.0,
+        orderDate: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+        turnaroundTime: "Standard",
+        templateData: {
+          templateType: "Business Materials",
+          title: "Corporate Branding Package",
+          description: "Complete branding materials for startup company",
+        },
+      },
+      {
+        id: "#12348",
+        userId: user?.id || "user1",
+        customerName: `${user?.firstName || "Emma"} ${
+          user?.lastName || "Davis"
+        }`,
+        customerEmail: user?.email || "emma.davis@example.com",
+        status: ORDER_STATUS.READY_FOR_PICKUP,
+        orderType: "printing",
+        deliveryMethod: "pickup",
+        files: [
+          {
+            id: "file5a",
+            fileName: "Photo Album.pdf",
+            fileType: "application/pdf",
+            pageCount: 50,
+          },
+        ],
+        totalAmount: 220.0,
+        orderDate: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+        turnaroundTime: "Standard",
+        templateData: null,
+      },
+      {
+        id: "#12349",
+        userId: user?.id || "user1",
+        customerName: `${user?.firstName || "Mike"} ${
+          user?.lastName || "Johnson"
+        }`,
+        customerEmail: user?.email || "mike.johnson@example.com",
+        status: ORDER_STATUS.DELIVERED,
+        orderType: "printing",
+        deliveryMethod: "delivery",
+        files: [
+          {
+            id: "file4",
+            fileName: "Thesis Report.pdf",
+            fileType: "application/pdf",
+            pageCount: 120,
+          },
+          {
+            id: "file5",
+            fileName: "Appendix.pdf",
+            fileType: "application/pdf",
+            pageCount: 25,
+          },
+        ],
+        totalAmount: 580.0,
+        orderDate: new Date(Date.now() - 432000000).toISOString(), // 5 days ago
+        turnaroundTime: "Standard",
+        templateData: null,
+      },
+      {
+        id: "#12350",
+        userId: user?.id || "user1",
+        customerName: `${user?.firstName || "Lisa"} ${
+          user?.lastName || "Chen"
+        }`,
+        customerEmail: user?.email || "lisa.chen@example.com",
+        status: ORDER_STATUS.CANCELLED,
+        orderType: "layout",
+        deliveryMethod: "pickup",
+        files: [
+          {
+            id: "file6a",
+            fileName: "Event Poster.jpg",
+            fileType: "image/jpeg",
+            pageCount: 1,
+          },
+        ],
+        totalAmount: 150.0,
+        orderDate: new Date(Date.now() - 604800000).toISOString(), // 7 days ago
+        turnaroundTime: "Rush",
+        templateData: {
+          templateType: "Event Materials",
+          title: "Concert Poster Design",
+          description: "Promotional poster for music concert",
+        },
+      },
+    ];
+  };
 
   useEffect(() => {
     const today = new Date();
     const options = { year: "numeric", month: "long", day: "numeric" };
     setCurrentDate(today.toLocaleDateString("en-US", options));
 
+    // Initialize mock orders
+    const mockOrderData = createMockOrders();
+    setMockOrders(mockOrderData);
+
     // Get the most recent order for this user
     if (user?.id) {
       const orders = orderManager.getOrdersByUser(user.id);
       setUserOrders(orders);
 
-      // Get the most recent order
-      if (orders.length > 0) {
+      // Use mock data for demonstration, or real order if available
+      if (mockOrderData.length > 0) {
+        setCurrentOrder(mockOrderData[0]); // Just use first order for reference if needed
+      } else if (orders.length > 0) {
         const recentOrder = orders[orders.length - 1];
         setCurrentOrder(recentOrder);
+      }
+    } else {
+      // For demo purposes, always show mock data
+      if (mockOrderData.length > 0) {
+        setCurrentOrder(mockOrderData[0]); // Just use first order for reference if needed
       }
     }
   }, [location.state, user?.id]);
@@ -134,135 +278,19 @@ export default function Dashboard() {
             />
           </div>
 
-          <div className="order-progress">
-            <h3>Order Progress</h3>
-            <div className="order-info">
-              <div className="order-line">
-                <div className="order-row">
-                  <span className="order-label">Order ID:</span>
-                  <span className="order-value">
-                    {currentOrder?.id || "No orders yet"}
-                  </span>
-                </div>
-                <div className="order-row">
-                  <span className="order-label">Files:</span>
-                  <span className="order-value">
-                    {currentOrder?.files?.length || 0} file(s)
-                  </span>
-                </div>
-                <div className="order-row">
-                  <span className="order-label">Total Amount:</span>
-                  <span className="order-value1">
-                    {formatPrice(currentOrder?.totalAmount || 0)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="progress-steps">
-              <div
-                className={`step ${
-                  currentOrder?.status === ORDER_STATUS.RECEIVED ||
-                  currentOrder?.status === ORDER_STATUS.PROCESSING ||
-                  currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
-                  currentOrder?.status === ORDER_STATUS.DELIVERED
-                    ? "active"
-                    : ""
-                }`}
-              >
-                <div
-                  className={`icon-circle ${
-                    currentOrder?.status === ORDER_STATUS.RECEIVED ||
-                    currentOrder?.status === ORDER_STATUS.PROCESSING ||
-                    currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
-                    currentOrder?.status === ORDER_STATUS.DELIVERED
-                      ? "highlight"
-                      : ""
-                  }`}
-                >
-                  <img
-                    src={OrderReceived}
-                    alt="1"
-                    className="step-img"
-                    onLoad={() =>
-                      console.log(
-                        "OrderReceived image loaded successfully, src:",
-                        OrderReceived
-                      )
-                    }
-                    onError={(e) =>
-                      console.error(
-                        "Failed to load OrderReceived image:",
-                        e.target.src
-                      )
-                    }
+          {/* All Order Progress Components */}
+          <div className="all-orders-container">
+            <h3 className="all-orders-title">All Orders Progress</h3>
+            <div className="orders-column">
+              {mockOrders.map((order, index) => (
+                <div key={order.id} className="order-progress-item">
+                  <OrderProgress
+                    orderData={order}
+                    showTitle={false}
+                    showOrderInfo={true}
                   />
                 </div>
-                <p>Order Received</p>
-              </div>
-              <div className="line"></div>
-              <div
-                className={`step ${
-                  currentOrder?.status === ORDER_STATUS.PROCESSING ||
-                  currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
-                  currentOrder?.status === ORDER_STATUS.DELIVERED
-                    ? "active"
-                    : ""
-                }`}
-              >
-                <div
-                  className={`icon-circle ${
-                    currentOrder?.status === ORDER_STATUS.PROCESSING ||
-                    currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
-                    currentOrder?.status === ORDER_STATUS.DELIVERED
-                      ? "highlight"
-                      : ""
-                  }`}
-                >
-                  <img src={OrderProcessing} alt="2" className="step-img" />
-                </div>
-                <p>Order Processing</p>
-              </div>
-              <div className="line"></div>
-              <div
-                className={`step ${
-                  currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
-                  currentOrder?.status === ORDER_STATUS.DELIVERED
-                    ? "active"
-                    : ""
-                }`}
-              >
-                <div
-                  className={`icon-circle ${
-                    currentOrder?.status === ORDER_STATUS.ON_THE_WAY ||
-                    currentOrder?.status === ORDER_STATUS.DELIVERED
-                      ? "highlight"
-                      : ""
-                  }`}
-                >
-                  <img src={Otw} alt="3" className="step-img" />
-                </div>
-                <p>On the way</p>
-              </div>
-              <div className="line"></div>
-              <div
-                className={`step ${
-                  currentOrder?.status === ORDER_STATUS.DELIVERED
-                    ? "active"
-                    : ""
-                }`}
-              >
-                <div
-                  className={`icon-circle ${
-                    currentOrder?.status === ORDER_STATUS.DELIVERED
-                      ? "highlight"
-                      : ""
-                  }`}
-                >
-                  <img src={Delivered} alt="4" className="step-img" />
-                </div>
-                <p>Delivered!</p>
-              </div>
+              ))}
             </div>
           </div>
         </main>
