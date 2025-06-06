@@ -64,112 +64,110 @@ export default function AdminProfile() {
     <div className="admin-profile-content-wrapper">
       <h2 className="ad-title">Admin Profile</h2>
 
-      <div className="admin-profile-card">
-        <header className="admin-profile-header">
-          <div className="admin-avatar-container">
-            <div className="admin-avatar">
-              <img
-                src={Profile}
-                alt="Admin Profile"
-                className="admin-avatar-img"
-              />
-            </div>
-            <button className="admin-edit-badge" onClick={handleEditClick}>
-              <PencilIcon className="admin-edit-icon" />
-            </button>
-            <input
-              type="file"
-              id="upload-admin-profile"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageChange}
+      <header className="admin-profile-header">
+        <div className="admin-avatar-container">
+          <div className="admin-avatar">
+            <img
+              src={Profile}
+              alt="Admin Profile"
+              className="admin-avatar-img"
             />
           </div>
-          <div className="admin-user-info">
-            <h2>
-              {adminData.firstName} {adminData.lastName}
-            </h2>
-            <p className="admin-username">
-              @{adminData.firstName.toLowerCase()}_
-              {adminData.lastName.toLowerCase()}
-            </p>
-            <p className="admin-role">Administrator</p>
-          </div>
-        </header>
+          <button className="admin-edit-badge" onClick={handleEditClick}>
+            <PencilIcon className="admin-edit-icon" />
+          </button>
+          <input
+            type="file"
+            id="upload-admin-profile"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+        </div>
+        <div className="admin-user-info">
+          <h2>
+            {adminData.firstName} {adminData.lastName}
+          </h2>
+          <p className="admin-username">
+            @{adminData.firstName.toLowerCase()}_
+            {adminData.lastName.toLowerCase()}
+          </p>
+          <p className="admin-role">Administrator</p>
+        </div>
+      </header>
 
-        <form onSubmit={handleSubmit} className="admin-profile-form">
-          <div className="admin-form-grid">
-            <div className="admin-form-row admin-form-double">
-              <div className="admin-form-field">
-                <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={adminData.firstName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="admin-form-field">
-                <label htmlFor="email">Email Address</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={adminData.email}
-                  onChange={handleChange}
-                />
-              </div>
+      <form onSubmit={handleSubmit} className="admin-profile-form">
+        <div className="admin-form-grid">
+          <div className="admin-form-row admin-form-double">
+            <div className="admin-form-field">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={adminData.firstName}
+                onChange={handleChange}
+              />
             </div>
-            <div className="admin-form-row admin-form-double">
-              <div className="admin-form-field">
-                <label htmlFor="lastName">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={adminData.lastName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="admin-form-field">
-                <label htmlFor="phone">Phone Number</label>
-                <div className="admin-phone-input">
-                  <input
-                    type="text"
-                    name="countryCode"
-                    value={adminData.countryCode}
-                    onChange={handleChange}
-                    className="admin-country-code"
-                  />
-                  <input
-                    type="text"
-                    name="phoneNumber"
-                    value={adminData.phoneNumber}
-                    onChange={handleChange}
-                    className="admin-phone-number"
-                  />
-                </div>
-              </div>
+            <div className="admin-form-field">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={adminData.email}
+                onChange={handleChange}
+              />
             </div>
-            <div className="admin-form-row admin-form-single">
-              <div className="admin-form-field">
-                <label htmlFor="location">Location</label>
+          </div>
+          <div className="admin-form-row admin-form-double">
+            <div className="admin-form-field">
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={adminData.lastName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="admin-form-field">
+              <label htmlFor="phone">Phone Number</label>
+              <div className="admin-phone-input">
                 <input
                   type="text"
-                  id="location"
-                  name="location"
-                  value={adminData.location}
+                  name="countryCode"
+                  value={adminData.countryCode}
                   onChange={handleChange}
+                  className="admin-country-code"
+                />
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  value={adminData.phoneNumber}
+                  onChange={handleChange}
+                  className="admin-phone-number"
                 />
               </div>
             </div>
           </div>
-          <div className="admin-form-actions">
-            <button type="submit">Save Changes</button>
+          <div className="admin-form-row admin-form-single">
+            <div className="admin-form-field">
+              <label htmlFor="location">Location</label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={adminData.location}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+        <div className="admin-form-actions">
+          <button type="submit">Save Changes</button>
+        </div>
+      </form>
     </div>
   );
 }
