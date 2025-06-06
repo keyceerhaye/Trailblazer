@@ -28,11 +28,47 @@ export const STEP_CONFIGS = {
 
 // Function to get steps with active states based on current page
 export const getStepsWithActiveStates = (stepConfig, currentStep) => {
+  const stepIndex = stepConfig.findIndex((s) => s.key === currentStep);
+
+  // If current step is not found, try to determine based on common step patterns
+  let activeUpTo = stepIndex;
+
+  if (stepIndex === -1) {
+    // Fallback: determine step index based on currentStep string
+    switch (currentStep) {
+      case "upload":
+        activeUpTo = 0;
+        break;
+      case "basket":
+        activeUpTo = stepConfig.findIndex(
+          (s) => s.label === "Basket" || s.key === "basket"
+        );
+        break;
+      case "delivery":
+        activeUpTo = stepConfig.findIndex(
+          (s) => s.label === "Delivery" || s.key === "delivery"
+        );
+        break;
+      case "payment":
+        activeUpTo = stepConfig.findIndex(
+          (s) => s.label === "Payment" || s.key === "payment"
+        );
+        break;
+      case "template":
+        activeUpTo = 0;
+        break;
+      case "specifications":
+        activeUpTo = 1;
+        break;
+      default:
+        activeUpTo = 0; // Default to first step
+    }
+  }
+
   return stepConfig.map((step, index) => {
-    const stepIndex = stepConfig.findIndex((s) => s.key === currentStep);
     return {
       ...step,
-      active: index <= stepIndex,
+      active: index <= activeUpTo,
     };
   });
 };

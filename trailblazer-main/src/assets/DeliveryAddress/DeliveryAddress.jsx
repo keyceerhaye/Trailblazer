@@ -116,13 +116,11 @@ const DeliveryAddress = () => {
               {index > 0 && (
                 <div
                   className={`da-step-line ${
-                    steps[index - 1].isActive ? "active" : ""
+                    steps[index - 1].active ? "active" : ""
                   }`}
                 ></div>
               )}
-              <div
-                className={`da-step-circle ${step.isActive ? "active" : ""}`}
-              >
+              <div className={`da-step-circle ${step.active ? "active" : ""}`}>
                 <span className="da-step-num">{step.number}</span>
               </div>
             </React.Fragment>
