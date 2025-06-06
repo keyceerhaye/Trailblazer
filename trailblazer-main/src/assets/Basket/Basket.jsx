@@ -21,7 +21,9 @@ const Basket = () => {
   const uploadedFiles =
     location.state?.files ||
     (location.state?.file ? [location.state.file] : null);
-  const passedDetails = location.state?.specifications || null;
+  const passedBasketItems = location.state?.basketItems || null;
+  const passedDetails =
+    location.state?.specifications || location.state?.orderDetails || null;
   const templateData = location.state?.templateData || null;
 
   // Debug logs
@@ -79,8 +81,48 @@ const Basket = () => {
   };
 
   useEffect(() => {
-    // If coming from layout specification page, prioritize template data
-    if (templateData && templateData.hasTemplate) {
+    // First priority: If we have existing basket items (coming from delivery/payment pages)
+    if (passedBasketItems && passedBasketItems.length > 0) {
+      console.log(
+        "BASKET: Restoring existing basket items.",
+        passedBasketItems
+      );
+      setBasketItems(passedBasketItems);
+
+      // Calculate total pages
+      const totalPageCount = passedBasketItems.reduce((total, item) => {
+        return total + (item.pageCount || 1);
+      }, 0);
+      setTotalPages(totalPageCount);
+
+      // Restore order details if they exist
+      if (passedDetails) {
+        setOrderDetails((prevDetails) => {
+          const updatedDetails = {
+            ...prevDetails,
+            ...passedDetails,
+          };
+          return {
+            ...updatedDetails,
+            price:
+              passedDetails.price ||
+              calculatePrice(
+                passedBasketItems,
+                updatedDetails,
+                templateData?.templateType
+              ),
+          };
+        });
+      }
+
+      showFeedback(`Basket restored with ${passedBasketItems.length} item(s)`);
+      console.log(
+        "BASKET: Successfully restored basketItems:",
+        passedBasketItems
+      );
+    }
+    // Second priority: If coming from layout specification page, prioritize template data
+    else if (templateData && templateData.hasTemplate) {
       console.log("BASKET: Initializing from template data.", templateData);
       const templateItem = {
         id: `template-${templateData.templateId}-${Date.now()}`,
@@ -169,7 +211,7 @@ const Basket = () => {
         });
       }
     }
-  }, [uploadedFiles, passedDetails, templateData]);
+  }, [passedBasketItems, uploadedFiles, passedDetails, templateData]);
 
   // Calculate price based on specifications and file page counts
   const calculatePrice = (items, details, templateType) => {

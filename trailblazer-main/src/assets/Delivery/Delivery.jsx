@@ -49,14 +49,22 @@ const Delivery = () => {
 
   // Handle back navigation to basket page
   const handleBack = () => {
+    const stateToPass = {
+      ...location.state,
+      basketItems: location.state?.basketItems || [],
+      orderDetails:
+        location.state?.orderDetails || location.state?.specifications || {},
+      specifications:
+        location.state?.specifications || location.state?.orderDetails || {},
+      templateData: location.state?.templateData || null,
+    };
+
+    console.log("DELIVERY: Navigating back to basket with state:", stateToPass);
+    console.log("DELIVERY: basketItems being passed:", stateToPass.basketItems);
+
     // Pass the current state back when navigating to basket page
     navigate("/basket", {
-      state: {
-        ...location.state,
-        basketItems: location.state?.basketItems || [],
-        specifications: location.state?.specifications || {},
-        templateData: location.state?.templateData || null,
-      },
+      state: stateToPass,
     });
   };
 
