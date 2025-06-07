@@ -137,6 +137,11 @@
   box-sizing: border-box;
 }
 
+/* Add left margin specifically to location input */
+#location {
+  margin-left: 20px;
+}
+
 /* Make sure first column form fields take full width of their grid cell */
 .admin-form-row .admin-form-field:first-child {
   width: 100%;
