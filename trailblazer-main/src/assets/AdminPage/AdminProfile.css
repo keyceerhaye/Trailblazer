@@ -137,9 +137,26 @@
   box-sizing: border-box;
 }
 
+#email {
+  margin-left: 15px;
+}
+
 /* Add left margin specifically to location input */
 #location {
   margin-left: 20px;
+}
+
+/* Limit width of email and phone inputs in second column */
+#email,
+.admin-phone-input {
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Ensure phone input container has same max-width as email */
+.admin-form-field:has(.admin-phone-input) .admin-input-container {
+  max-width: 400px;
+  width: 100%;
 }
 
 /* Make sure first column form fields take full width of their grid cell */
