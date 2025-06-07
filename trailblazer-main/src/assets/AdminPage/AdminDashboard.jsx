@@ -41,6 +41,7 @@ import "./AdminDashboard.css";
 import AdminSalesComponent from "./AdminSales"; // Import the separate AdminSales component
 import { AdminOrderHistoryContent } from "./AdminOrderHistory"; // Import the order history content component
 import AdminProfile from "./AdminProfile"; // Import the AdminProfile component
+import OrderDetailView from "./OrderDetailView"; // Import the OrderDetailView component
 import logoImage from "../pages/logo.png"; // Ensure these paths are correct
 import profilePic from "../pages/profile.png";
 import {
@@ -59,6 +60,7 @@ const AdminDashboard = () => {
     left: 0,
   });
   const [selectedChatUser, setSelectedChatUser] = useState(null);
+  const [viewingOrder, setViewingOrder] = useState(null);
   const actionDropdownRefs = useRef([]);
   const navigate = useNavigate();
   const location = useLocation(); // Get current location
@@ -109,10 +111,22 @@ const AdminDashboard = () => {
   const handleProfileClick = () => navigate("/admin-profile");
   const handleLogOut = () => navigate("/");
   const handleNavClick = (path) => {
+    // Clear the viewing order when navigating to a different page
+    setViewingOrder(null);
     navigate(path);
     if (isMobileSidebarOpen) {
       setIsMobileSidebarOpen(false); // Close mobile sidebar on nav
     }
+  };
+
+  const handleViewOrder = (order) => {
+    setViewingOrder(order);
+    setSelectedActionOrderIndex(null); // Close dropdown
+  };
+
+  const handleBackToOrders = () => {
+    setViewingOrder(null);
+    // Navigation will be handled by the current page state automatically
   };
 
   // Function to refresh admin name from localStorage
@@ -206,8 +220,35 @@ const AdminDashboard = () => {
       const allOrders = orderManager.getAllOrders();
       const stats = orderManager.getOrderStatistics();
 
+      // Add fake order data for demonstration
+      const fakeOrders = [
+        {
+          id: "ORD-001",
+          customerName: "John Smith",
+          deliveryMethod: "deliver",
+          paymentMethod: "GCash",
+          status: ORDER_STATUS.PROCESSING,
+          totalAmount: 250.0,
+          orderDate: new Date().toISOString(),
+          files: ["business_cards.pdf"],
+        },
+        {
+          id: "ORD-002",
+          customerName: "Maria Garcia",
+          deliveryMethod: "pickup",
+          paymentMethod: "Cash on Delivery",
+          status: ORDER_STATUS.READY_FOR_PICKUP,
+          totalAmount: 180.5,
+          orderDate: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+          files: ["flyers.pdf", "poster.jpg"],
+        },
+      ];
+
+      // Combine real orders with fake orders
+      const combinedOrders = [...allOrders, ...fakeOrders];
+
       // Transform orders to admin dashboard format
-      const transformedOrders = allOrders.map((order) => ({
+      const transformedOrders = combinedOrders.map((order) => ({
         id: order.id,
         name: order.customerName,
         type: order.deliveryMethod === "deliver" ? "Delivery" : "Pick-up",
@@ -320,22 +361,71 @@ const AdminDashboard = () => {
   const renderOrderStatus = (status) => {
     let statusClass = "";
     let statusIcon = null;
+    let backgroundColor = "";
+    let textColor = "";
+
     switch (status.toLowerCase().replace(/\s+/g, "")) {
       case "delivered":
         statusClass = "delivered";
-        statusIcon = <Circle size={10} className="ad-status-icon" />;
+        statusIcon = <Circle size={8} className="ad-status-icon" />;
+        backgroundColor = "#e8f5e8";
+        textColor = "#2d5a2d";
         break;
       case "ontheway":
         statusClass = "ontheway";
+        statusIcon = <Truck size={12} className="ad-status-icon" />;
+        backgroundColor = "#fff3cd";
+        textColor = "#856404";
         break;
       case "ready":
+      case "readyforpickup":
         statusClass = "ready";
+        statusIcon = <Clock size={12} className="ad-status-icon" />;
+        backgroundColor = "#d1ecf1";
+        textColor = "#0c5460";
+        break;
+      case "processing":
+        statusClass = "processing";
+        statusIcon = <Circle size={8} className="ad-status-icon spinning" />;
+        backgroundColor = "#e2e3ff";
+        textColor = "#383d9a";
+        break;
+      case "orderreceived":
+        statusClass = "received";
+        statusIcon = <ShoppingBag size={12} className="ad-status-icon" />;
+        backgroundColor = "#f8f9fa";
+        textColor = "#495057";
+        break;
+      case "cancelled":
+        statusClass = "cancelled";
+        statusIcon = <Circle size={8} className="ad-status-icon" />;
+        backgroundColor = "#f8d7da";
+        textColor = "#721c24";
         break;
       default:
         statusClass = "default";
+        statusIcon = <Circle size={8} className="ad-status-icon" />;
+        backgroundColor = "#f8f9fa";
+        textColor = "#495057";
     }
+
     return (
-      <span className={`ad-status ${statusClass}`}>
+      <span
+        className={`ad-status ${statusClass}`}
+        style={{
+          backgroundColor: backgroundColor,
+          color: textColor,
+          padding: "6px 12px",
+          borderRadius: "20px",
+          fontSize: "12px",
+          fontWeight: "500",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          border: `1px solid ${textColor}20`,
+          whiteSpace: "nowrap",
+        }}
+      >
         {statusIcon}
         {status}
       </span>
@@ -394,23 +484,26 @@ const AdminDashboard = () => {
           }}
         >
           <div
-            onClick={() => alert(`View ${orders[selectedActionOrderIndex].id}`)}
+            onClick={() => handleViewOrder(orders[selectedActionOrderIndex])}
+            style={{ color: "black" }}
           >
             View Order
           </div>
           <div
             onClick={() =>
-              alert(`Message ${orders[selectedActionOrderIndex].name}`)
+              alert(`Cancel order ${orders[selectedActionOrderIndex].id}`)
             }
+            style={{ color: "red" }}
           >
-            Message Customer
+            Cancel Product
           </div>
           <div
             onClick={() =>
-              alert(`Cancel ${orders[selectedActionOrderIndex].id}`)
+              alert(`Message ${orders[selectedActionOrderIndex].name}`)
             }
+            style={{ color: "black" }}
           >
-            Cancel Order
+            Message
           </div>
         </div>
       )}
@@ -696,7 +789,29 @@ const AdminDashboard = () => {
     );
   };
 
+  const getCurrentPageName = () => {
+    const currentPath = location.pathname.toLowerCase();
+    if (currentPath.includes("/admin-sales")) {
+      return "Sales";
+    } else if (currentPath.includes("/admin-orderhistory")) {
+      return "Order History";
+    }
+    return "Live Orders";
+  };
+
   const renderPageContent = () => {
+    // If viewing an order, show the detail view
+    if (viewingOrder) {
+      return (
+        <OrderDetailView
+          order={viewingOrder}
+          onBack={handleBackToOrders}
+          sourcePage={getCurrentPageName()}
+          onNavigate={handleNavClick}
+        />
+      );
+    }
+
     const currentPath = location.pathname.toLowerCase();
     console.log("Current Path in renderPageContent:", currentPath); // DEBUG LOG
     if (currentPath.includes("/admin-sales")) {
