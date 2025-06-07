@@ -297,9 +297,9 @@ export default function AdminProfile() {
               </div>
             </div>
 
-            {/* Third Row - Location (Full Width) */}
+            {/* Third Row - Location (Left Column Only) */}
             <div className="admin-form-row">
-              <div className="admin-form-field admin-form-field-full">
+              <div className="admin-form-field">
                 <label htmlFor="location">Location</label>
                 <div className="admin-input-container">
                   <div className="admin-input-wrapper">
@@ -313,6 +313,9 @@ export default function AdminProfile() {
                     />
                   </div>
                 </div>
+              </div>
+              <div className="admin-form-field">
+                {/* Empty field to maintain grid structure */}
               </div>
             </div>
           </div>

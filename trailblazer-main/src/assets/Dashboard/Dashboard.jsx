@@ -5,7 +5,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import "./Dashboard.css";
 import { LogOut, Phone, Info, Settings, Home } from "lucide-react";
 import profilePic from "../pages/profile.png";
-import OrderReceived from "../pages/orderreceived.png";
+import OrderReceived from "../pages/OrderReceived.png";
 import OrderProcessing from "../pages/2.png";
 import Otw from "../pages/3.png";
 import Delivered from "../pages/4.png";
