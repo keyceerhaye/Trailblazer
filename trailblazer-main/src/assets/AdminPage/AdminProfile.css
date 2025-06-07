@@ -98,9 +98,27 @@
 
 .admin-form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(300px, 600px) 1fr;
   gap: 1rem;
   width: 100%;
+}
+
+/* Force consistent first column width for all rows */
+@media (min-width: 769px) {
+  .admin-form-row {
+    grid-template-columns: 600px 1fr;
+  }
+}
+
+/* Ensure location row matches other rows exactly */
+.admin-form-row:has([id="location"]) {
+  grid-template-columns: minmax(300px, 600px) 1fr;
+}
+
+@media (min-width: 769px) {
+  .admin-form-row:has([id="location"]) {
+    grid-template-columns: 600px 1fr;
+  }
 }
 
 .admin-form-field {
@@ -111,10 +129,24 @@
   min-width: 0;
 }
 
+/* Ensure all first-column inputs fill their grid cell consistently */
 #location,
 #firstName,
 #lastName {
-  max-width: 600px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Make sure first column form fields take full width of their grid cell */
+.admin-form-row .admin-form-field:first-child {
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-form-row .admin-form-field:first-child .admin-input-container,
+.admin-form-row .admin-form-field:first-child .admin-input-wrapper {
+  width: 100%;
+  min-width: 0;
 }
 
 .admin-form-field-full {
@@ -273,6 +305,14 @@
     display: flex;
     flex: 1;
     max-width: 900px;
+  }
+
+  /* Maintain consistent width for location, firstName, lastName in mobile */
+  #location,
+  #firstName,
+  #lastName {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .admin-profile-header {
